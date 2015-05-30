@@ -99,7 +99,7 @@ class Feeds extends Eloquent {
 
 			$post_card_buttons = htmlfactory::bake_html("3", array("ncomments" => "comment"));
 			$user_data         = array("fullname" => $user -> fullname);
-			$data              = array_merge($data, $user_data, array("feed_id" => $feed -> id, "class_lu" => "fa fa-heart-o like", "comments" => "", "post_card_btns" => $post_card_buttons));
+			$data              = array_merge($data, $data_ombed, $user_data, array("feed_id" => $feed -> id, "class_lu" => "fa fa-heart-o like", "comments" => "", "post_card_btns" => $post_card_buttons));
 
 			//modifying created timestamp to readable timestamp
 			$data['created'] = $this -> time_stamp_builder($time);
@@ -302,10 +302,13 @@ class Feeds extends Eloquent {
 
 		if($comment_id){ //error here to fix 
 			$data = array(
-				"fullname"   => $users -> fullname,
-				"comment_id" => $comment_id,
-				"comment"    => $data['comment'],
-				"created"    => $this -> time_stamp_builder($created)
+				"comment_likes_count" => "",
+				"is_liked"            => "",
+				"like_class"          => "like",
+				"fullname"            => $users -> fullname,
+				"comment_id"          => $comment_id,
+				"comment"             => $data['comment'],
+				"created"             => $this -> time_stamp_builder($created)
 			);
 
 			echo htmlfactory::bake_html("2", $data);
