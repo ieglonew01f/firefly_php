@@ -113,8 +113,6 @@ var handler  = {
 			}
 		}
 
-		alert(dataString);
-
 		$.ajax({
 		    type  : 'POST',
 		    url   : '/unlike_like_post_and_comment',
@@ -128,7 +126,21 @@ var handler  = {
 					else if(data_type == 2 || data_type == "2"){ //for comments
 						this_obj.removeClass('like').addClass('unlike');
 						this_obj.addClass('color-primary');
-						this_obj.children('i').text('+1');
+						var lcount = this_obj.children('i').text();
+						var res    = lcount.split('');
+
+						if(res[1]){
+							if(res[1] >= 1 || res[1] >= "1"){
+								var newCount = parseInt(res[1]) + 1;
+								this_obj.children('i').text('+'+newCount);
+							}
+							else{
+								this_obj.children('i').text('+1');
+							}
+						}
+						else{
+							this_obj.children('i').text('+1');
+						}	
 					}
 				}
 				else if(type == 2 || type == "2"){ //unlikes
@@ -140,13 +152,19 @@ var handler  = {
 						this_obj.removeClass('unlike').addClass('like');
 						this_obj.removeClass('color-primary');
 						var lcount = this_obj.children('i').text();
-						var res    = lcount.split(' ');
-						if(res[1] > 1 || res[1] > "1"){
-							this_obj.children('i').text('+'+parseInt(res[1]) + 1);
+						var res    = lcount.split('');
+
+						if(res[1]){
+							if(res[1] > 1 || res[1] > "1"){
+								this_obj.children('i').text('+'+parseInt(res[1] - 1));
+							}
+							else{
+								this_obj.children('i').text('');
+							}
 						}
-						else if(res[1] === 1 || res[1] > "1"){
+						else{
 							this_obj.children('i').text('');
-						}
+						 }	
 					}
 				}
 			},

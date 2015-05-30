@@ -300,7 +300,7 @@ class Feeds extends Eloquent {
 		//getting user data
 		$users = DB::table('users')->where('id', Session::get('id'))->first();
 
-		if($comment_id){
+		if($comment_id){ //error here to fix 
 			$data = array(
 				"fullname"   => $users -> fullname,
 				"comment_id" => $comment_id,
