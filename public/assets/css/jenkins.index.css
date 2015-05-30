@@ -1,0 +1,78 @@
+@import url(http://fonts.googleapis.com/css?family=Stalemate);
+body{
+	color: #838383;
+}
+h1,h2,h3,h4,h5,h6{
+	color: #838383;
+}
+.jumbotron h1, .jumbotron .h1 {
+  color: white;
+}
+.width-full{
+	width:100%;
+}
+.background-transparent{
+	background:transparent;
+}
+.jumbotron-background{
+	background: #08233e;
+  background-size:cover;
+  border:none;
+}
+.text-white{
+	color:white;
+}
+.navbar-brand{
+	font-family: 'Stalemate', cursive;
+	font-size:6em;
+}
+.font-family-stale{
+	font-family: 'Stalemate', cursive;
+}
+hr.symbol {
+  padding: 0;
+  border: none;
+  border-top: 1px solid #D8D8D8;
+  color: #585858;
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+hr.symbol:after {
+  content: "or signup with your email";
+  display: inline-block;
+  position: relative;
+  top: -13px;
+  padding: 0 10px;
+  background: rgb(245, 245, 245);
+  font-weight:400;
+}
+.margin-bottom-sm{
+	margin-bottom:10px;
+}
+.no-margin-top{
+	margin-top:0px;
+}
+.navbar-default{
+  border-color:transparent;
+}
+.members-icons{
+  -webkit-transition: all .1s ease-in-out;
+  -moz-transition: all .1s ease-in-out;
+  -o-transition: all .1s ease-in-out;
+  transition: all .1s ease-in-out;
+}
+img.img-circle.members-icons:hover {
+  width:60px;
+  height:60px;
+  cursor:pointer;
+}
+.navbar-default .navbar-nav>li>a {
+  color: white;
+}
+.navbar-default .navbar-nav>li>a:hover{
+  color: #838383;
+}
+.npr{
+  padding-right:0px;
+}

@@ -1,0 +1,68 @@
+@import url(http://fonts.googleapis.com/css?family=Stalemate);
+body{
+
+  background:#08233e;
+	color: #838383;
+}
+h1,h2,h3,h4,h5,h6{
+  color: white;
+}
+.font-family-stale{
+	font-family: 'Stalemate', cursive;
+  font-size: 5.6em;
+  font-weight: bold;
+}
+.width-full{
+  width:100%;
+}
+hr.symbol {
+  padding: 0;
+  border: none;
+  border-top: 1px solid #D8D8D8;
+  color: #585858;
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+hr.symbol:after {
+  content: "or login with your email or username";
+  display: inline-block;
+  position: relative;
+  top: -13px;
+  padding: 0 10px;
+  background: rgb(250, 250, 250);
+  font-weight:400;
+}
+.facebook-btn{
+  background:#3a5795;
+  background-color:#3a5795;
+  border-color: #403A95;
+}
+.facebook-btn:hover{
+  background:#3a5795;
+  border-color: #403A95;
+}
+.google-btn{
+  background:#d34836;
+  border-color:#BD3131;
+}
+.google-btn:hover{
+  background:#d34836;
+  border-color:#BD3131;
+}
+ul>li{
+  color:white;
+}
+ul>li>a{
+  color:white;
+}
+.alert-warning {
+  color: #8a6d3b;
+  background-color: #fcf8e3;
+  border-color: #faebcc;
+}
+.alert-danger{
+  color: #a94442;
+  background-color: #f2dede;
+  border-color: #ebccd1;
+}
