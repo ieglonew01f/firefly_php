@@ -131,7 +131,8 @@ var handler  = {
 
 						if(res[1]){
 							if(res[1] >= 1 || res[1] >= "1"){
-								this_obj.children('i').text('+'+parseInt(res[1] + 1));
+								var newCount = parseInt(res[1]) + 1;
+								this_obj.children('i').text('+'+newCount);
 							}
 							else{
 								this_obj.children('i').text('+1');
