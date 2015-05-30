@@ -164,7 +164,7 @@ var handler  = {
 						}
 						else{
 							this_obj.children('i').text('');
-						}	
+						 }	
 					}
 				}
 			},
