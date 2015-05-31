@@ -30,5 +30,6 @@ Route::post('/delete_post', 'FeedController@delete_post');
 Route::post('/unlike_like_post_and_comment', 'FeedController@unlike_like_post_and_comment');
 Route::post('/add_comment', 'FeedController@add_comment');
 Route::post('/edit_comment', 'FeedController@edit_comment');
+Route::post('/delete_comment', 'FeedController@delete_comment');
 
 

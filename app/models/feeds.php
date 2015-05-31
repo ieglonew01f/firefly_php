@@ -324,4 +324,15 @@ class Feeds extends Eloquent {
 			DB::table('comments')->where('u_id', Session::get('id'))->where('id', $data['comment_id'])->update(['comment' => $data['comment']]);
 		}
 	}
+
+	//delete comment
+
+	public function delete_comment_data($data){
+		//verify ownership
+		$comment = DB::table('comments')->where('u_id', Session::get('id'))->where('id', $data['comment_id'])->first();
+
+		if($comment){ //if owner then delete
+			DB::table('comments')->where('u_id', Session::get('id'))->where('id', $data['comment_id'])->delete();
+		}
+	}
 }

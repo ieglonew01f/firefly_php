@@ -56,11 +56,35 @@ var init = function(){
 	$(document).on('click', 'span.edit-comment', '', handler.edit_coment_opener);
 	$(document).on('click', 'button.comment-edit-closer', '', handler.edit_coment_closer);
 	$(document).on('click', 'button.comment-edit-save', '', handler.edit_coment_save);
+	$(document).on('click', 'span.delete-comment', '', handler.delete_comment);
 
 }
 
 //helpers
 var handler  = {
+	delete_comment(){
+		var this_obj   = $(this);
+		var dataString = "comment_id="+this_obj.parents('.comment').data("id");
+
+		if(comment){
+			$.ajax({
+			    type  : 'POST',
+			    url   : '/delete_comment',
+			    data  : dataString,
+				beforeSend: function(){
+					this_obj.attr("data-icon", "").html('<div class="loader loader-inner ball-pulse mrt10"><div></div><div></div><div></div></div>')
+				},
+				success: function(html){
+					this_obj.parents('.comment').fadeOut("slow");
+				},
+				complete: function(responseText){ 
+				},
+				error: function(XMLHttpRequest, textStatus, errorThrown) {
+				    alert(errorThrown)
+				}
+			});
+		}
+	},
 	edit_coment_save(){
 		var this_obj   = $(this);
 		var comment    = this_obj.parent().parent().find('input').val();

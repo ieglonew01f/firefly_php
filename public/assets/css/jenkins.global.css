@@ -2172,5 +2172,9 @@
   margin-top:0px !important;
 }
 .input-width{
+  margin-top:5px;
   width: 374px;
+}
+.fs15spandeletecom{
+font-size: 15px;
 }

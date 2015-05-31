@@ -119,7 +119,18 @@ class FeedController extends BaseController {
 			"comment_id" => Input::get('comment_id'),
 			"comment"    => Input::get('comment')
 		);
-		
+
 		$feeds -> edit_comment_data($data);
+	}
+
+	//delete comment
+
+	public function delete_comment(){
+		$feeds = new feeds;
+		$data  = array(
+			"comment_id" => Input::get('comment_id')
+		);
+
+		$feeds -> delete_comment_data($data);
 	}
 }
