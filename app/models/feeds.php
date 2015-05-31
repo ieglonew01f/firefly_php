@@ -314,4 +314,14 @@ class Feeds extends Eloquent {
 			echo htmlfactory::bake_html("2", $data);
 		}
 	}
+
+	//edit comment
+	public function edit_comment_data($data){
+		//verify ownership
+		$comment = DB::table('comments')->where('u_id', Session::get('id'))->where('id', $data['comment_id'])->first();
+
+		if($comment){ //if owner then update
+			DB::table('comments')->where('u_id', Session::get('id'))->where('id', $data['comment_id'])->update(['comment' => $data['comment']]);
+		}
+	}
 }

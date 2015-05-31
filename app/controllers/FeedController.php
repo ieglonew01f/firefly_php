@@ -110,4 +110,16 @@ class FeedController extends BaseController {
 
 		$feeds -> add_comment_data($data);
 	}
+
+	//edit comment
+
+	public function edit_comment(){
+		$feeds = new feeds;
+		$data  = array(
+			"comment_id" => Input::get('comment_id'),
+			"comment"    => Input::get('comment')
+		);
+		
+		$feeds -> edit_comment_data($data);
+	}
 }

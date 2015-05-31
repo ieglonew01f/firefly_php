@@ -49,13 +49,53 @@ var init = function(){
 	$(document).on('click', 'span.unlike', {type: "2"}, handler.like_unlike_handler);
 
 	//adding comment
-	$(document).on('click', 'span#comments_btn', '', handler.openComments);
-	$(document).on('keydown', 'input#comment', '', handler.addComment);
+	$(document).on('click', '#comments_btn', '', handler.openComments);
+	$(document).on('keydown', '#comment', '', handler.addComment);
+
+	//edit comment
+	$(document).on('click', 'span.edit-comment', '', handler.edit_coment_opener);
+	$(document).on('click', 'button.comment-edit-closer', '', handler.edit_coment_closer);
+	$(document).on('click', 'button.comment-edit-save', '', handler.edit_coment_save);
 
 }
 
 //helpers
 var handler  = {
+	edit_coment_save(){
+		var this_obj   = $(this);
+		var comment    = this_obj.parent().parent().find('input').val();
+		var dataString = "comment="+comment+"&comment_id="+this_obj.parents('.comment').data("id");
+
+		if(comment){
+			$.ajax({
+			    type  : 'POST',
+			    url   : '/edit_comment',
+			    data  : dataString,
+				beforeSend: function(){
+					this_obj.parents('div.media-body').children('#comment_edit_loader').removeClass("hidden");
+					this_obj.parents('div.media-body').children('div.edit-comment-box').addClass("hidden");
+				},
+				success: function(html){
+					this_obj.parents('.media-body').children('#comment_edit_loader').addClass("hidden");
+					this_obj.parents('div.media-body').children('p.comment-data').text(comment).show();
+				},
+				complete: function(responseText){ 
+
+				},
+				error: function(XMLHttpRequest, textStatus, errorThrown) {
+				    alert(errorThrown)
+				}
+			});
+		}
+	},
+	edit_coment_opener(){
+		$(this).parents('div.media-body').children('div.edit-comment-box').removeClass("hidden");
+		$(this).parents('div.media-body').children('p.comment-data').hide();
+	},
+	edit_coment_closer(){
+		$(this).parents('div.media-body').children('p.comment-data').show();
+		$(this).parents('div.media-body').children('div.edit-comment-box').addClass("hidden");
+	},
 	openComments: function(){
 		var this_post_container = $(this).parents('.post-container');
 		this_post_container.children('.post-card-footer').addClass('copenpccss');

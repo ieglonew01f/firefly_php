@@ -109,8 +109,19 @@ class Htmlfactory {
                   </div>
                   <div class="media-body">
                     <h5 class="media-heading nmb" id="media-heading">'.$data['fullname'].' - <small class="text-muted">'.$data['created'].'</small></h5>
-                    <p class="nmt nmb">'.$data['comment'].'</p>
-                    <p class="nmt"><span data-type="2" class="button-tiny '.$data['is_liked'].' '.$data['like_class'].'" data-icon="&#xe068;"> <i class="text-bold text-primary">'.$data['comment_likes_count'].'</i></span> &nbsp; <span class="button-tiny" data-icon="&#xe051;"></span> &nbsp; <span class="button-tiny" data-icon="&#xe060;"></span><p>
+                    <p class="nmt nmb comment-data">'.$data['comment'].'</p>
+                    <div id="comment_edit_loader" class="loader loader-inner ball-pulse mrt10 hidden"><div></div><div></div><div></div></div>
+                    <div class="edit-comment-box hidden">
+	                    <ul class="list-inline">
+		                    <li>
+		                    	<input class="form-control input-sm input-width" type="text" value="'.$data['comment'].'"></input>
+		                    </li>
+		                    <li>
+		                    	<button class="btn btn-sm btn-flat comment-edit-save"><i class="fa fa-check"></i></button> <button class="btn btn-sm btn-flat comment-edit-closer"><i class="fa fa-times"></i></button>
+		                    </li>	
+		                </ul>
+	                </div>
+                    <p class="nmt"><span data-type="2" class="button-tiny '.$data['is_liked'].' '.$data['like_class'].'" data-icon="&#xe068;"> <i class="text-bold text-primary">'.$data['comment_likes_count'].'</i></span> &nbsp; <span class="button-tiny" data-icon="&#xe051;"></span> &nbsp; <span class="button-tiny edit-comment" data-icon="&#xe060;"></span><p>
                   </div>
                 </div>
             </div>

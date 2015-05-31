@@ -2153,3 +2153,24 @@
 .text-bold{
   font-weight: bolder;
 }
+.btn-flat{
+  color: rgb(21, 140, 186);
+  cursor: pointer;
+  border: 1px solid rgb(231, 231, 231);
+  background: white;
+  border-radius:3px;
+  padding: 3px 8px 3px 8px;
+  border-color: #ccc;
+}
+.btn-flat:hover, .btn-flat:focus{
+  background-color: rgb(21, 140, 186);
+  color: white;
+  cursor: pointer;
+  padding: 3px 8px 3px 8px;
+  border: 1px solid rgb(231, 231, 231);
+  border-color: #ccc;
+  margin-top:0px !important;
+}
+.input-width{
+  width: 374px;
+}
