@@ -186,6 +186,15 @@ class Feeds extends Eloquent {
 					$clike_count = "";
 				}
 
+				//checking ownership of comment
+				$query = DB::table('comments')->where('id', $comments -> id)->where('u_id', Session::get('id'))->count();
+				if($query > 0){
+					$delete_edit_class = "";
+				}
+				else{
+					$delete_edit_class = "hidden";
+				}
+
 				//checking if the user has liked the comment or not
 				$this_liked = DB::table('comment_likes')->where('comment_id', $comments -> id)->where('u_id', Session::get('id'))->count();
 
@@ -196,6 +205,7 @@ class Feeds extends Eloquent {
 				}
 
 				$data_c = array(
+					"delete_edit_class"   => $delete_edit_class,
 					"like_class"          => $like_class,
 					"is_liked"            => $is_liked,
 					"comment_likes_count" => $clike_count,
@@ -300,8 +310,9 @@ class Feeds extends Eloquent {
 		//getting user data
 		$users = DB::table('users')->where('id', Session::get('id'))->first();
 
-		if($comment_id){ //error here to fix 
+		if($comment_id){ 
 			$data = array(
+				"delete_edit_class"   => "",
 				"comment_likes_count" => "",
 				"is_liked"            => "",
 				"like_class"          => "like",

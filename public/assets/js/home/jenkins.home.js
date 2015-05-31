@@ -18,7 +18,7 @@ var comments_btn  = $("span#comments_btn");
 
 //variables
 var data, matches, soundcloud, viemo, code, regExp, match;
-var youtube_vtitle, youtube_vdesc, youtube_vthumb, youtube_vcode, global_SoundCloud_Link, post_card_obj;
+var youtube_vtitle, youtube_vdesc, youtube_vthumb, youtube_vcode, global_SoundCloud_Link, comment_card_obj, post_card_obj;
 
 /* SET API KEY FOR YOUTUBE */
 var apiKey = "AIzaSyDLAPqnX5JQ6bqcxZJaxrlaFRLqCQMBZQM";
@@ -56,15 +56,23 @@ var init = function(){
 	$(document).on('click', 'span.edit-comment', '', handler.edit_coment_opener);
 	$(document).on('click', 'button.comment-edit-closer', '', handler.edit_coment_closer);
 	$(document).on('click', 'button.comment-edit-save', '', handler.edit_coment_save);
-	$(document).on('click', 'span.delete-comment', '', handler.delete_comment);
+	$(document).on('click', 'span.delete-comment', '', handler.delete_comment_confirm);
+	$(document).on('click', '#confirm_delete_comment', '', handler.delete_comment);
 
 }
 
 //helpers
 var handler  = {
-	delete_comment(){
+	delete_comment_confirm: function(){
+		utility_modal.modal('show');
+		utility_modal.find('h4').html('<b>Delete Comment</b>');
+		utility_modal.find('p').text('Are you sure you want to delete this comment ?');
+		utility_modal.find('div.model-buttons').find('button#confirm').attr("id", "confirm_delete_comment").attr("data-id", $(this).parents('.comment').data("id"));
+		comment_card_obj = $(this).parents('.comment');
+	},
+	delete_comment: function(){
 		var this_obj   = $(this);
-		var dataString = "comment_id="+this_obj.parents('.comment').data("id");
+		var dataString = "comment_id="+this_obj.data("id");
 
 		if(comment){
 			$.ajax({
@@ -72,10 +80,11 @@ var handler  = {
 			    url   : '/delete_comment',
 			    data  : dataString,
 				beforeSend: function(){
-					this_obj.attr("data-icon", "").html('<div class="loader loader-inner ball-pulse mrt10"><div></div><div></div><div></div></div>')
+					utility_modal.modal('hide');
+					comment_card_obj.find('span.delete-comment').attr("data-icon", "").html('<div class="loader loader-inner ball-pulse mrt10"><div></div><div></div><div></div></div>');
 				},
 				success: function(html){
-					this_obj.parents('.comment').fadeOut("slow");
+					comment_card_obj.fadeOut("slow");
 				},
 				complete: function(responseText){ 
 				},
@@ -85,7 +94,7 @@ var handler  = {
 			});
 		}
 	},
-	edit_coment_save(){
+	edit_coment_save: function(){
 		var this_obj   = $(this);
 		var comment    = this_obj.parent().parent().find('input').val();
 		var dataString = "comment="+comment+"&comment_id="+this_obj.parents('.comment').data("id");
@@ -112,7 +121,7 @@ var handler  = {
 			});
 		}
 	},
-	edit_coment_opener(){
+	edit_coment_opener: function(){
 		$(this).parents('div.media-body').children('div.edit-comment-box').removeClass("hidden");
 		$(this).parents('div.media-body').children('p.comment-data').hide();
 	},
@@ -400,6 +409,7 @@ var handler  = {
 		utility_modal.modal('show');
 		utility_modal.find('h4').html('<b>Delete post</b>');
 		utility_modal.find('p').text('Are you sure you want to delete this post ?');
+		utility_modal.find('div.model-buttons').find('button#confirm_delete_comment').attr("id", "confirm");
 		post_card_obj = $(this).parents('.post-container');
 	},
 	confirm_delete_post: function(){
