@@ -79,6 +79,8 @@ class Htmlfactory {
 						'.$data['post_card_btns'].'
 					</div>
 		            <div class="comment-container hidden">
+		            	<div class="loader loader-inner ball-pulse hidden"><div></div><div></div><div></div></div>
+		            	<p><a id="view_prev_comm" class="'.$data['view_prev_comment'].'" href="javascript:;">View previous comments</a></p>
 		            	<div class="comments-holder">
 		            		'.$data['comments'].'
 		                </div>

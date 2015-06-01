@@ -133,4 +133,16 @@ class FeedController extends BaseController {
 
 		$feeds -> delete_comment_data($data);
 	}
+
+	//show comment
+	public function show_comment(){
+		$feeds = new feeds;
+		$data  = array(
+			"feed_id"   => Input::get('feed_id'),
+			"offset"    => Input::get('offset'),
+			"remainder" => Input::get('remainder')
+		);
+
+		return $feeds -> show_comment_data($data);
+	}
 }

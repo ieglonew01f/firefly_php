@@ -2134,6 +2134,7 @@
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
   border-top: none;
+  padding-top:5px;
 }
 .button-tiny{
 
@@ -2177,4 +2178,7 @@
 }
 .fs15spandeletecom{
 font-size: 15px;
+}
+.mbsm{
+  margin-bottom:5px;
 }

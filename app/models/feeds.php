@@ -48,7 +48,7 @@ class Feeds extends Eloquent {
 
 			$post_card_buttons = htmlfactory::bake_html("3", array("ncomments" => $comments_count));
 			$user_data         = array("fullname" => $user -> fullname);
-			$data              = array_merge($data, $user_data, array("feed_id" => $feed -> id, "class_lu" => "fa fa-heart-o like", "comments" => "", "post_card_btns" => $post_card_buttons));
+			$data              = array_merge($data, $user_data, array("feed_id" => $feed -> id, "class_lu" => "fa fa-heart-o like", "comments" => "", "post_card_btns" => $post_card_buttons, "view_prev_comment" => "hidden"));
 
 			//modifying created timestamp to readable timestamp
 			$data['created'] = $this -> time_stamp_builder($time);
@@ -99,7 +99,7 @@ class Feeds extends Eloquent {
 
 			$post_card_buttons = htmlfactory::bake_html("3", array("ncomments" => "comment"));
 			$user_data         = array("fullname" => $user -> fullname);
-			$data              = array_merge($data, $data_ombed, $user_data, array("feed_id" => $feed -> id, "class_lu" => "fa fa-heart-o like", "comments" => "", "post_card_btns" => $post_card_buttons));
+			$data              = array_merge($data, $data_ombed, $user_data, array("feed_id" => $feed -> id, "class_lu" => "fa fa-heart-o like", "comments" => "", "post_card_btns" => $post_card_buttons, "view_prev_comment" => "hidden"));
 
 			//modifying created timestamp to readable timestamp
 			$data['created'] = $this -> time_stamp_builder($time);
@@ -204,6 +204,14 @@ class Feeds extends Eloquent {
 					$like_class = "like";
 				}
 
+				//if comment count > 3
+				if($comments_count > 3){
+					$view_prev_comment = "";
+				}
+				else{
+					$view_prev_comment = "hidden";
+				}
+
 				$data_c = array(
 					"delete_edit_class"   => $delete_edit_class,
 					"like_class"          => $like_class,
@@ -220,6 +228,7 @@ class Feeds extends Eloquent {
 			//getting post card data buttons
 			if($comments_count < 1 || $comments_count == 0){
 				$comments_count = "comment";
+				$view_prev_comment = "hidden";
 			}
 			else{
 				$comments_count = $comments_count." comments";
@@ -227,7 +236,7 @@ class Feeds extends Eloquent {
 
 			$post_card_buttons = htmlfactory::bake_html("3", array("ncomments" => $comments_count));
 
-			$data     = array_merge($data, array("comments" => $comment_array, "post_card_btns" => $post_card_buttons));
+			$data     = array_merge($data, array("comments" => $comment_array, "post_card_btns" => $post_card_buttons, "view_prev_comment" => $view_prev_comment));
 		    $content .= htmlfactory::bake_html("1", $data);
 		} 
 
@@ -312,6 +321,7 @@ class Feeds extends Eloquent {
 
 		if($comment_id){ 
 			$data = array(
+				"view_prev_comment"   => "",
 				"delete_edit_class"   => "",
 				"comment_likes_count" => "",
 				"is_liked"            => "",
@@ -345,5 +355,65 @@ class Feeds extends Eloquent {
 		if($comment){ //if owner then delete
 			DB::table('comments')->where('u_id', Session::get('id'))->where('id', $data['comment_id'])->delete();
 		}
+	}
+
+	//show prev comments with limit
+	public function show_comment_data($data){
+		$comments_count = DB::table('comments')->where('feed_id', $data['feed_id'])->count();
+		$comments       = DB::table('comments')->join('users', 'comments.u_id', '=', 'users.id')->where('feed_id', $data['feed_id'])->select('comments.id', 'comments.comment', 'comments.created', 'users.fullname')->orderBy('created', 'asc')->skip($data['offset'])->take($data['remainder'])->get();
+		$comment_array  = "";
+
+		foreach($comments as $comments){
+			//getting comments like count
+			$clike_count = DB::table('comment_likes')->where('comment_id', $comments -> id)->count();
+			if($clike_count > 0){
+				$clike_count = "+".$clike_count;
+				$is_liked    = "text-primary";
+			}
+			else{
+				$is_liked    = "";
+				$clike_count = "";
+			}
+
+			//checking ownership of comment
+			$query = DB::table('comments')->where('id', $comments -> id)->where('u_id', Session::get('id'))->count();
+			if($query > 0){
+				$delete_edit_class = "";
+			}
+			else{
+				$delete_edit_class = "hidden";
+			}
+
+			//checking if the user has liked the comment or not
+			$this_liked = DB::table('comment_likes')->where('comment_id', $comments -> id)->where('u_id', Session::get('id'))->count();
+
+			if($this_liked > 0){
+				$like_class = "unlike";
+			}else{
+				$like_class = "like";
+			}
+
+			//if comment count > 3
+			if($comments_count > 3){
+				$view_prev_comment = "";
+			}
+			else{
+				$view_prev_comment = "hidden";
+			}
+
+			$data_c = array(
+				"delete_edit_class"   => $delete_edit_class,
+				"like_class"          => $like_class,
+				"is_liked"            => $is_liked,
+				"comment_likes_count" => $clike_count,
+				"fullname"            => $comments -> fullname,
+				"comment_id"          => $comments -> id,
+				"comment"             => $comments -> comment,
+				"created"             => $this -> time_stamp_builder($comments -> created)
+			);
+			$comment_array .= htmlfactory::bake_html("2", $data_c);
+		}
+
+		return $comment_array;
 	}
 }

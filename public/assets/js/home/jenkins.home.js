@@ -17,8 +17,8 @@ var confirm       = $("button#confirm");
 var comments_btn  = $("span#comments_btn");
 
 //variables
-var data, matches, soundcloud, viemo, code, regExp, match;
-var youtube_vtitle, youtube_vdesc, youtube_vthumb, youtube_vcode, global_SoundCloud_Link, comment_card_obj, post_card_obj;
+var data, matches, soundcloud, viemo, code, regExp, match, previous_comment_offset = 6;
+var youtube_vtitle, youtube_vdesc, youtube_vthumb, youtube_vcode, global_SoundCloud_Link, comment_card_obj, post_card_obj,exec = 0, multiples, remainder;
 
 /* SET API KEY FOR YOUTUBE */
 var apiKey = "AIzaSyDLAPqnX5JQ6bqcxZJaxrlaFRLqCQMBZQM";
@@ -59,10 +59,52 @@ var init = function(){
 	$(document).on('click', 'span.delete-comment', '', handler.delete_comment_confirm);
 	$(document).on('click', '#confirm_delete_comment', '', handler.delete_comment);
 
+	//view previous comments
+	$(document).on('click', '#view_prev_comm', '', handler.view_prev_comm);
+
 }
 
 //helpers
 var handler  = {
+	view_prev_comm: function(){
+		var thisObj    = $(this);
+		var feed_id    = $(this).parents('.post-container').data("id");
+		var ob         = thisObj.parents('.post-container').find('#comments_btn').text();
+		var dat        = ob.split(' ');
+		if(exec == 0){
+			previous_comment_offset = dat[0] - 6;
+			multiples  = parseInt(dat[0]/3);
+			remainder  = 3;
+			exec       = 1;
+		}
+
+		var dataString = "offset="+previous_comment_offset+"&feed_id="+feed_id+"&remainder="+remainder;
+
+		$.ajax({
+		    type  : 'POST',
+		    url   : '/show_comment',
+		    data  : dataString,
+			beforeSend: function(){
+				previous_comment_offset -= 3;
+				multiples --;
+				if(multiples == 1){ previous_comment_offset = 0; remainder = dat[0] - multiples * 3;}
+				else if(multiples < 1 ){ thisObj.hide(); }
+				thisObj.parent().parent().children('.loader').removeClass('hidden');
+				thisObj.hide();
+			},
+			success: function(html){
+				thisObj.parent().parent().children('.loader').addClass('hidden');
+				thisObj.parent().parent().find('.comments-holder').prepend(html);
+				if(multiples > 0) thisObj.show();
+			},
+			complete: function(responseText){ 
+
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
+			    alert(errorThrown)
+			}
+		});
+	},
 	delete_comment_confirm: function(){
 		utility_modal.modal('show');
 		utility_modal.find('h4').html('<b>Delete Comment</b>');
