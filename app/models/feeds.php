@@ -95,10 +95,10 @@ class Feeds extends Eloquent {
 
 			//baking post
 			//getting user data
-			$user = DB::table('users')->where('id', $data['u_id'])->first();
+			$user = DB::table('users')->join('users_profile', 'users_profile.u_id', '=', 'users.id')->where('users.id', $data['u_id'])->first();
 
 			$post_card_buttons = htmlfactory::bake_html("3", array("ncomments" => "comment"));
-			$user_data         = array("fullname" => $user -> fullname);
+			$user_data         = array("fullname" => $user -> fullname, "profile_picture" => $user -> profile_picture);
 			$data              = array_merge($data, $data_ombed, $user_data, array("feed_id" => $feed -> id, "class_lu" => "fa fa-heart-o like", "comments" => "", "post_card_btns" => $post_card_buttons, "view_prev_comment" => "hidden"));
 
 			//modifying created timestamp to readable timestamp
@@ -116,17 +116,18 @@ class Feeds extends Eloquent {
 		$content = "";
 
 		foreach ($feeds as $feeds){
-			$user = DB::table('users')->where('id', $feeds -> u_id)->first();
+			$user = DB::table('users')->join('users_profile', 'users_profile.u_id', '=', 'users.id')->where('users.id', $feeds -> u_id)->first();
 			$type = $feeds -> type;
 
 			if($type === "0" || $type === 0){ //normal feed
 				//data
 				$data = array(
-					"feed_id"  => $feeds -> id,
-					"fullname" => $user -> fullname,
-					"content"  => $feeds -> content,
-					"type"     => $feeds -> type,
-					"created"  => $this -> time_stamp_builder($feeds -> created)
+					"feed_id"         => $feeds -> id,
+					"profile_picture" => $user -> profile_picture,
+					"fullname"        => $user -> fullname,
+					"content"         => $feeds -> content,
+					"type"            => $feeds -> type,
+					"created"         => $this -> time_stamp_builder($feeds -> created)
 				);
 			}
 			else if($type === "1" || $type === 1 || $type === "2" || $type === 2){ //oembd feed
@@ -134,25 +135,27 @@ class Feeds extends Eloquent {
 
 				if($type === "1" || $type === 1){ //for youtube
 					$data   = array(
-						"feed_id"  => $feeds -> id,
-						"vcode"    => $ombed -> vcode,
-						"vthumb"   => $ombed -> vthumb,
-						"vdesc"    => $ombed -> vdesc,
-						"vtitle"   => $ombed -> vtitle,
-						"fullname" => $user -> fullname,
-						"content"  => $feeds -> content,
-						"type"     => $feeds -> type,
-						"created"  => $this -> time_stamp_builder($feeds -> created)
+						"feed_id"         => $feeds -> id,
+						"vcode"           => $ombed -> vcode,
+						"vthumb"          => $ombed -> vthumb,
+						"vdesc"           => $ombed -> vdesc,
+						"vtitle"          => $ombed -> vtitle,
+						"fullname"        => $user -> fullname,
+						"profile_picture" => $user -> profile_picture,
+						"content"         => $feeds -> content,
+						"type"            => $feeds -> type,
+						"created"         => $this -> time_stamp_builder($feeds -> created)
 					);
 				}
 				else if($type === "2" || $type === 2){ //for sound cloud
 					$data   = array(
-						"feed_id"  => $feeds -> id,
-						"vcode"    => $ombed -> vcode,
-						"fullname" => $user -> fullname,
-						"content"  => $feeds -> content,
-						"type"     => $feeds -> type,
-						"created"  => $this -> time_stamp_builder($feeds -> created)
+						"feed_id"         => $feeds -> id,
+						"vcode"           => $ombed -> vcode,
+						"fullname"        => $user -> fullname,
+						"profile_picture" => $user -> profile_picture,
+						"content"         => $feeds -> content,
+						"type"            => $feeds -> type,
+						"created"         => $this -> time_stamp_builder($feeds -> created)
 					);
 				}
 			}

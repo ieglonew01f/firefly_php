@@ -57,7 +57,7 @@ class Htmlfactory {
 	                <div class="media nmt">
 	                  <div class="media-left">
 	                    <a href="#">
-	                      <img width="64" height="64" class="media-object" src="public/assets/img/avatars/man_2.jpg">
+	                      <img width="64" height="64" class="media-object" src="uploads/'.$data['profile_picture'].'">
 	                    </a>
 	                  </div>
 	                  <div class="media-body">
