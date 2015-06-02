@@ -46,10 +46,11 @@ class Feeds extends Eloquent {
 				$comments_count = $comments_count." comments";
 			}
 
-			$post_card_buttons = htmlfactory::bake_html("3", array("ncomments" => $comments_count));
-			$user_data         = array("fullname" => $user -> fullname);
-			$data              = array_merge($data, $user_data, array("feed_id" => $feed -> id, "class_lu" => "fa fa-heart-o like", "comments" => "", "post_card_btns" => $post_card_buttons, "view_prev_comment" => "hidden"));
+			$user = DB::table('users')->join('users_profile', 'users_profile.u_id', '=', 'users.id')->where('users.id', $data['u_id'])->first();
 
+			$post_card_buttons = htmlfactory::bake_html("3", array("ncomments" => "comment"));
+			$user_data         = array("fullname" => $user -> fullname, "profile_picture" => $user -> profile_picture);
+			$data              = array_merge($data, $user_data, array("feed_id" => $feed -> id, "class_lu" => "fa fa-heart-o like", "comments" => "", "post_card_btns" => $post_card_buttons, "view_prev_comment" => "hidden"));
 			//modifying created timestamp to readable timestamp
 			$data['created'] = $this -> time_stamp_builder($time);
 
