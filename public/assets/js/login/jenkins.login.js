@@ -62,7 +62,7 @@ var handler  = {
 						failed_msg.removeClass("hidden")
 					}
 					else{
-						alert("Login success");
+						window.location = "home";
 						failed_msg.addClass("hidden");
 					}
 				},

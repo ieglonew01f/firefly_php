@@ -168,7 +168,7 @@ var handler  = {
 						email_input.parent().addClass("has-error").find('span').text('This email address is already registered with us').addClass("text-danger");
 					}
 					else{
-						alert("user_created")
+						window.location = "home";
 						username_test = false;
 					}
 				},
