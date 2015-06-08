@@ -76,3 +76,7 @@ img.img-circle.members-icons:hover {
 .npr{
   padding-right:0px;
 }
+.nptb{
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+}

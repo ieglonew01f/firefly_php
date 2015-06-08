@@ -93,7 +93,7 @@
                 </div>
                 <div class="checkbox checkbox-primary">
                   <input id="checkbox" class="styled" type="checkbox" checked></input>
-                  <label for="checkbox">{{trans('messages.by_sign')}} <a href="#" class="spc-a">{{trans('messages.and')}}</a> {{trans('messages.terms')}} <a href="#" class="spc-a">{{trans('messages.privacy')}}</a></label>
+                  <label for="checkbox">{{trans('messages.by_sign')}} <a href="#" class="spc-a">{{trans('messages.terms')}}</a> {{trans('messages.and')}} <a href="#" class="spc-a">{{trans('messages.privacy')}}</a></label>
                 </div>
                 <div class="form-group">
                   <button id="new_account" class="btn btn-primary width-full">{{trans('messages.new_acc')}}</button>
