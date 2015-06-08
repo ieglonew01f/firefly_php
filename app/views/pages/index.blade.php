@@ -20,8 +20,7 @@
                 <li><a href="#"><b>FEATURES</b></a></li>
                 <li><a href="#"><b>DOCUMENTATION</b></a></li>
                 <li><a href="#"><b>FAQ's</b></a></li>
-                <li><a href="#"><b>LOGIN</b></a></li>
-                <li><button type="button" class="btn btn-success navbar-btn">Sign in</button></li>
+                <li><button onclick="window.location='/login'" type="button" class="btn btn-success navbar-btn">Sign in</button></li>
               </ul>
             </div>
           </div>

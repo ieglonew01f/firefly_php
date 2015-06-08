@@ -3,16 +3,21 @@
   Social Networking Script
 @stop
 @section('page_css')
-  {{ HTML::style('public/assets/css/jenkins.home.css'); }}
+  {{ HTML::style('public/assets/css/jenkins.profile.css'); }}
 @stop
 @section('content')
-    <div class="content mrt80">
+    <div class="content mrt50">
       @include('includes.sidebar')
       
       <div class="container">
         <div class="row">
+          <div class="col-md-12">
+            @include('widgets.profilebanner', $profile_data)
+          </div>
+        </div>
+        <div class="row">
           <div class="col-md-7">
-
+            @include('widgets.profileSetup', array('percentage' => $profile_completion, 'profile_data' => $profile_data))
             @include('includes.statusdiv')
 
             <div id="feeds_cont">
@@ -21,7 +26,7 @@
 
           </div>
           <div class="col-md-5">
-            @include('widgets.profileSetup', array('percentage' => $profile_completion))
+            @include('widgets.about', $profile_data)
             @include('widgets.suggestions')
           </div>
       </div>

@@ -9,7 +9,10 @@ class Htmlfactory {
 		* type = 1 -> for baking posts
 		* type = 2 -> for comments html data
 		* type = 3 -> for baking post card buttons
+		* type = 4 -> for profile setup
 		*/
+
+		$base_path = 'http://localhost'; //change it to site url
 
 		if($type === "1" || $type === 1){ //post card
 			if($data['type'] === "0" || $data['type'] === 0){ //normal feed
@@ -56,8 +59,8 @@ class Htmlfactory {
 	                </div>
 	                <div class="media nmt">
 	                  <div class="media-left">
-	                    <a href="#">
-	                      <img width="64" height="64" class="media-object" src="uploads/'.$data['profile_picture'].'">
+	                    <a href="'.$base_path.'/profile/'.$data['username'].'">
+	                      <img width="64" height="64" class="media-object" src="'.$base_path.'/uploads/'.$data['profile_picture'].'">
 	                    </a>
 	                  </div>
 	                  <div class="media-body">
@@ -133,6 +136,44 @@ class Htmlfactory {
 			return '
 				<ul class="list-inline no-margin-bottom"><li><img width="32" height="32" src="public/assets/img/avatars/man_1.jpg"></img></li><li><img width="32" height="32" src="public/assets/img/avatars/man_2.jpg"></img></li><li><img width="32" height="32" src="public/assets/img/avatars/real_female1.jpg"></img></li><li><span class="no-likes">23 more likes</span></li><li><span id="comments_btn" class="span-comments no-likes">'.$data['ncomments'].'</span></li><li><span class="no-likes">21 Shares</span></li></ul>
 			';
+		}
+		else if($type === 4 || $type === "4"){ //for profile setup
+			if($data['type'] === "schooling"){
+				$dom = '<input id="answer" data-name="schooling" class="form-control input-sm" placeholder="Example Spring Field Highschool"></input>';
+				$question_text = 'Where did you went for schooling';
+				$hidden = '';
+			}
+			else if($data['type'] === "gender"){
+				$dom = '<select id="answer" data-name="gender" class="form-control input-sm"><option>Male</option><option>Female</option><option>Other</option></select>';
+				$question_text = 'Please specify your gender';
+				$hidden = '';
+			}
+			else if($data['type'] === "college"){
+				$dom = '<input id="answer" data-name="college" class="form-control input-sm" placeholder="Example Hadvard University"></input>';
+				$question_text = 'Where did you go for college';
+				$hidden = '';
+			}
+			else if($data['type'] === "location"){
+				$dom = '<input id="answer" data-name="location" class="form-control input-sm" placeholder="Where are you now living currently ?"></input>';
+				$question_text = 'Where are you living ?';
+				$hidden = '';
+			}
+			else if($data['type'] === "home"){
+				$dom = '<input id="answer" data-name="home" class="form-control input-sm" placeholder="Example: New York"></input>';
+				$question_text = 'Where is your home town ?';
+				$hidden = '';
+			}
+			else if($data['type'] === "relationship"){
+				$dom = '<select id="answer" data-name="relationship" class="form-control input-sm"><option>Single</option><option>In a relationship</option><option>Engaged</option><option>Married</option><option>In a civil partnership</option><option>In a domestic partnership</option><option>In an open relationship</option><option>Complicated</option><option>Separated</option><option>Divorced</option><option>Widowed</option></select>';
+				$question_text = 'Whats your relationship status';
+			}
+			else{
+				$dom = '';
+				$question_text = '';
+				$hidden = 'hidden';
+			}
+
+			return array('dom' => $dom, 'question' => $question_text, 'hidden' => $hidden);
 		}
 	}
 }

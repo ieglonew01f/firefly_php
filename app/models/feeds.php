@@ -49,7 +49,7 @@ class Feeds extends Eloquent {
 			$user = DB::table('users')->join('users_profile', 'users_profile.u_id', '=', 'users.id')->where('users.id', $data['u_id'])->first();
 
 			$post_card_buttons = htmlfactory::bake_html("3", array("ncomments" => "comment"));
-			$user_data         = array("fullname" => $user -> fullname, "profile_picture" => $user -> profile_picture);
+			$user_data         = array("fullname" => $user -> fullname, "profile_picture" => $user -> profile_picture, "username" => $user -> username);
 			$data              = array_merge($data, $user_data, array("feed_id" => $feed -> id, "class_lu" => "fa fa-heart-o like", "comments" => "", "post_card_btns" => $post_card_buttons, "view_prev_comment" => "hidden"));
 			//modifying created timestamp to readable timestamp
 			$data['created'] = $this -> time_stamp_builder($time);
@@ -99,7 +99,7 @@ class Feeds extends Eloquent {
 			$user = DB::table('users')->join('users_profile', 'users_profile.u_id', '=', 'users.id')->where('users.id', $data['u_id'])->first();
 
 			$post_card_buttons = htmlfactory::bake_html("3", array("ncomments" => "comment"));
-			$user_data         = array("fullname" => $user -> fullname, "profile_picture" => $user -> profile_picture);
+			$user_data         = array("fullname" => $user -> fullname, "profile_picture" => $user -> profile_picture, "username" => $user -> username);
 			$data              = array_merge($data, $data_ombed, $user_data, array("feed_id" => $feed -> id, "class_lu" => "fa fa-heart-o like", "comments" => "", "post_card_btns" => $post_card_buttons, "view_prev_comment" => "hidden"));
 
 			//modifying created timestamp to readable timestamp
@@ -125,6 +125,7 @@ class Feeds extends Eloquent {
 				$data = array(
 					"feed_id"         => $feeds -> id,
 					"profile_picture" => $user -> profile_picture,
+					"username"        => $user -> username,
 					"fullname"        => $user -> fullname,
 					"content"         => $feeds -> content,
 					"type"            => $feeds -> type,
@@ -142,6 +143,7 @@ class Feeds extends Eloquent {
 						"vdesc"           => $ombed -> vdesc,
 						"vtitle"          => $ombed -> vtitle,
 						"fullname"        => $user -> fullname,
+						"username"        => $user -> username,
 						"profile_picture" => $user -> profile_picture,
 						"content"         => $feeds -> content,
 						"type"            => $feeds -> type,
@@ -153,6 +155,7 @@ class Feeds extends Eloquent {
 						"feed_id"         => $feeds -> id,
 						"vcode"           => $ombed -> vcode,
 						"fullname"        => $user -> fullname,
+						"username"        => $user -> username,
 						"profile_picture" => $user -> profile_picture,
 						"content"         => $feeds -> content,
 						"type"            => $feeds -> type,

@@ -1,25 +1,24 @@
-    <div class="well-snow">
+    <div class="well-snow profile-completion-panel {{ $hidden }}">
       <h4 class="nmt"><span class="text-success" data-icon="&#xe080;"></span> Profile completion</h4>
       <div class="progress">
-        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 15%">
-          <span class="sr-only">45% Complete</span>
+        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" data-value="{{ $percentage }}" style="width: {{ $percentage }}%">
         </div>
       </div>
-      <h4 class="nmt">Your profile is 10 % complete</h4>
+      <h4 class="nmt complete-prec-txt">Your profile is {{ $percentage }}% complete</h4>
       <hr class="hr-dashed">
-      <div class="media">
+      <div class="media question-container">
         <div class="media-left">
           <a href="#">
-            <img width="50" height="50" class="media-object" src="public/assets/img/avatars/man_2.jpg">
+            <img width="50" height="50" class="media-object" src="{{ $profile_data['base_url'] }}/uploads/{{ $profile_data['profile_picture'] }}">
           </a>
         </div>
-        <div class="media-body line-height-1">
-          <p>Where did you went for schooling</p>
-          <input class="form-control input-sm" placeholder="Example Spring doll Highschool"></input>
+        <div class="media-body line-height-1 question-bank">
+          <p>{{ $question }}</p>
+          <div class="input-container">{{ $dom }}</div>
         </div>
       </div>
       <br/>
       <div class="form-group">
-        <button class="btn btn-primary btn-sm">next <span data-icon="&#xe079;"></span></button> <button class="btn btn-success btn-sm">Skip <span data-icon="&#xe082;"></span></button>
+        <button id="next_question" class="btn btn-primary btn-sm">next <span data-icon="&#xe079;"></span></button> <button id="skip_question" class="btn btn-success btn-sm">Close <span data-icon="&#xe082;"></span></button>
       </div>
     </div>

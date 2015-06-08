@@ -2182,3 +2182,56 @@ font-size: 15px;
 .mbsm{
   margin-bottom:5px;
 }
+.mrt50{
+  margin-top:50px;
+}
+.li-icons{
+  cursor:pointer;
+  padding: 5px;
+  border:1px solid transparent;
+}
+.li-icons:hover, .li-icons:focus{
+  color: rgb(21, 123, 186);
+  border-radius: 4px;
+  border: 1px solid rgb(79, 147, 190);
+}
+.li-icons-active{
+  border: 1px solid rgb(79, 147, 190);
+  border-radius: 4px;
+  color: rgb(21, 123, 186);
+}
+.well-banner{
+  background:rgb(21, 123, 186);
+  min-height:200px;
+  border-bottom-right-radius:0px;
+  border-bottom-left-radius:0px;
+  border-bottom:none;
+  margin-bottom:0px;
+}
+.footer-links-well{
+  border-top:none;
+  border-top-right-radius:0px;
+  border-top-left-radius:0px;
+}
+.mrb10{
+  margin-bottom: 10px;
+}
+.media-align-bottom{
+  vertical-align: bottom;
+}
+.btn-transparent{
+  background: transparent;
+  border: 1px solid white;
+  text-transform: none;
+}
+.btn-transparent:hover, .btn-transparent:focus{
+  background: white;
+  border: 1px solid white;
+  text-transform: none;
+  margin-top:0px;
+  color:rgb(79, 147, 190);
+}
+.profile-img{
+  border: 2px solid white;
+  border-radius: 5px;
+}

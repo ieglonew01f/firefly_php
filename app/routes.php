@@ -23,6 +23,9 @@ Route::post('/newLogin', 'LoginController@login');
 /*ROUTES FOR HOME PAGE */
 Route::get('/home', 'HomeController@index');
 
+/*ROUTES FOR PROFILE PAGE*/
+Route::get('/profile/{username}', 'ProfileController@profile');
+
 /*ROUTES FOR FEEDS */
 Route::post('/share_post', 'FeedController@bake_post');
 Route::post('/edit_post', 'FeedController@edit_post');
@@ -33,4 +36,5 @@ Route::post('/edit_comment', 'FeedController@edit_comment');
 Route::post('/delete_comment', 'FeedController@delete_comment');
 Route::post('/show_comment', 'FeedController@show_comment');
 
-
+/*ROUTES FOR PROFILE COMPLETION*/
+Route::post('/bake_profile', 'ProfileController@bake_profile');

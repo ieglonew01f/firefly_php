@@ -1,26 +1,25 @@
 <?php
 
-class HomeController extends BaseController {
+class ProfileController extends BaseController {
 
 	/*
 	|--------------------------------------------------------------------------
-	| Home page controller
+	| Profile Controller
 	| Author: lonew01f
-	| First commit: 5/9/2015 06:47 PM
-	| Describtion: Home page controller handlers all the aspect related to
-	| home page of the user
+	| First commit: 6/3/2015 11:50 PM
+	| Describtion: Profile page controller handlers all the aspect related to
+	| the user profile
 	|--------------------------------------------------------------------------
 	|
 	*/
-
-	public function index()
-	{
+	//show profiles
+	public function profile($username){
 		$feeds   = new feeds;
 		$profile = new profiles;
 
 		//getting profile data
 		$profile_settings = $profile -> load_profile_settings();
-		$profile_data     = $profile -> load_profile_data(Session::get('username'));
+		$profile_data     = $profile -> load_profile_data($username);
 
 		$data = array(
 			"feeds"              => $feeds -> get_feeds("0"),
@@ -31,7 +30,20 @@ class HomeController extends BaseController {
 			"profile_data"       => $profile_data
 		);
 
-		return View::make('pages.home', $data);
+		return View::make('pages.profile', $data);
+	}
+
+	//baking profile data
+	public function bake_profile()
+	{
+		$profiles = new profiles;
+		$data     = array(
+			"column_name"   => Input::get('question'),
+			"value"         => Input::get('answer'),
+			"profile_setup" => true
+		);
+
+		return $profiles -> update_or_bake_profile_data($data);
 	}
 
 }
