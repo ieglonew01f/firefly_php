@@ -40,4 +40,4 @@ Route::post('/show_comment', 'FeedController@show_comment');
 Route::post('/bake_profile', 'ProfileController@bake_profile');
 
 /*ROUTES FOR PROFILE INTERACTION*/
-Route::post('/friendship_handler', 'ProfileController@friendship_handler');
+Route::post('/people_handler', 'ProfileController@people_handler');

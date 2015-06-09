@@ -74,13 +74,18 @@ class Profiles extends Eloquent {
 		privacy settings.
 	*/
 	public function load_profile_data($username){
+		$website_url = 'http://localhost'; //change this as required
+
 		$data = DB::table('users_profile')->join('users', 'users.id', '=', 'users_profile.u_id')->where('users.username', '=', $username)->first();
 
 		//generate friendship button
-		$button_data = DB::table('friends')->join('users', 'users.id', '=', 'friends.for_id')->where('users.username', '=', $username)->first();
+		$button_data        = DB::table('friends')->join('users', 'users.id', '=', 'friends.for_id')->where('users.username', '=', $username)->first();
+		$follow_button_data = DB::table('followers')->join('users', 'users.id', '=', 'followers.following')->where('users.username', '=', $username)->first();
 
-		if($data -> u_id == Session::get('id')){ //if user is viewing his own profile do no show friendship buton
+		if($data -> u_id == Session::get('id')){ //if user is viewing his own profile do no show friendship buton or follower button
 			$friendship_button = '';
+			$follow_button = '';
+			$message_button = '<a href="'.$website_url.'/inbox/" class="btn btn-success btn-transparent btn-sm">Messages</a>';
 		}
 		else{
 			if($button_data){ //if exist
@@ -90,10 +95,23 @@ class Profiles extends Eloquent {
 			else{ // nothing found show add friend button
 				$friendship_button = '<button type="button" data-type="01"  data-id="'.$data -> u_id.'" class="btn btn-default btn-transparent btn-sm dropdown-toggle button_friend friend" aria-expanded="false">Add as a friend</button>';
 			}
+
+			//generate follower button
+			if($follow_button_data){
+				$follow_button = '<button data-type="3"  data-id="'.$data -> u_id.'" class="btn btn-success btn-transparent btn-sm follow">Following </button>';
+			}
+			else{
+				$follow_button = '<button data-type="2"  data-id="'.$data -> u_id.'" class="btn btn-success btn-transparent btn-sm follow">Follow</button>';
+			}
+
+			//generate message button
+			$message_button = '<a href="'.$website_url.'/inbox/'.$username.'" class="btn btn-success btn-transparent btn-sm">Message</a>';
 		}
 
+		//generate followers buton
+
 		return array(
-			"base_url"          => "http://localhost",
+			"base_url"          => $website_url,
 			"u_id"              => $data -> u_id,
 			"fullname"          => $data -> fullname,
 			"username"          => $username,
@@ -105,16 +123,20 @@ class Profiles extends Eloquent {
 			"college"           => $data -> college,
 			"relationship"      => $data -> relationship,
 			"profile_picture"   => $data -> profile_picture,
-			"friendship_button" => $friendship_button
+			"friendship_button" => $friendship_button,
+			"follow_button"     => $follow_button,
+			"message_button"    => $message_button
 		);
 	}
 
 	//add or remove friends
-	public function add_or_remove_friends($data){
+	public function add_or_remove_friends_follow_or_unfollow_people($data){
 		/* type = 01 -> add friend / request sent
 		   type = 11 -> confirm friendship
 		   type = 01 -> reject friend request
 		   type = 10 -> cancle friend request
+		   type = 2  -> follow target id
+		   type = 3  -> unfollow target id
 		*/
 		
 		$for_id = $data['profile_id'];
@@ -132,6 +154,26 @@ class Profiles extends Eloquent {
 		}
 		else if($data['type'] == 10 || $data['type'] == "10"){ //cancle friend request
 			DB::table('friends')->where('by_id', Session::get('id'))->where('for_id', $for_id)->where('status', '01')->delete(); //delete the request
+		}
+		else if($data['type'] == 2 || $data['type'] == "2"){ //follow some one ;)
+			//follow profile_id
+
+			//check if follow id already exist
+			$data = DB::table('followers')->where('follower', Session::get('id'))->where('following', $for_id)->first();
+
+			if(!$data){ //if returned nothing then insert follower data
+				DB::table('followers')->insert(array('follower' => Session::get('id'), 'following' => $for_id));
+			}
+		}
+		else if($data['type'] == 3 || $data['type'] == "3"){ //unfollow somone ;D
+			//unfollow profile_id
+
+			//check if follow id already exist
+			$data = DB::table('followers')->where('follower', Session::get('id'))->where('following', $for_id)->first();
+
+			if($data){ //if following
+				DB::table('followers')->where('follower', Session::get('id'))->where('following', $for_id)->delete(); //delete the request
+			}
 		}
 	}
 }

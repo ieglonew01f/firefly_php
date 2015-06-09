@@ -24,7 +24,7 @@
               <li class="divider"></li>
               <li><a href="#" class="friend"><b><span class="text-primary hidden" data-icon="&#xe080;"></span> Add to family</b></a></li>
             </ul>
-          </div> <button class="btn btn-success btn-transparent btn-sm">Follow</button> <button class="btn btn-success btn-transparent btn-sm">Message</button>
+          </div> {{ $follow_button }} {{ $message_button }}
         </div>
       </div>
     </div>
