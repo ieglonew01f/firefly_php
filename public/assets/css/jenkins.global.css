@@ -2223,8 +2223,10 @@ font-size: 15px;
   background: transparent;
   border: 1px solid white;
   text-transform: none;
+  color:white;
+  border-radius:4px;
 }
-.btn-transparent:hover, .btn-transparent:focus{
+.btn-transparent:hover, .btn-transparent:focus, .btn-transparent:active{
   background: white;
   border: 1px solid white;
   text-transform: none;
@@ -2234,4 +2236,7 @@ font-size: 15px;
 .profile-img{
   border: 2px solid white;
   border-radius: 5px;
+}
+.profile-buttons-div{
+  margin-top: 190px;
 }

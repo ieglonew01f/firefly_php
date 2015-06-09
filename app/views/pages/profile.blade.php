@@ -38,4 +38,5 @@
   {{ HTML::script('public/assets/js/plugins/bootbox.min.js') }}
   {{ HTML::script('public/assets/js/plugins/autogrow.js') }}
   {{ HTML::script('public/assets/js/feeds/jenkins.feeds.js'); }}
+  {{ HTML::script('public/assets/js/people/jenkins.people.js'); }}
 @stop

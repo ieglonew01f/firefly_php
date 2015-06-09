@@ -46,4 +46,14 @@ class ProfileController extends BaseController {
 		return $profiles -> update_or_bake_profile_data($data);
 	}
 
+	public function friendship_handler(){
+		$profiles = new profiles;
+		$data     = array(
+			"profile_id"   => Input::get('profile_id'),
+			"type"         => Input::get('type')
+		);
+
+		return $profiles -> add_or_remove_friends($data);
+	}
+
 }
