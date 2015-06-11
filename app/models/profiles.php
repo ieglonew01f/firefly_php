@@ -86,6 +86,18 @@ class Profiles extends Eloquent {
 			$friendship_button = '';
 			$follow_button = '';
 			$message_button = '<a href="'.$website_url.'/inbox/" class="btn btn-success btn-transparent btn-sm">Messages</a>';
+			$more_button    = '
+	          <div class="btn-group">
+	            <button type="button" class="btn btn-default btn-transparent btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">More <span class="caret"></span></button>
+	            <ul class="dropdown-menu mrt10" role="menu">
+	              <li><a href="javascript:;" class="friend"><b><span class="text-muted" data-icon="&#xe060;"></span> Edit profile</b></a></li>
+	              <li><a href="javascript:;" class="change-banner"><b><span class="text-muted" data-icon="&#xe07f;"></span> Change Banner</b></a></li>
+	              <li><a href="javascript:;" class="friend"><b><span class="text-muted hidden" data-icon="&#xe002;"></span> Remove banner</b></a></li>
+	              <li class="divider"></li>
+	              <li><a href="#" class="friend"><b><span class="text-muted hidden" data-icon="&#xe080;"></span> Profile settings</b></a></li>
+	            </ul>
+	          </div>
+			';
 		}
 		else{
 			if($button_data){ //if exist
@@ -106,6 +118,7 @@ class Profiles extends Eloquent {
 
 			//generate message button
 			$message_button = '<a href="'.$website_url.'/inbox/'.$username.'" class="btn btn-success btn-transparent btn-sm">Message</a>';
+			$more_button    = '';
 		}
 
 		//generate followers buton
@@ -125,7 +138,8 @@ class Profiles extends Eloquent {
 			"profile_picture"   => $data -> profile_picture,
 			"friendship_button" => $friendship_button,
 			"follow_button"     => $follow_button,
-			"message_button"    => $message_button
+			"message_button"    => $message_button,
+			"more_button"       => $more_button
 		);
 	}
 

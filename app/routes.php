@@ -41,3 +41,6 @@ Route::post('/bake_profile', 'ProfileController@bake_profile');
 
 /*ROUTES FOR PROFILE INTERACTION*/
 Route::post('/people_handler', 'ProfileController@people_handler');
+
+/*ROUTES FOR FILE UPLOADS LIKE CHANGEING BANNER*/
+Route::post('/change_banner', 'UploadController@change_banner');

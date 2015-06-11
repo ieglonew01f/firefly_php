@@ -1,7 +1,7 @@
 <div class="profile-banner-container">
   <div class="well well-banner">
     <div class="row">
-      <div class="col-md-7">
+      <div class="col-md-6">
         <div class="media" style="margin-top:100px;color:white">
           <div class="media-left">
             <a href="#">
@@ -14,7 +14,7 @@
           </div>
         </div>
       </div>
-      <div class="col-md-5">
+      <div class="col-md-6">
         <div class="profile-buttons-div pull-right">
           <div class="btn-group">
             {{ $friendship_button }}
@@ -24,7 +24,7 @@
               <li class="divider"></li>
               <li><a href="#" class="friend"><b><span class="text-primary hidden" data-icon="&#xe080;"></span> Add to family</b></a></li>
             </ul>
-          </div> {{ $follow_button }} {{ $message_button }}
+          </div> {{ $follow_button }} {{ $message_button }} {{ $more_button }}
         </div>
       </div>
     </div>
@@ -43,3 +43,7 @@
     </span>
   </div>
 </div>
+<form class="banner_form" method="post" enctype="multipart/form-data" action="/change_banner">
+    <input type="file" name="file" id="file_banner" class="hidden"/>
+    <input type="hidden" name="type" value="1"/>
+</form>
