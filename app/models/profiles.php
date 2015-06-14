@@ -16,7 +16,7 @@ class Profiles extends Eloquent {
 		//check if the colname has a value
 		$data = DB::table('users_profile')->where("u_id", Session::get('id'))->first();
 
-		$data ? DB::table('users_profile')->where("u_id", Session::get('id'))->update([$question => $value]) : DB::table('users_profile')->insert(["u_id" => Session::get('id'), "schooling" => $value]);
+		$data ? DB::table('users_profile')->where("u_id", Session::get('id'))->update([$question => $value]) : DB::table('users_profile')->insert(["u_id" => Session::get('id'), $question => $value]);
 
 		if($profile_setup) return $this -> get_next_empty_profile_data();
 	}
@@ -82,9 +82,15 @@ class Profiles extends Eloquent {
 		$button_data        = DB::table('friends')->join('users', 'users.id', '=', 'friends.for_id')->where('users.username', '=', $username)->first();
 		$follow_button_data = DB::table('followers')->join('users', 'users.id', '=', 'followers.following')->where('users.username', '=', $username)->first();
 
-		if($data -> u_id == Session::get('id')){ //if user is viewing his own profile do no show friendship buton or follower button
+		if($data -> u_id == Session::get('id')){ //if user is viewing his own profile do no show friendship buton and follower button
+			//getting modal for profile picture change
+			
+			$modal_data =  htmlfactory::bake_html("5", array());
+
+
+			//generating buttons
 			$friendship_button = '';
-			$follow_button = '';
+			$follow_button  = '';
 			$message_button = '<a href="'.$website_url.'/inbox/" class="btn btn-success btn-transparent btn-sm">Messages</a>';
 			$more_button    = '
 	          <div class="btn-group">
@@ -92,9 +98,10 @@ class Profiles extends Eloquent {
 	            <ul class="dropdown-menu mrt10" role="menu">
 	              <li><a href="javascript:;" class="friend"><b><span class="text-muted" data-icon="&#xe060;"></span> Edit profile</b></a></li>
 	              <li><a href="javascript:;" class="change-banner"><b><span class="text-muted" data-icon="&#xe07f;"></span> Change Banner</b></a></li>
-	              <li><a href="javascript:;" class="friend"><b><span class="text-muted hidden" data-icon="&#xe002;"></span> Remove banner</b></a></li>
+	              <li><a href="javascript:;" class="friend"><b><span class="text-muted" data-icon="&#xe082;"></span> Remove banner</b></a></li>
 	              <li class="divider"></li>
-	              <li><a href="#" class="friend"><b><span class="text-muted hidden" data-icon="&#xe080;"></span> Profile settings</b></a></li>
+	              <li><a href="javascript:;" data-toggle="modal" data-target="#total_utility_modal" class="change-profile-picture"><b><span class="text-muted" data-icon="&#xe07f;"></span> Change Profile Picture</b></a></li>
+	              <li><a href="#" class="friend"><b><span class="text-muted" data-icon="&#xe09a;"></span> Profile settings</b></a></li>
 	            </ul>
 	          </div>
 			';
@@ -119,12 +126,14 @@ class Profiles extends Eloquent {
 			//generate message button
 			$message_button = '<a href="'.$website_url.'/inbox/'.$username.'" class="btn btn-success btn-transparent btn-sm">Message</a>';
 			$more_button    = '';
+			$modal_data     = '';
 		}
 
-		//generate followers buton
+		//throw all profile data
 
 		return array(
 			"base_url"          => $website_url,
+			/* ----------- PROFILE DATA  ------------*/
 			"u_id"              => $data -> u_id,
 			"fullname"          => $data -> fullname,
 			"username"          => $username,
@@ -136,10 +145,13 @@ class Profiles extends Eloquent {
 			"college"           => $data -> college,
 			"relationship"      => $data -> relationship,
 			"profile_picture"   => $data -> profile_picture,
+			"banner"            => $data -> banner,
+			/* ----------- META DATA  ------------*/
 			"friendship_button" => $friendship_button,
 			"follow_button"     => $follow_button,
 			"message_button"    => $message_button,
-			"more_button"       => $more_button
+			"more_button"       => $more_button,
+			"modal_body"        => $modal_data
 		);
 	}
 

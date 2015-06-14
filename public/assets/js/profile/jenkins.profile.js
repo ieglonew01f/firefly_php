@@ -1,7 +1,10 @@
 //cache
 var change_banner_btn  = $('.change-banner');
 var file_change_banner = $('#file_banner');
-var banner_form        = $('form.banner_form')
+var banner_form        = $('form.banner_form');
+var banner_container   = $('div.well-banner');
+var banner_loader      = $('div.banner-loader');
+var handler            = {};
 
 //variables
 
@@ -16,20 +19,21 @@ var init = function(){
 	//ajax file upload listner
 	banner_form.ajaxForm({
 		beforeSend: function() { //before sending form
-			change_banner_btn.parents('.btn-group').find('button').html('<div id="delete_loader" class="loader loader-inner ball-pulse pull-right"><div></div><div></div><div></div></div>').attr('style','background:white');
+			banner_loader.show();
 		},
 		uploadProgress: function(event, position, total, percentComplete) { //on progress
-			//$(".bl-perc").html(percentComplete + '%') //update progressbar percent complete
+			banner_loader.find('span.text').text(' uploading... '+percentComplete+' %');
 		},
 		complete: function(response) { // on complete
-			//$('#banner-divp').attr('style','background: url(../themes/linda/assets/uploads/'+response.responseText+')');
-			//$('.body-loader').hide();
+			banner_loader.hide();
+			banner_container.attr('style','background:url("../uploads/'+response.responseText+'");background-size:cover;');
+			//alert(response.responseText);
 		}
 	});
 }
 
 //helpers
-var handler  = {
+handler  = {
 	click_file: function(){
 		file_change_banner.click();
 	},

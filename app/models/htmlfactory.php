@@ -10,6 +10,7 @@ class Htmlfactory {
 		* type = 2 -> for comments html data
 		* type = 3 -> for baking post card buttons
 		* type = 4 -> for profile setup
+		* type = 5 -> for generating profile picture change modal
 		*/
 
 		$base_path = 'http://localhost'; //change it to site url
@@ -174,6 +175,55 @@ class Htmlfactory {
 			}
 
 			return array('dom' => $dom, 'question' => $question_text, 'hidden' => $hidden);
+		}
+		else if($type === 5 || $type === "5"){
+			return '
+				<div class="buttons-container">
+					<button class="btn btn-transparent-primary btn-lg"><span data-icon="&#xe084;"></span> Upload from computer</button>
+					<button class="btn btn-transparent-primary btn-lg"><span data-icon="&#xe07f;"></span> Take a snapshot</button>
+					<button class="btn btn-transparent-primary btn-lg"><span data-icon="&#xe05f;"></span> Edit profile picture</button>
+				</div>
+				<hr class="hr-sm"/>
+				<p>Choose an avatar</p>
+				<div class="row">
+					<div class="col-xs-3">
+						<img class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/boy_1.jpg"></img>
+					</div>
+					<div class="col-xs-3">
+						<img class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/boy_2.jpg"></img>
+					</div>
+					<div class="col-xs-3">
+						<img class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/boy_3.jpg"></img>
+					</div>
+					<div class="col-xs-3">
+						<img class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/boy_4.jpg"></img>
+					</div>
+					<div class="col-xs-3">
+						<img class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/boy_5.jpg"></img>
+					</div>
+					<div class="col-xs-3">
+						<img class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/boy_6.jpg"></img>
+					</div>
+					<div class="col-xs-3">
+						<img class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/female_1.jpg"></img>
+					</div>
+					<div class="col-xs-3">
+						<img class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/female_2.jpg"></img>
+					</div>
+					<div class="col-xs-3">
+						<img class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/female_3.jpg"></img>
+					</div>
+					<div class="col-xs-3">
+						<img class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/female_4.jpg"></img>
+					</div>
+					<div class="col-xs-3">
+						<img class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/female_5.jpg"></img>
+					</div>
+					<div class="col-xs-3">
+						<img class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/female_6.jpg"></img>
+					</div>
+				</div>
+			';
 		}
 	}
 }

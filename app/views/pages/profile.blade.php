@@ -31,6 +31,7 @@
           </div>
       </div>
         @include('includes.utility')
+        @include('includes.modalcommon', $profile_data)
     </div>
 @stop
 @section('page_js')

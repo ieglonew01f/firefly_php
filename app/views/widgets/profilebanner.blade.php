@@ -1,16 +1,17 @@
 <div class="profile-banner-container">
-  <div class="well well-banner">
+  <div class="banner-loader"><div class="loader loader-inner ball-pulse"><div></div><div></div><div></div></div> <span data-icon="&#xe084;"></span><span class="text"></span></div>
+  <div class="well well-banner" @if ($banner) style="background:url('../uploads/{{ $banner }}');background-size:cover;" @endif>
     <div class="row">
       <div class="col-md-6">
-        <div class="media" style="margin-top:100px;color:white">
+        <div class="media media-profile">
           <div class="media-left">
             <a href="#">
               <img width="128" height="128" class="media-object profile-img" src="{{ $base_url}}/uploads/{{ $profile_picture }}">
             </a>
           </div>
           <div class="media-body media-align-bottom">
-            <h1 class="media-heading text-white">{{ $fullname }}</h1>
-            <small class="text-white">50 Followers - 20 Friends - 12 Following</small><br>
+            <h1 class="media-heading text-white text-shadow">{{ $fullname }}</h1>
+            <small class="text-white text-shadow">50 Followers - 20 Friends - 12 Following</small><br>
           </div>
         </div>
       </div>

@@ -25,6 +25,7 @@ var text_perc_com  = $("h4.complete-prec-txt");
 var progress_bar   = $("div.progress-bar");
 var current_c_perc = $('div.progress-bar').data('value');
 var profile_c_div  = $('div.profile-completion-panel');
+var handler_feeds  = {};
 
 //variables
 var data, matches, soundcloud, viemo, code, regExp, match, previous_comment_offset = 6, current_c_perc;
@@ -38,48 +39,48 @@ var scapiKey = "243727134d2c71ba214ef1ec60a371d3";
 //init function
 var init = function(){
 	//workers
-	handler.soundcloud_init();
-	handler.auto_grow();
+	handler_feeds.soundcloud_init();
+	handler_feeds.auto_grow();
 
 	//post status
-	status_button.click(handler.share_status);
-	text_status.bind('paste', handler.url_expander);
+	status_button.click(handler_feeds.share_status);
+	text_status.bind('paste', handler_feeds.url_expander);
 
 	//edit post
-	$(document).on('click', '.editpost', '', handler.edit_post);
-	$(document).on('click', '#done_editing', '', handler.save_edit_post);
-	$(document).on('click', '#close_edit', '', handler.close_edit_post);
+	$(document).on('click', '.editpost', '', handler_feeds.edit_post);
+	$(document).on('click', '#done_editing', '', handler_feeds.save_edit_post);
+	$(document).on('click', '#close_edit', '', handler_feeds.close_edit_post);
 
 	//delete post
-	$(document).on('click', '.deletepost', '', handler.delete_post);
-	$(document).on('click', '#confirm', '', handler.confirm_delete_post);
+	$(document).on('click', '.deletepost', '', handler_feeds.delete_post);
+	$(document).on('click', '#confirm', '', handler_feeds.confirm_delete_post);
 
 	//unlike and like handler
-	$(document).on('click', 'span.like', {type: "1"}, handler.like_unlike_handler);
-	$(document).on('click', 'span.unlike', {type: "2"}, handler.like_unlike_handler);
+	$(document).on('click', 'span.like', {type: "1"}, handler_feeds.like_unlike_handler);
+	$(document).on('click', 'span.unlike', {type: "2"}, handler_feeds.like_unlike_handler);
 
 	//adding comment
-	$(document).on('click', '#comments_btn', '', handler.openComments);
-	$(document).on('keydown', '#comment', '', handler.addComment);
+	$(document).on('click', '#comments_btn', '', handler_feeds.openComments);
+	$(document).on('keydown', '#comment', '', handler_feeds.addComment);
 
 	//edit comment
-	$(document).on('click', 'span.edit-comment', '', handler.edit_coment_opener);
-	$(document).on('click', 'button.comment-edit-closer', '', handler.edit_coment_closer);
-	$(document).on('click', 'button.comment-edit-save', '', handler.edit_coment_save);
-	$(document).on('click', 'span.delete-comment', '', handler.delete_comment_confirm);
-	$(document).on('click', '#confirm_delete_comment', '', handler.delete_comment);
+	$(document).on('click', 'span.edit-comment', '', handler_feeds.edit_coment_opener);
+	$(document).on('click', 'button.comment-edit-closer', '', handler_feeds.edit_coment_closer);
+	$(document).on('click', 'button.comment-edit-save', '', handler_feeds.edit_coment_save);
+	$(document).on('click', 'span.delete-comment', '', handler_feeds.delete_comment_confirm);
+	$(document).on('click', '#confirm_delete_comment', '', handler_feeds.delete_comment);
 
 	//view previous comments
-	$(document).on('click', '#view_prev_comm', '', handler.view_prev_comm);
+	$(document).on('click', '#view_prev_comm', '', handler_feeds.view_prev_comm);
 
 	//profile completion handler
-	next_question.click(handler.save_answer);
-	next_question.click(handler.skip_answer);
+	next_question.click(handler_feeds.save_answer);
+	next_question.click(handler_feeds.skip_answer);
 
 }
 
 //helpers
-var handler  = {
+handler_feeds  = {
 	show_next_profile_setup_data: function(column_name){
 		var dom = void(0);
 
@@ -472,7 +473,7 @@ var handler  = {
 				beforeSend: function(){
 					loader.removeClass("hidden");
 					status_button.attr("disabled","disabled");
-					handler.reset_oembd_data();
+					handler_feeds.reset_oembd_data();
 				},
 				success: function(html){
 					loader.addClass("hidden");
