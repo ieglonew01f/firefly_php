@@ -44,3 +44,5 @@ Route::post('/people_handler', 'ProfileController@people_handler');
 
 /*ROUTES FOR FILE UPLOADS LIKE CHANGEING BANNER*/
 Route::post('/change_banner', 'UploadController@change_banner');
+Route::post('/change_pp', 'UploadController@change_profile_picture');
+Route::post('/set_avatar', 'UploadController@set_avatar');

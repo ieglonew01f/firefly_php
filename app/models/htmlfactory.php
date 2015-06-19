@@ -179,48 +179,86 @@ class Htmlfactory {
 		else if($type === 5 || $type === "5"){
 			return '
 				<div class="buttons-container">
-					<button class="btn btn-transparent-primary btn-lg"><span data-icon="&#xe084;"></span> Upload from computer</button>
+					<button id="upload_from_computer" class="btn btn-transparent-primary btn-lg"><span data-icon="&#xe084;"></span> Upload from computer</button>
 					<button class="btn btn-transparent-primary btn-lg"><span data-icon="&#xe07f;"></span> Take a snapshot</button>
 					<button class="btn btn-transparent-primary btn-lg"><span data-icon="&#xe05f;"></span> Edit profile picture</button>
 				</div>
 				<hr class="hr-sm"/>
-				<p>Choose an avatar</p>
-				<div class="row">
-					<div class="col-xs-3">
-						<img class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/boy_1.jpg"></img>
-					</div>
-					<div class="col-xs-3">
-						<img class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/boy_2.jpg"></img>
-					</div>
-					<div class="col-xs-3">
-						<img class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/boy_3.jpg"></img>
-					</div>
-					<div class="col-xs-3">
-						<img class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/boy_4.jpg"></img>
-					</div>
-					<div class="col-xs-3">
-						<img class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/boy_5.jpg"></img>
-					</div>
-					<div class="col-xs-3">
-						<img class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/boy_6.jpg"></img>
-					</div>
-					<div class="col-xs-3">
-						<img class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/female_1.jpg"></img>
-					</div>
-					<div class="col-xs-3">
-						<img class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/female_2.jpg"></img>
-					</div>
-					<div class="col-xs-3">
-						<img class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/female_3.jpg"></img>
-					</div>
-					<div class="col-xs-3">
-						<img class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/female_4.jpg"></img>
-					</div>
-					<div class="col-xs-3">
-						<img class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/female_5.jpg"></img>
-					</div>
-					<div class="col-xs-3">
-						<img class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/female_6.jpg"></img>
+				<p>or you could pick an avatar</p>
+				<div class="slimscroll-avatar">
+					<div class="row">
+						<div class="col-xs-2">
+							<img data-name="boy_1.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/boy_1.jpg"></img>
+						</div>
+						<div class="col-xs-2">
+							<img data-name="boy_2.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/boy_2.jpg"></img>
+						</div>
+						<div class="col-xs-2">
+							<img data-name="boy_3.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/boy_3.jpg"></img>
+						</div>
+						<div class="col-xs-2">
+							<img data-name="boy_4.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/boy_4.jpg"></img>
+						</div>
+						<div class="col-xs-2">
+							<img data-name="boy_5.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/boy_5.jpg"></img>
+						</div>
+						<div class="col-xs-2">
+							<img data-name="boy_6.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/boy_6.jpg"></img>
+						</div>
+						<div class="col-xs-2">
+							<img data-name="female_1.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/female_1.jpg"></img>
+						</div>
+						<div class="col-xs-2">
+							<img data-name="female_2.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/female_2.jpg"></img>
+						</div>
+						<div class="col-xs-2">
+							<img data-name="female_3.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/female_3.jpg"></img>
+						</div>
+						<div class="col-xs-2">
+							<img data-name="female_4.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/female_4.jpg"></img>
+						</div>
+						<div class="col-xs-2">
+							<img data-name="female_5.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/female_5.jpg"></img>
+						</div>
+						<div class="col-xs-2">
+							<img data-name="female_6.jpg"  class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/female_6.jpg"></img>
+						</div>
+						<div class="col-xs-2">
+							<img data-name="boy_7.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/boy_7.jpg"></img>
+						</div>
+						<div class="col-xs-2">
+							<img data-name="boy_8.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/boy_8.jpg"></img>
+						</div>
+						<div class="col-xs-2">
+							<img data-name="boy_9.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/boy_9.jpg"></img>
+						</div>
+						<div class="col-xs-2">
+							<img data-name="boy_10.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/boy_10.jpg"></img>
+						</div>
+						<div class="col-xs-2">
+							<img data-name="boy_11.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/boy_11.jpg"></img>
+						</div>
+						<div class="col-xs-2">
+							<img data-name="female_7.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/female_7.jpg"></img>
+						</div>
+						<div class="col-xs-2">
+							<img data-name="female_8.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/female_8.jpg"></img>
+						</div>
+						<div class="col-xs-2">
+							<img data-name="female_9.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/female_9.jpg"></img>
+						</div>
+						<div class="col-xs-2">
+							<img data-name="female_10.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/female_10.jpg"></img>
+						</div>
+						<div class="col-xs-2">
+							<img data-name="female_11.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/female_11.jpg"></img>
+						</div>
+						<div class="col-xs-2">
+							<img data-name="female_12.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/female_12.jpg"></img>
+						</div>
+						<div class="col-xs-2">
+							<img data-name="female_13.jpg"  class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/female_13.jpg"></img>
+						</div>
 					</div>
 				</div>
 			';

@@ -12,14 +12,14 @@ class UploadController extends BaseController {
     |--------------------------------------------------------------------------
     |
     */
+
+    //change banner
     public function change_banner(){
          //save path
         $upload_folder  = $_SERVER['DOCUMENT_ROOT'];
         $upload_folder .= "/uploads/";
 
-        $file_name    = $_FILES['file']['name'];
-
-        $image = $this -> lossless_save($upload_folder, $_FILES['file']['name'], 0);
+        $image = $this -> lossless_save($upload_folder, $_FILES['file'], 0);
 
         //save to db
         $profile = new Profiles;
@@ -28,27 +28,132 @@ class UploadController extends BaseController {
         echo $image;
     }
 
-    private function lossless_save($save_path, $file_name, $type){
+    //set avatar 
+    public function set_avatar(){
+        $profile = new profiles;
+        $profile -> update_or_bake_profile_data(array('column_name' => 'profile_picture', 'value' => Input::get('avatarname'), 'profile_setup' => false));
+    }
+
+    //change profile picture
+    public function change_profile_picture(){
+         //save path
+        $upload_folder  = $_SERVER['DOCUMENT_ROOT'];
+        $upload_folder .= "/uploads/";
+
+        $image = $this -> crop_and_save($upload_folder, $_FILES['file'], 0);
+
+        //save to db
+        $profile = new Profiles;
+        $profile -> update_or_bake_profile_data(array('column_name' => 'profile_picture', 'value' => $image, 'profile_setup' => false));
+
+        echo $image;
+    }
+
+    private function lossless_save($save_path, $file, $type){
         //save path
         $upload_folder = $save_path;
         $RandomNumber  = rand(0, 9999999999); 
         $id            = Session::get('id');
 
         //Get file extension from Image name, this will be added after random name
-        $ImageExt = substr($file_name, strrpos($file_name, '.'));
+        $ImageExt = substr($file['name'], strrpos($file['name'], '.'));
         $ImageExt = str_replace('.','',$ImageExt);
         
         //remove extension from filename
-        $ImageName      = preg_replace("/\\.[^.\\s]{3,4}$/", "", $file_name); 
+        $ImageName      = preg_replace("/\\.[^.\\s]{3,4}$/", "", $file['name']); 
         
         //Construct a new name with random number and extension.
         $NewFileName = $ImageName.'-'.$RandomNumber.$id.'.'.$ImageExt;
-
-        $file_size = $_FILES['file']['size'];
-        $file_tmp  = $_FILES['file']['tmp_name'];
+        $file_tmp    = $file['tmp_name'];
 
         move_uploaded_file($file_tmp, $upload_folder.$NewFileName);
         return $NewFileName;
+    }
+
+    //crop and save
+    private function crop_and_save($save_path, $file, $type){
+        //save path
+        $upload_folder  = $save_path;
+        $_FILES['file'] = $file;
+
+        ################# SETTINGS###########################################
+        $ThumbSquareSize        = 500;      //Thumbnail
+        $BigImageMaxSize        = 1024;     //Image Maximum height or width
+        $ThumbPrefix            = "thumb_"; //Normal thumb Prefix
+        $DestinationDirectory   = $upload_folder;
+        $Quality                = 100;      //jpeg quality
+        #####################################################################
+        
+        
+        // check $_FILES['file'] not empty
+        if(!isset($_FILES['file']) || !is_uploaded_file($_FILES['file']['tmp_name']))
+        {
+                die('Something wrong with uploaded file, something missing!'); // output error when above checks fail.
+        }
+        
+        // Random number will be added after image name
+        $RandomNumber   = rand(0, 9999999999); 
+
+        $ImageName      = str_replace(' ','-',strtolower($_FILES['file']['name'])); //get image name
+        $ImageSize      = $_FILES['file']['size']; // get original image size
+        $TempSrc        = $_FILES['file']['tmp_name']; // Temp name of image file stored in PHP tmp folder
+        $ImageType      = $_FILES['file']['type']; //get file type, returns "image/png", image/jpeg, text/plain etc.
+
+        //Let's check allowed $ImageType, we use PHP SWITCH statement here
+        switch(strtolower($ImageType))
+        {
+            case 'image/png':
+                //Create a new image from file 
+                $CreatedImage =  imagecreatefrompng($_FILES['file']['tmp_name']);
+                break;
+            case 'image/gif':
+                $CreatedImage =  imagecreatefromgif($_FILES['file']['tmp_name']);
+                break;          
+            case 'image/jpeg':
+            case 'image/pjpeg':
+                $CreatedImage = imagecreatefromjpeg($_FILES['file']['tmp_name']);
+                break;
+            default:
+                die('Unsupported File!'); //output error and exit
+        }
+        
+        //PHP getimagesize() function returns height/width from image file stored in PHP tmp folder.
+        //Get first two values from image, width and height. 
+        //list assign svalues to $CurWidth,$CurHeight
+        list($CurWidth,$CurHeight)=getimagesize($TempSrc);
+        
+        //Get file extension from Image name, this will be added after random name
+        $ImageExt = substr($ImageName, strrpos($ImageName, '.'));
+        $ImageExt = str_replace('.','',$ImageExt);
+        
+        //remove extension from filename
+        $ImageName      = preg_replace("/\\.[^.\\s]{3,4}$/", "", $ImageName); 
+        
+        //Construct a new name with random number and extension.
+        $NewImageName = $ImageName.'-'.$RandomNumber.'.'.$ImageExt;
+        
+        //set the Destination Image
+        $thumb_DestRandImageName    = $DestinationDirectory.$ThumbPrefix.$NewImageName; //Thumbnail name with destination directory
+        $DestRandImageName          = $DestinationDirectory.$NewImageName; // Image with destination directory
+
+        //Resize image to Specified Size by calling resizeImage function.
+        if($this -> resizeImage($CurWidth,$CurHeight,$BigImageMaxSize,$DestRandImageName,$CreatedImage,$Quality,$ImageType))
+        {
+            //Create a square Thumbnail right after, this time we are using cropImage() function
+            if(!$this -> cropImage($CurWidth,$CurHeight,$ThumbSquareSize,$thumb_DestRandImageName,$CreatedImage,$Quality,$ImageType))
+                {
+                    echo 'Error Creating thumbnail';
+                }
+                
+            //updating 
+
+            return $NewImageName;
+           
+
+
+        }else{
+            die('Resize Error'); //output error
+        } 
     }
 
 

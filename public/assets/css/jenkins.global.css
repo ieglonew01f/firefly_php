@@ -2275,9 +2275,9 @@ font-size: 15px;
   margin-top:100px;
 }
 .img-cthumbnail{
-  width: 100px;
+  width: 60px;
   border-radius: 5px;
-  height: 100px;
+  height: 60px;
   cursor: pointer;
   margin-bottom: 10px;
   border: 1px solid rgb(79, 147, 190);

@@ -48,3 +48,7 @@
     <input type="file" name="file" id="file_banner" class="hidden"/>
     <input type="hidden" name="type" value="1"/>
 </form>
+<form id="form_change_profile_picture" method="post" enctype="multipart/form-data" action="/change_pp">
+    <input type="file" name="file" id="file_pp" class="hidden"/>
+    <input type="hidden" name="type" value="1"/>
+</form>
