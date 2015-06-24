@@ -42,6 +42,24 @@ class Htmlfactory {
 						<iframe width="100%" class="margin-top-sm" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/'.$data['vcode'].'&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true"></iframe>
 						';
 			}
+			else if($data['type'] === "3" || $data['type'] === 3){ //photo feed
+				$img_list = '';
+				$counter  = 4;
+				foreach($data['images'] as $images){
+					$img_list .= '<div class="item"><img src="'.$base_path.'/uploads/'.$images.'"></img></div>';
+
+					if($counter == 0) break; //load only 4 images
+
+					$counter --;
+				}
+
+				$content = '	
+						<p class="mrt10">'.$data['content'].'</p>
+						<div class="img-collage-div">
+							'.$img_list.'
+						</div>
+						';
+			}
 			return '
 	            <div data-id="'.$data['feed_id'].'" class="post-container">
 	              <div class="post-cards">

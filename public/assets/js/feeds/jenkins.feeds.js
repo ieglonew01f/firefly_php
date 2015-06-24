@@ -1,35 +1,38 @@
 //cache
-var status_button  = $("#status_button");
-var text_status    = $("#status");
-var edit_text      = $("#edit_text");
-var loader         = $("#loader");
-var feed_content   = $("#feeds_cont");
-var video_frame    = $("#video_frame");
-var edit_post      = $("li.editpost");
-var delete_post    = $("li.deletepost");
-var post_card      = $("div.post-container");
-var edit_panel     = $("#edit_panel");
-var save_editing   = $("#done_editing");
-var sc_widget      = $("#scWidget");
-var close_edit     = $("#close_edit");
-var utility_modal  = $("#utility_modal");
-var confirm        = $("#confirm");
-var comments_btn   = $("#comments_btn");
-var skip_question  = $("#skip_question");
-var next_question  = $("#next_question");
-var question_div   = $(".question-container");
-var question       = $("div.question-bank p");
-var input_content  = $("div.input-container");
-var answer         = $("#answer");
-var text_perc_com  = $("h4.complete-prec-txt");
-var progress_bar   = $("div.progress-bar");
-var current_c_perc = $('div.progress-bar').data('value');
-var profile_c_div  = $('div.profile-completion-panel');
-var handler_feeds  = {};
+var status_button     = $("#status_button");
+var text_status       = $("#status");
+var edit_text         = $("#edit_text");
+var loader            = $("#loader");
+var feed_content      = $("#feeds_cont");
+var video_frame       = $("#video_frame");
+var edit_post         = $("li.editpost");
+var delete_post       = $("li.deletepost");
+var post_card         = $("div.post-container");
+var edit_panel        = $("#edit_panel");
+var save_editing      = $("#done_editing");
+var sc_widget         = $("#scWidget");
+var close_edit        = $("#close_edit");
+var utility_modal     = $("#utility_modal");
+var confirm           = $("#confirm");
+var comments_btn      = $("#comments_btn");
+var skip_question     = $("#skip_question");
+var next_question     = $("#next_question");
+var question_div      = $(".question-container");
+var question          = $("div.question-bank p");
+var input_content     = $("div.input-container");
+var answer            = $("#answer");
+var text_perc_com     = $("h4.complete-prec-txt");
+var progress_bar      = $("div.progress-bar");
+var current_c_perc    = $('div.progress-bar').data('value');
+var profile_c_div     = $('div.profile-completion-panel');
+var photo_select      = $('li.photo-select');
+var photo_upload      = $('#photo_upload');
+var photo_upload_form = $('#photo_update_form');
+var status_img_div    = $('.status-img-container').find('.row');
 
 //variables
-var data, matches, soundcloud, viemo, code, regExp, match, previous_comment_offset = 6, current_c_perc;
-var youtube_vtitle, youtube_vdesc, youtube_vthumb, youtube_vcode, global_SoundCloud_Link, comment_card_obj, post_card_obj,exec = 0, multiples, remainder;
+var data, matches, soundcloud, viemo, code, regExp, match, previous_comment_offset = 6, current_c_perc, handler_feeds = {}, photo_array = [];
+var youtube_vtitle, youtube_vdesc, youtube_vthumb, youtube_vcode, global_SoundCloud_Link, comment_card_obj, post_card_obj,exec = 0, multiples, remainder, isPhotoUpdate = false;
 
 /* SET API KEY FOR YOUTUBE */
 var apiKey = "AIzaSyDLAPqnX5JQ6bqcxZJaxrlaFRLqCQMBZQM";
@@ -38,9 +41,11 @@ var scapiKey = "243727134d2c71ba214ef1ec60a371d3";
 
 //init function
 var init = function(){
+
 	//workers
 	handler_feeds.soundcloud_init();
 	handler_feeds.auto_grow();
+	handler_feeds.init_photo_grid({gutter: 1});
 
 	//post status
 	status_button.click(handler_feeds.share_status);
@@ -77,10 +82,42 @@ var init = function(){
 	next_question.click(handler_feeds.save_answer);
 	next_question.click(handler_feeds.skip_answer);
 
+	//image status handlers
+	photo_select.click(handler_feeds.click_file);
+	$(document).on('click', '.upload-next-img-div', '', handler_feeds.click_file);
+	photo_upload.change(handler_feeds.submit_photo_upload_form);
+
+	//ajax file upload listner
+	photo_upload_form.ajaxForm({
+		beforeSend: function() { //before sending form
+			$('.next-img-col').remove();
+			status_img_div.append('<div class="col-xs-2 loader-col"><div class="upload-progress-div"><div class="progress tiny-progress-bar"><div class="progress-bar progress-bar-striped active upload-progress-div-progress-bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"></div></div></div>');
+		},
+		uploadProgress: function(event, position, total, percentComplete) { //on progress
+			$('.upload-progress-div-progress-bar').attr('style', 'width:'+percentComplete+'%');
+		},
+		complete: function(response) { // on complete
+			$('.loader-col').remove();
+			status_img_div.append('<div class="col-xs-2 img-col"><img class="img-uploads-stdiv" src="uploads/thumb_'+response.responseText+'"></img></div>');
+			status_img_div.append('<div class="col-xs-2 next-img-col"><div class="upload-next-img-div"><i class="fa fa-plus"></i></div>');
+			photo_array.push(response.responseText);
+		}
+	});
 }
 
 //helpers
 handler_feeds  = {
+	init_photo_grid: function(options){
+		$('.img-collage-div').gridalicious(options);
+	},
+	submit_photo_upload_form: function(){
+		photo_upload_form.submit();
+	},
+	//for file upload / photo update
+	click_file: function(){
+		photo_upload.click();
+		isPhotoUpdate = true;
+	},
 	show_next_profile_setup_data: function(column_name){
 		var dom = void(0);
 
@@ -449,23 +486,58 @@ handler_feeds  = {
 		}
 		else if(soundcloud){ //for soundcloud
 			var res = data.split('.com/',2);
-			handler.soundcloud_embed(res[1]);
-			handler.soundcloud_trackId(data);
+			handler_feeds.soundcloud_embed(res[1]);
+			handler_feeds.soundcloud_trackId(data);
 			status_button.text('Share this sound');
 		}
 	},
 	share_status: function(){
-		if(text_status != ""){
+		var status = text_status.val().replace(/\r\n|\r|\n/g,"<br />");
+		if(status != "" || isPhotoUpdate == true || global_SoundCloud_Link != "" || code != ""){
 			//if a youtube video
 			if(code){
-				var dataString = "content="+text_status.val()+"&youtube_vcode="+youtube_vcode+"&youtube_vthumb="+youtube_vthumb+"&youtube_vdesc="+youtube_vdesc+"&youtube_vtitle="+youtube_vtitle+"&type="+1;		
+				var dataString = "content="+status+"&youtube_vcode="+youtube_vcode+"&youtube_vthumb="+youtube_vthumb+"&youtube_vdesc="+youtube_vdesc+"&youtube_vtitle="+youtube_vtitle+"&type="+1;		
 			}
 			else if(global_SoundCloud_Link){ //if sound cloud
-				var dataString = "content="+text_status.val()+"&soundcloud_code="+global_SoundCloud_Link+"&type="+2;	
+				var dataString = "content="+status+"&soundcloud_code="+global_SoundCloud_Link+"&type="+2;	
+			}
+			else if(isPhotoUpdate){ //if a photo update
+				var dataString = {content: status, photo_array: photo_array}
+				dataString     = JSON.stringify(dataString);
+				$.ajax({
+				    type  : 'POST',
+				    url   : '/bake_photo_update',
+				    data  : {data : dataString},
+					beforeSend: function(){
+						loader.removeClass("hidden");
+						status_button.attr("disabled","disabled");
+						handler_feeds.reset_oembd_data();
+					},
+					success: function(html){
+						loader.addClass("hidden");
+						$(html).hide().prependTo(feed_content).fadeIn("slow");
+						text_status.val('');
+						status_button.removeAttr("disabled").text("share");
+						video_frame.addClass("hidden");
+						isPhotoUpdate = false;
+						global_SoundCloud_Link = '';
+						code = '';
+						status_img_div.empty();
+					},
+					complete: function(responseText){ 
+						handler_feeds.init_photo_grid({gutter: 5});
+					},
+					error: function(XMLHttpRequest, textStatus, errorThrown) {
+					    alert(errorThrown)
+					}
+				});
+
+				return;
 			}
 			else{
-				var dataString = "content="+text_status.val()+"&type="+0;
+				var dataString = "content="+status+"&type="+0;
 			}
+
 			$.ajax({
 			    type  : 'POST',
 			    url   : '/share_post',
@@ -478,9 +550,12 @@ handler_feeds  = {
 				success: function(html){
 					loader.addClass("hidden");
 					$(html).hide().prependTo(feed_content).fadeIn("slow");
-					text_status.val("");
+					text_status.val('');
 					status_button.removeAttr("disabled").text("share");
 					video_frame.addClass("hidden");
+					isPhotoUpdate = false;
+					global_SoundCloud_Link = '';
+					code = '';
 				},
 				complete: function(responseText){ 
 

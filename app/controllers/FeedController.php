@@ -60,6 +60,24 @@ class FeedController extends BaseController {
 		return $feeds -> insert_post($data);
 	}
 
+	//for image update / photo update special function causes its json bitches !
+	public function bake_special_post()
+	{
+		$feeds = new feeds;
+		$data = json_decode(Input::get('data'));
+
+		$data  = array(
+			"content" => $data -> content,
+			"images"  => $data -> photo_array,
+			"u_id"    => Session::get('id'),
+			"type"    => 3, // for image update
+			"created" => time()
+		);
+
+		return $feeds -> insert_post($data);
+
+	}
+
 	public function edit_post(){
 		$data  = array(
 			"feed_id"    => Input::get('feed_id'),

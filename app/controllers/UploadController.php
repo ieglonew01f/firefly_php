@@ -13,6 +13,22 @@ class UploadController extends BaseController {
     |
     */
 
+    //photo update
+    public function photo_update(){
+       // sleep(5);
+         //save path
+        $upload_folder  = $_SERVER['DOCUMENT_ROOT'];
+        $upload_folder .= "/uploads/";
+
+        $image = $this -> crop_and_save($upload_folder, $_FILES['file'], 0);
+
+        //save to db
+        //$profile = new Profiles;
+        //$profile -> update_or_bake_profile_data(array('column_name' => 'profile_picture', 'value' => $image, 'profile_setup' => false));
+
+        echo $image;
+    }
+
     //change banner
     public function change_banner(){
          //save path

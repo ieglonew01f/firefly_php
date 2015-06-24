@@ -6,6 +6,7 @@
     <!-- JQUERY PLUGINS -->
     {{ HTML::script('public/assets/js/plugins/jquery.validate.min.js'); }}
     {{ HTML::script('public/assets/js/plugins/jquery.slimscroll.min.js'); }}
+    {{ HTML::script('public/assets/js/plugins/jquery.grid-a-licious.min.js'); }}
     <!-- EOF PLUGINS -->
     
     <!-- PAGE LEVEL SCRIPTS -->
