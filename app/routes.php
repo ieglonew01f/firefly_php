@@ -36,6 +36,7 @@ Route::post('/edit_comment', 'FeedController@edit_comment');
 Route::post('/delete_comment', 'FeedController@delete_comment');
 Route::post('/show_comment', 'FeedController@show_comment');
 Route::post('/bake_photo_update', 'FeedController@bake_special_post');
+Route::post('/get_photo_gallery_data', 'FeedController@get_photo_gallery_data');
 
 /*ROUTES FOR PROFILE COMPLETION*/
 Route::post('/bake_profile', 'ProfileController@bake_profile');
@@ -48,3 +49,4 @@ Route::post('/change_banner', 'UploadController@change_banner');
 Route::post('/change_pp', 'UploadController@change_profile_picture');
 Route::post('/set_avatar', 'UploadController@set_avatar');
 Route::post('/photo_update', 'UploadController@photo_update');
+

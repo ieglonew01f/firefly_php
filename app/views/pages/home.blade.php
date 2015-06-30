@@ -26,6 +26,7 @@
           </div>
       </div>
         @include('includes.utility')
+        @include('widgets.photoViewer')
     </div>
 @stop
 @section('page_js')

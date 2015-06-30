@@ -1,34 +1,38 @@
 //cache
-var status_button     = $("#status_button");
-var text_status       = $("#status");
-var edit_text         = $("#edit_text");
-var loader            = $("#loader");
-var feed_content      = $("#feeds_cont");
-var video_frame       = $("#video_frame");
-var edit_post         = $("li.editpost");
-var delete_post       = $("li.deletepost");
-var post_card         = $("div.post-container");
-var edit_panel        = $("#edit_panel");
-var save_editing      = $("#done_editing");
-var sc_widget         = $("#scWidget");
-var close_edit        = $("#close_edit");
-var utility_modal     = $("#utility_modal");
-var confirm           = $("#confirm");
-var comments_btn      = $("#comments_btn");
-var skip_question     = $("#skip_question");
-var next_question     = $("#next_question");
-var question_div      = $(".question-container");
-var question          = $("div.question-bank p");
-var input_content     = $("div.input-container");
-var answer            = $("#answer");
-var text_perc_com     = $("h4.complete-prec-txt");
-var progress_bar      = $("div.progress-bar");
-var current_c_perc    = $('div.progress-bar').data('value');
-var profile_c_div     = $('div.profile-completion-panel');
-var photo_select      = $('li.photo-select');
-var photo_upload      = $('#photo_upload');
-var photo_upload_form = $('#photo_update_form');
-var status_img_div    = $('.status-img-container').find('.row');
+var status_button         = $("#status_button");
+var text_status           = $("#status");
+var edit_text             = $("#edit_text");
+var loader                = $("#loader");
+var feed_content          = $("#feeds_cont");
+var video_frame           = $("#video_frame");
+var edit_post             = $("li.editpost");
+var delete_post           = $("li.deletepost");
+var post_card             = $("div.post-container");
+var edit_panel            = $("#edit_panel");
+var save_editing          = $("#done_editing");
+var sc_widget             = $("#scWidget");
+var close_edit            = $("#close_edit");
+var utility_modal         = $("#utility_modal");
+var confirm               = $("#confirm");
+var comments_btn          = $("#comments_btn");
+var skip_question         = $("#skip_question");
+var next_question         = $("#next_question");
+var question_div          = $(".question-container");
+var question              = $("div.question-bank p");
+var input_content         = $("div.input-container");
+var answer                = $("#answer");
+var text_perc_com         = $("h4.complete-prec-txt");
+var progress_bar          = $("div.progress-bar");
+var current_c_perc        = $('div.progress-bar').data('value');
+var profile_c_div         = $('div.profile-completion-panel');
+var photo_select          = $('li.photo-select');
+var photo_upload          = $('#photo_upload');
+var photo_upload_form     = $('#photo_update_form');
+var status_img_div        = $('.status-img-container').find('.row');
+var feedPhotos            = $('.feedPhotos');
+var viewerModal           = $('#viewerModal');
+var viewerDialogMediaBody = $('#viewerDialogMediaBody');
+var img_gallery_cnt       = $('.img-container');
 
 //variables
 var data, matches, soundcloud, viemo, code, regExp, match, previous_comment_offset = 6, current_c_perc, handler_feeds = {}, photo_array = [];
@@ -41,7 +45,6 @@ var scapiKey = "243727134d2c71ba214ef1ec60a371d3";
 
 //init function
 var init = function(){
-
 	//workers
 	handler_feeds.soundcloud_init();
 	handler_feeds.auto_grow();
@@ -82,10 +85,13 @@ var init = function(){
 	next_question.click(handler_feeds.save_answer);
 	next_question.click(handler_feeds.skip_answer);
 
-	//image status handlers
+	//image and image status handlers
 	photo_select.click(handler_feeds.click_file);
 	$(document).on('click', '.upload-next-img-div', '', handler_feeds.click_file);
 	photo_upload.change(handler_feeds.submit_photo_upload_form);
+
+	//on click view lightbox for photos
+	feedPhotos.click(handler_feeds.showPhotoAlbum)
 
 	//ajax file upload listner
 	photo_upload_form.ajaxForm({
@@ -107,6 +113,53 @@ var init = function(){
 
 //helpers
 handler_feeds  = {
+	timestampToDate: function(timestamp){
+		return jsDate = new Date(timestamp*1000);
+	},
+	showPhotoAlbum: function(){
+		//loop and set image data
+		var dom_data    = [];
+		var clicked_img = $(this).data('img');
+		//load feed photo gallery data from feed
+		var dataString = 'feed_id=' + $(this).data('id') + '&image=' + clicked_img;
+		$.ajax({
+		    type     : 'POST',
+		    url      : '/get_photo_gallery_data',
+		    data     : dataString,
+		    dataType : 'json',
+			beforeSend: function(){
+				$('.img-container').empty();
+			},
+			success: function(data){
+				var created = handler_feeds.timestampToDate(data.user_data.created).toDateString();
+				viewerDialogMediaBody.children('.media-body').find('h4').text(data.user_data.fullname); //setting fullname
+				viewerDialogMediaBody.children('.media-left').find('a').attr('href', '/profile/'+data.user_data.username+''); //setting href for profile
+				viewerDialogMediaBody.children('.media-left').find('a').children('img').attr('src', '/uploads/'+data.user_data.profile_picture+''); //setting profile picture
+				viewerDialogMediaBody.children('.media-body').find('small').text(created) //set the time when post was created 
+
+				//set clicked image as first
+				dom_data.push({ image: 'http://localhost/uploads/'+clicked_img})
+
+				$.each(data.images, function(index, data) {
+				    dom_data.push({ image: 'http://localhost/uploads/'+data.image})
+				});
+
+			},
+			complete: function(responseTet){ 
+
+				viewerModal.modal('show');
+		        Galleria.loadTheme('http://localhost/public/assets/js/plugins/jqueryImageSlider/themes/classic/galleria.classic.js');
+
+		        Galleria.run('.img-container', {
+				    dataSource: dom_data,
+				});
+
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
+			    alert(errorThrown)
+			}
+		});
+	},
 	init_photo_grid: function(options){
 		$('.img-collage-div').gridalicious(options);
 	},

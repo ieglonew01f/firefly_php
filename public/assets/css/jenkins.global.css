@@ -2336,3 +2336,43 @@ font-size: 15px;
 .upload-next-img-div:hover{
  border: 1px solid rgb(21, 140, 186);
 }
+.viewerDialog{
+  margin-top: 150px;
+  max-width: 1300px;
+  min-width: 1200px;
+}
+.padding-none{
+  padding:0px;
+}
+.viewerModalImage{
+  overflow:hidden;
+  height: 550px;
+}
+.viewerModalImage > .img-container{
+  background-size: cover !important;
+  width: 100%;
+  height: 100%;
+}
+.npr{
+  padding-right:0px;
+}
+.npl{
+  padding-left:0px;
+}
+.viewerDialogProfile{
+  padding:15px;
+}
+.media-left, .media-right, .media-body {
+  padding-left:1px;
+}
+.viewerDialogComments{
+  margin-top:10px;
+}
+.comment-withbg{
+  padding:10px;
+  margin-bottom:5px;
+  background-color: aliceblue;
+}
+.feedPhotos{
+  cursor:pointer;
+}

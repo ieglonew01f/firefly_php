@@ -15,16 +15,11 @@ class UploadController extends BaseController {
 
     //photo update
     public function photo_update(){
-       // sleep(5);
          //save path
         $upload_folder  = $_SERVER['DOCUMENT_ROOT'];
         $upload_folder .= "/uploads/";
 
-        $image = $this -> crop_and_save($upload_folder, $_FILES['file'], 0);
-
-        //save to db
-        //$profile = new Profiles;
-        //$profile -> update_or_bake_profile_data(array('column_name' => 'profile_picture', 'value' => $image, 'profile_setup' => false));
+        $image = $this -> crop_and_save($upload_folder, $_FILES['file'], 0, 250, 4096);
 
         echo $image;
     }
@@ -56,7 +51,7 @@ class UploadController extends BaseController {
         $upload_folder  = $_SERVER['DOCUMENT_ROOT'];
         $upload_folder .= "/uploads/";
 
-        $image = $this -> crop_and_save($upload_folder, $_FILES['file'], 0);
+        $image = $this -> crop_and_save($upload_folder, $_FILES['file'], 0, 500, 2048);
 
         //save to db
         $profile = new Profiles;
@@ -87,14 +82,12 @@ class UploadController extends BaseController {
     }
 
     //crop and save
-    private function crop_and_save($save_path, $file, $type){
+    private function crop_and_save($save_path, $file, $type, $ThumbSquareSize, $BigImageMaxSize){
         //save path
         $upload_folder  = $save_path;
         $_FILES['file'] = $file;
 
-        ################# SETTINGS###########################################
-        $ThumbSquareSize        = 500;      //Thumbnail
-        $BigImageMaxSize        = 1024;     //Image Maximum height or width
+        ##########################SETTINGS###################################
         $ThumbPrefix            = "thumb_"; //Normal thumb Prefix
         $DestinationDirectory   = $upload_folder;
         $Quality                = 100;      //jpeg quality

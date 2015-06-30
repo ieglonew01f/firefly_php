@@ -163,4 +163,10 @@ class FeedController extends BaseController {
 
 		return $feeds -> show_comment_data($data);
 	}
+
+	//gets feed details for photo gallery
+	public function get_photo_gallery_data(){
+		$feeds = new feeds;
+		return $feeds -> load_photo_gallery_data(Input::all());
+	}
 }

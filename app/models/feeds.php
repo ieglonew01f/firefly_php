@@ -490,4 +490,23 @@ class Feeds extends Eloquent {
 
 		return $comment_array;
 	}
+
+	//bake photo gallery
+	public function load_photo_gallery_data($data){
+		$feed_id = $data['feed_id'];
+		$imgs    = array();
+		//get user details by feed_id
+		$user = DB::table('users')->join('feeds', 'users.id', '=', 'feeds.u_id')->join('users_profile', 'users.id', '=', 'users_profile.u_id')->where('feeds.id', '=', $feed_id)->first();
+
+		//getting image data
+		$images = DB::table('photo_update')->where('feed_id', $feed_id)->where('image', '!=', $data['image'])->get();
+
+		foreach($images as $images){
+			array_push($imgs, $images);
+		}
+
+		$result = array("user_data" => $user, "images" => $imgs);
+
+		return json_encode($result);
+	}
 }

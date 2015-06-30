@@ -46,7 +46,7 @@ class Htmlfactory {
 				$img_list = '';
 				$counter  = 4;
 				foreach($data['images'] as $images){
-					$img_list .= '<div class="item"><img src="'.$base_path.'/uploads/'.$images.'"></img></div>';
+					$img_list .= '<div class="item"><img width="10" class="feedPhotos" data-id="'.$data['feed_id'].'" data-img="'.$images.'" src="'.$base_path.'/uploads/'.$images.'"></img></div>';
 
 					if($counter == 0) break; //load only 4 images
 
