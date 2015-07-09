@@ -5,7 +5,7 @@
       <div class="col-md-6">
         <div class="media media-profile">
           <div class="media-left">
-            <a href="#">
+            <a href="{{ $base_url}}/profile/{{ $username }}">
               <img width="128" height="128" class="media-object profile-img" src="{{ $base_url}}/uploads/{{ $profile_picture }}">
             </a>
           </div>

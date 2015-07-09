@@ -15,6 +15,14 @@ class Htmlfactory {
 
 		$base_path = 'http://localhost'; //change it to site url
 
+		//session data
+		$u_id_session            = Session::get('id');
+		$fullname_session        = Session::get('fullname');
+		$username_session        = Session::get('username');
+		$profile_picture_session = DB::table('users_profile')->where('u_id', $u_id_session)->first()->profile_picture; //get session user profile
+
+
+
 		if($type === "1" || $type === 1){ //post card
 			if($data['type'] === "0" || $data['type'] === 0){ //normal feed
 				$content = '<p class="mrt10">'.$data['content'].'</p>';
@@ -46,7 +54,7 @@ class Htmlfactory {
 				$img_list = '';
 				$counter  = 4;
 				foreach($data['images'] as $images){
-					$img_list .= '<div class="item"><img width="10" class="feedPhotos" data-id="'.$data['feed_id'].'" data-img="'.$images.'" src="'.$base_path.'/uploads/'.$images.'"></img></div>';
+					$img_list .= '<div class="item"><img width="100" class="feedPhotos" data-id="'.$data['feed_id'].'" data-img="'.$images.'" src="'.$base_path.'/uploads/'.$images.'"></img></div>';
 
 					if($counter == 0) break; //load only 4 images
 
@@ -109,8 +117,8 @@ class Htmlfactory {
 		                <div class="comment-input">
 			                <div class="media nmt">
 			                  <div class="media-left">
-			                    <a href="#">
-			                      <img width="38" height="38" class="media-object" src="public/assets/img/avatars/man_2.jpg">
+			                    <a href="'.$base_path.'/profile/'.$username_session.'">
+			                      <img width="38" height="38" class="media-object" src="'.$base_path.'/uploads/'.$profile_picture_session.'">
 			                    </a>
 			                  </div>
 			                  <div class="media-body">
@@ -127,8 +135,8 @@ class Htmlfactory {
         	<div data-id="'.$data['comment_id'].'" class="comment">
                 <div class="media nmt">
                   <div class="media-left">
-                    <a href="#">
-                      <img width="32" height="32" class="media-object" src="public/assets/img/avatars/man_2.jpg">
+                    <a href="'.$base_path.'/profile/'.$data['username'].'">
+                      <img width="32" height="32" class="media-object" src="'.$base_path.'/uploads/'.$data['profile_picture'].'">
                     </a>
                   </div>
                   <div class="media-body">
@@ -145,7 +153,7 @@ class Htmlfactory {
 		                    </li>	
 		                </ul>
 	                </div>
-                    <p class="nmt"><span data-type="2" class="button-tiny '.$data['is_liked'].' '.$data['like_class'].'" data-icon="&#xe068;"> <i class="text-bold text-primary">'.$data['comment_likes_count'].'</i></span> &nbsp; <span class="button-tiny" data-icon="&#xe051;"></span> &nbsp; <span class="button-tiny edit-comment '.$data['delete_edit_class'].'" data-icon="&#xe060;"></span> &nbsp; <span class="button-tiny delete-comment fs15spandeletecom '.$data['delete_edit_class'].'" data-icon="&#xe082;"></span><p>
+                    <p class="nmt"><span data-type="2" class="button-tiny '.$data['is_liked'].' '.$data['like_class'].'" data-icon="&#xe068;"> <i class="text-bold text-primary">'.$data['comment_likes_count'].'</i></span> &nbsp; <span class="button-tiny edit-comment '.$data['delete_edit_class'].'" data-icon="&#xe060;"></span> &nbsp; <span class="button-tiny delete-comment fs15spandeletecom '.$data['delete_edit_class'].'" data-icon="&#xe082;"></span><p>
                   </div>
                 </div>
             </div>

@@ -26,7 +26,7 @@
           </div>
       </div>
         @include('includes.utility')
-        @include('widgets.photoViewer')
+        @include('widgets.photoViewer', $profile_data)
     </div>
 @stop
 @section('page_js')

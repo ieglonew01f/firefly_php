@@ -32,7 +32,7 @@
       </div>
         @include('includes.utility')
         @include('includes.modalcommon', $profile_data)
-        @include('widgets.photoViewer')
+        @include('widgets.photoViewer', $profile_data)
     </div>
 @stop
 @section('page_js')

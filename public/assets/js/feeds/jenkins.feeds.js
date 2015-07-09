@@ -33,7 +33,10 @@ var feedPhotos            = $('.feedPhotos');
 var viewerModal           = $('#viewerModal');
 var viewerDialogMediaBody = $('#viewerDialogMediaBody');
 var img_gallery_cnt       = $('.img-container');
-
+var gallery_comments      = $("#gallery_comments");
+var input_comment_gallery = $('input#comment_gallery');
+var gallery_loader        = $("#gallery_comment_loader");
+var gallery_comment_count = $("#comments_count");
 //variables
 var data, matches, soundcloud, viemo, code, regExp, match, previous_comment_offset = 6, current_c_perc, handler_feeds = {}, photo_array = [];
 var youtube_vtitle, youtube_vdesc, youtube_vthumb, youtube_vcode, global_SoundCloud_Link, comment_card_obj, post_card_obj,exec = 0, multiples, remainder, isPhotoUpdate = false;
@@ -70,6 +73,8 @@ var init = function(){
 	//adding comment
 	$(document).on('click', '#comments_btn', '', handler_feeds.openComments);
 	$(document).on('keydown', '#comment', '', handler_feeds.addComment);
+	//add comments for comment_gallery
+	$(document).on('keydown', '#comment_gallery', '', handler_feeds.addComment_gallery);
 
 	//edit comment
 	$(document).on('click', 'span.edit-comment', '', handler_feeds.edit_coment_opener);
@@ -91,7 +96,7 @@ var init = function(){
 	photo_upload.change(handler_feeds.submit_photo_upload_form);
 
 	//on click view lightbox for photos
-	feedPhotos.click(handler_feeds.showPhotoAlbum)
+	$(document).on('click', '.feedPhotos', '', handler_feeds.showPhotoAlbum);
 
 	//ajax file upload listner
 	photo_upload_form.ajaxForm({
@@ -109,10 +114,64 @@ var init = function(){
 			photo_array.push(response.responseText);
 		}
 	});
+
+	//when user clicks the next image on image gallery load its comments
+	// bind the method to Galleria.ready
+	Galleria.ready(function(options) {
+	    this.bind('image', function(e) { //on next or prev image
+	       var image = this.getActiveImage().src.split('/')[4];
+	       input_comment_gallery.attr('data-image', image);
+	       //send ajax request with the image name and load its comments
+	       var dataString = "image="+image;
+			$.ajax({
+			    type  : 'POST',
+			    url   : '/show_gallery_comments',
+			    data  : dataString,
+				beforeSend: function(){
+					gallery_comments.empty();
+					gallery_loader.removeClass('hidden');
+				},
+				success: function(html){
+					gallery_comments.append(html);
+				},
+				complete: function(responseText){ 
+					gallery_loader.addClass('hidden');
+				},
+				error: function(XMLHttpRequest, textStatus, errorThrown) {
+				    alert(errorThrown)
+				}
+			});
+	    });
+	});
 }
 
-//helpers
+/* =============================================== HELPERS ==============================================*/
+
 handler_feeds  = {
+	addComment_gallery: function(e){
+		var keyCode    = e.keyCode || e.which;
+		var thisObj    = $(this);
+		var dataString = "feed_id="+$(this).data('feed')+"&image="+$(this).data('image')+"&comment="+$(this).val();
+		if (keyCode == 13){
+			$.ajax({
+			    type  : 'POST',
+			    url   : '/add_comment',
+			    data  : dataString,
+				beforeSend: function(){
+
+				},
+				success: function(html){
+					gallery_comments.append(html);
+				},
+				complete: function(responseText){ 
+					thisObj.val("");
+				},
+				error: function(XMLHttpRequest, textStatus, errorThrown) {
+				    alert(errorThrown)
+				}
+			});
+		}
+	},
 	timestampToDate: function(timestamp){
 		return jsDate = new Date(timestamp*1000);
 	},
@@ -120,6 +179,7 @@ handler_feeds  = {
 		//loop and set image data
 		var dom_data    = [];
 		var clicked_img = $(this).data('img');
+		var thisObj     = $(this);
 		//load feed photo gallery data from feed
 		var dataString = 'feed_id=' + $(this).data('id') + '&image=' + clicked_img;
 		$.ajax({
@@ -129,6 +189,7 @@ handler_feeds  = {
 		    dataType : 'json',
 			beforeSend: function(){
 				$('.img-container').empty();
+				gallery_comments.empty();
 			},
 			success: function(data){
 				var created = handler_feeds.timestampToDate(data.user_data.created).toDateString();
@@ -137,11 +198,14 @@ handler_feeds  = {
 				viewerDialogMediaBody.children('.media-left').find('a').children('img').attr('src', '/uploads/'+data.user_data.profile_picture+''); //setting profile picture
 				viewerDialogMediaBody.children('.media-body').find('small').text(created) //set the time when post was created 
 
+				//set feed id for input comment
+				input_comment_gallery.attr('data-feed', thisObj.data('id'));
+
 				//set clicked image as first
-				dom_data.push({ image: 'http://localhost/uploads/'+clicked_img})
+				dom_data.push({ image: 'http://localhost/uploads/'+clicked_img });
 
 				$.each(data.images, function(index, data) {
-				    dom_data.push({ image: 'http://localhost/uploads/'+data.image})
+				    dom_data.push({ image: 'http://localhost/uploads/'+data.image });
 				});
 
 			},
@@ -153,10 +217,9 @@ handler_feeds  = {
 		        Galleria.run('.img-container', {
 				    dataSource: dom_data,
 				});
-
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
-			    alert(errorThrown)
+			    alert(errorThrown);
 			}
 		});
 	},

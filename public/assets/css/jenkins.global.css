@@ -2246,6 +2246,7 @@ font-size: 15px;
   text-transform: none;
   margin-top:0px;
   color:white;
+  outline:none;
 }
 .profile-img{
   border: 2px solid white;
@@ -2375,4 +2376,7 @@ font-size: 15px;
 }
 .feedPhotos{
   cursor:pointer;
+}
+.margin-bottom-sm{
+  margin-bottom:10px;
 }

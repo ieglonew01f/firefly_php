@@ -18,6 +18,7 @@ class Feeds extends Eloquent {
 		if($data['type'] === 0 || $data['type'] === "0"){
 
 			$id   = Session::get('id');
+			
 			$time = time();
 			//store feeds data into feeds
 			$data = array(
@@ -244,8 +245,8 @@ class Feeds extends Eloquent {
 			}
 
 			//appending comments array
-			$comments_count = DB::table('comments')->where('feed_id', $feeds -> id)->count();
-			$comments       = DB::table('comments')->join('users', 'comments.u_id', '=', 'users.id')->where('feed_id', $feeds -> id)->select('comments.id', 'comments.comment', 'comments.created', 'users.fullname')->orderBy('created', 'asc')->skip($comments_count - 3)->take(3)->get();
+			$comments_count = DB::table('comments')->where('feed_id', $feeds -> id)->where('type', 0)->count();
+			$comments       = DB::table('comments')->join('users', 'comments.u_id', '=', 'users.id')->join('users_profile','comments.u_id', '=', 'users_profile.u_id')->where('feed_id', $feeds -> id)->where('type', 0)->select('comments.id', 'comments.comment', 'comments.created', 'users.fullname', 'users.username', 'users_profile.profile_picture')->orderBy('created', 'asc')->skip($comments_count - 3)->take(3)->get();
 			$comment_array = "";
 
 			foreach ($comments as $comments){
@@ -292,6 +293,8 @@ class Feeds extends Eloquent {
 					"is_liked"            => $is_liked,
 					"comment_likes_count" => $clike_count,
 					"fullname"            => $comments -> fullname,
+					"username"            => $comments -> username,
+					"profile_picture"     => $comments -> profile_picture,
 					"comment_id"          => $comments -> id,
 					"comment"             => $comments -> comment,
 					"created"             => $this -> time_stamp_builder($comments -> created)
@@ -391,7 +394,7 @@ class Feeds extends Eloquent {
 		$created    = $data['created'];
 
 		//getting user data
-		$users = DB::table('users')->where('id', Session::get('id'))->first();
+		$users = DB::table('users')->join('users_profile', 'users_profile.u_id', '=', 'users.id')->where('users.id', Session::get('id'))->first();
 
 		if($comment_id){ 
 			$data = array(
@@ -401,6 +404,8 @@ class Feeds extends Eloquent {
 				"is_liked"            => "",
 				"like_class"          => "like",
 				"fullname"            => $users -> fullname,
+				"username"            => $users -> username,
+				"profile_picture"     => $users -> profile_picture,
 				"comment_id"          => $comment_id,
 				"comment"             => $data['comment'],
 				"created"             => $this -> time_stamp_builder($created)
@@ -433,8 +438,15 @@ class Feeds extends Eloquent {
 
 	//show prev comments with limit
 	public function show_comment_data($data){
-		$comments_count = DB::table('comments')->where('feed_id', $data['feed_id'])->count();
-		$comments       = DB::table('comments')->join('users', 'comments.u_id', '=', 'users.id')->where('feed_id', $data['feed_id'])->select('comments.id', 'comments.comment', 'comments.created', 'users.fullname')->orderBy('created', 'asc')->skip($data['offset'])->take($data['remainder'])->get();
+		if($data['image']){ //if loading gallery comments
+			$comments_count = DB::table('comments')->where('image', $data['image'])->count();
+			$comments       = DB::table('comments')->join('users', 'comments.u_id', '=', 'users.id')->join('users_profile','comments.u_id', '=', 'users_profile.u_id')->where('image', $data['image'])->select('comments.id', 'comments.comment', 'comments.created', 'users.fullname', 'users.username', 'users_profile.profile_picture')->orderBy('created', 'asc')->get();
+		}
+		else if(empty($data['image'])){
+			$comments_count = DB::table('comments')->where('feed_id', $data['feed_id'])->count();
+			$comments       = DB::table('comments')->join('users', 'comments.u_id', '=', 'users.id')->join('users_profile','comments.u_id', '=', 'users_profile.u_id')->where('feed_id', $data['feed_id'])->select('comments.id', 'comments.comment', 'comments.created', 'users.fullname', 'users.username', 'users_profile.profile_picture')->orderBy('created', 'asc')->skip($data['offset'])->take($data['remainder'])->get();
+		}
+
 		$comment_array  = "";
 
 		foreach($comments as $comments){
@@ -481,6 +493,8 @@ class Feeds extends Eloquent {
 				"is_liked"            => $is_liked,
 				"comment_likes_count" => $clike_count,
 				"fullname"            => $comments -> fullname,
+				"username"            => $comments -> username,
+				"profile_picture"     => $comments -> profile_picture,
 				"comment_id"          => $comments -> id,
 				"comment"             => $comments -> comment,
 				"created"             => $this -> time_stamp_builder($comments -> created)

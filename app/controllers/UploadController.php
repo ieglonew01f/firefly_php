@@ -51,7 +51,7 @@ class UploadController extends BaseController {
         $upload_folder  = $_SERVER['DOCUMENT_ROOT'];
         $upload_folder .= "/uploads/";
 
-        $image = $this -> crop_and_save($upload_folder, $_FILES['file'], 0, 500, 2048);
+        $image = $this -> crop_and_save($upload_folder, $_FILES['file'], 0, 500, 4096);
 
         //save to db
         $profile = new Profiles;

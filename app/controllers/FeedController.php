@@ -118,13 +118,28 @@ class FeedController extends BaseController {
 
 	//add comment
 	public function add_comment(){
+
 		$feeds = new feeds;
-		$data  = array(
-			"feed_id" => Input::get('feed_id'),
-			"u_id"    => Session::get('id'),
-			"comment" => Input::get('comment'),
-			"created" => time()
- 		);
+
+		if(empty(Input::get('image'))){ //if comment on a post
+			$data  = array(
+				"feed_id" => Input::get('feed_id'),
+				"u_id"    => Session::get('id'),
+				"comment" => Input::get('comment'),
+				"created" => time(),
+				"type"    => 0 //type 0 for normal comments feed comments
+	 		);
+		}
+		else if(!empty(Input::get('image'))){ //if a gallery comment
+			$data  = array(
+				"feed_id" => Input::get('feed_id'),
+				"image"   => Input::get('image'),
+				"u_id"    => Session::get('id'),
+				"comment" => Input::get('comment'),
+				"created" => time(),
+				"type"    => 1 // for gallery photo comments
+	 		);
+		}
 
 		$feeds -> add_comment_data($data);
 	}
@@ -159,6 +174,16 @@ class FeedController extends BaseController {
 			"feed_id"   => Input::get('feed_id'),
 			"offset"    => Input::get('offset'),
 			"remainder" => Input::get('remainder')
+		);
+
+		return $feeds -> show_comment_data($data);
+	}
+
+	//load gallery comments
+	public function show_gallery_comments(){
+		$feeds = new feeds;
+		$data  = array(
+			"image"   => Input::get('image'),
 		);
 
 		return $feeds -> show_comment_data($data);
