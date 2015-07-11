@@ -20,6 +20,7 @@ class ProfileController extends BaseController {
 		//getting profile data
 		$profile_settings = $profile -> load_profile_settings();
 		$profile_data     = $profile -> load_profile_data($username);
+		$session_data     = $profile -> load_profile_data(Session::get('username'));
 
 		$data = array(
 			"feeds"              => $feeds -> get_feeds("0"),
@@ -27,7 +28,8 @@ class ProfileController extends BaseController {
 			"dom"                => $profile_settings['dom'],
 			"question"           => $profile_settings['question'],
 			"hidden"             => $profile_settings['hidden'],
-			"profile_data"       => $profile_data
+			"profile_data"       => $profile_data,
+			"session_data"       => $session_data
 		);
 
 		return View::make('pages.profile', $data);

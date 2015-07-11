@@ -38,7 +38,7 @@ var input_comment_gallery = $('input#comment_gallery');
 var gallery_loader        = $("#gallery_comment_loader");
 var gallery_comment_count = $("#comments_count");
 //variables
-var data, matches, soundcloud, viemo, code, regExp, match, previous_comment_offset = 6, current_c_perc, handler_feeds = {}, photo_array = [];
+var data, matches, soundcloud, viemo, code, regExp, match, previous_comment_offset = 6, current_c_perc, handler_feeds = {}, photo_array = [], image_counter = 0, img_feed_id = 0;
 var youtube_vtitle, youtube_vdesc, youtube_vthumb, youtube_vcode, global_SoundCloud_Link, comment_card_obj, post_card_obj,exec = 0, multiples, remainder, isPhotoUpdate = false;
 
 /* SET API KEY FOR YOUTUBE */
@@ -119,10 +119,19 @@ var init = function(){
 	// bind the method to Galleria.ready
 	Galleria.ready(function(options) {
 	    this.bind('image', function(e) { //on next or prev image
-	       var image = this.getActiveImage().src.split('/')[4];
-	       input_comment_gallery.attr('data-image', image);
-	       //send ajax request with the image name and load its comments
-	       var dataString = "image="+image;
+			var image = this.getActiveImage().src.split('/')[4];
+			input_comment_gallery.attr('data-image', image);
+			//send ajax request with the image name and load its comments
+
+			//if more number of images
+			if(image_counter > 0){
+				var dataString = "image="+image+"&feed_id="+img_feed_id;
+			}
+			//else load comments of the only image
+	   		else if(image_counter == 0){
+				var dataString = "image="+image+"&single="+1+"&feed_id="+img_feed_id;
+	   		}
+
 			$.ajax({
 			    type  : 'POST',
 			    url   : '/show_gallery_comments',
@@ -136,6 +145,10 @@ var init = function(){
 				},
 				complete: function(responseText){ 
 					gallery_loader.addClass('hidden');
+					//slim scroll on photo gallery comments
+					gallery_comments.slimScroll({
+						height: '350px'
+					});
 				},
 				error: function(XMLHttpRequest, textStatus, errorThrown) {
 				    alert(errorThrown)
@@ -180,6 +193,7 @@ handler_feeds  = {
 		var dom_data    = [];
 		var clicked_img = $(this).data('img');
 		var thisObj     = $(this);
+		img_feed_id     = thisObj.data('id'); //set feed id for retriving comments
 		//load feed photo gallery data from feed
 		var dataString = 'feed_id=' + $(this).data('id') + '&image=' + clicked_img;
 		$.ajax({
@@ -190,6 +204,7 @@ handler_feeds  = {
 			beforeSend: function(){
 				$('.img-container').empty();
 				gallery_comments.empty();
+				image_counter = 0;
 			},
 			success: function(data){
 				var created = handler_feeds.timestampToDate(data.user_data.created).toDateString();
@@ -207,6 +222,8 @@ handler_feeds  = {
 				$.each(data.images, function(index, data) {
 				    dom_data.push({ image: 'http://localhost/uploads/'+data.image });
 				});
+
+				image_counter = data.images.length;
 
 			},
 			complete: function(responseTet){ 

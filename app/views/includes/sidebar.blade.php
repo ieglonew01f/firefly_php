@@ -1,14 +1,14 @@
-    <div class="sidebar hidden">
+    <div class="sidebar">
       <ul class="list-unstyled top-sidebar-ul">
         <li>
           <div class="media">
             <div class="media-left">
-              <a href="#">
-                <img width="42" height="42" class="media-object" src="public/assets/img/avatars/man_2.jpg">
+              <a href="{{ $base_url }}/profile/{{ $username }}">
+                <img width="42" height="42" class="media-object" src="{{ $base_url }}/uploads/{{ $profile_picture }}">
               </a>
             </div>
             <div class="media-body line-height-1">
-              <h4 class="media-heading" id="media-heading">Mike Jones</h4>
+              <h4 class="media-heading" id="media-heading">{{ $fullname }}</h4>
               <a href="">Edit profile</a>
             </div>
           </div>

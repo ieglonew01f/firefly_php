@@ -7,7 +7,7 @@
 @stop
 @section('content')
     <div class="content mrt50">
-      @include('includes.sidebar')
+      @include('includes.sidebar', $session_data)
       
       <div class="container">
         <div class="row">
@@ -32,7 +32,7 @@
       </div>
         @include('includes.utility')
         @include('includes.modalcommon', $profile_data)
-        @include('widgets.photoViewer', $profile_data)
+        @include('widgets.photoViewer', $session_data)
     </div>
 @stop
 @section('page_js')

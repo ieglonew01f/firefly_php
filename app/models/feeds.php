@@ -108,9 +108,8 @@ class Feeds extends Eloquent {
 
 			return htmlfactory::bake_html("1", $data);
 		} 
-		//for photo updates
-		if($data['type'] === 3 || $data['type'] === "3"){
-
+		//for photo updates type 3 = multi photo / type 4 is single photo update
+		else if($data['type'] === "3" || $data['type'] === 3 || $data['type'] === "4" || $data['type'] === 4){
 			$id   = Session::get('id');
 			$time = time();
 			//store feeds data into feeds
@@ -211,7 +210,7 @@ class Feeds extends Eloquent {
 					);
 				}
 			}
-			else if($type === "3" || $type === 3){ //for photo updates
+			else if($type === "3" || $type === 3 || $type === "4" || $type === 4){ //for photo updates
 
 				$image  = DB::table('photo_update')->where('feed_id', $feeds -> id)->get();
 				$images = array();
@@ -245,8 +244,15 @@ class Feeds extends Eloquent {
 			}
 
 			//appending comments array
-			$comments_count = DB::table('comments')->where('feed_id', $feeds -> id)->where('type', 0)->count();
-			$comments       = DB::table('comments')->join('users', 'comments.u_id', '=', 'users.id')->join('users_profile','comments.u_id', '=', 'users_profile.u_id')->where('feed_id', $feeds -> id)->where('type', 0)->select('comments.id', 'comments.comment', 'comments.created', 'users.fullname', 'users.username', 'users_profile.profile_picture')->orderBy('created', 'asc')->skip($comments_count - 3)->take(3)->get();
+			if($type === "3" || $type === 3){ // for multi photos
+				$comments_count = DB::table('comments')->where('feed_id', $feeds -> id)->where('type', 0)->count();
+				$comments       = DB::table('comments')->join('users', 'comments.u_id', '=', 'users.id')->join('users_profile','comments.u_id', '=', 'users_profile.u_id')->where('feed_id', $feeds -> id)->where('type', 0)->select('comments.id', 'comments.comment', 'comments.created', 'users.fullname', 'users.username', 'users_profile.profile_picture')->orderBy('created', 'asc')->skip($comments_count - 3)->take(3)->get();
+			}
+			else{ //for other type of feed and single photos
+				$comments_count = DB::table('comments')->where('feed_id', $feeds -> id)->count();
+				$comments       = DB::table('comments')->join('users', 'comments.u_id', '=', 'users.id')->join('users_profile','comments.u_id', '=', 'users_profile.u_id')->where('feed_id', $feeds -> id)->select('comments.id', 'comments.comment', 'comments.created', 'users.fullname', 'users.username', 'users_profile.profile_picture')->orderBy('created', 'asc')->skip($comments_count - 3)->take(3)->get();
+			}
+
 			$comment_array = "";
 
 			foreach ($comments as $comments){
@@ -439,8 +445,14 @@ class Feeds extends Eloquent {
 	//show prev comments with limit
 	public function show_comment_data($data){
 		if($data['image']){ //if loading gallery comments
-			$comments_count = DB::table('comments')->where('image', $data['image'])->count();
-			$comments       = DB::table('comments')->join('users', 'comments.u_id', '=', 'users.id')->join('users_profile','comments.u_id', '=', 'users_profile.u_id')->where('image', $data['image'])->select('comments.id', 'comments.comment', 'comments.created', 'users.fullname', 'users.username', 'users_profile.profile_picture')->orderBy('created', 'asc')->get();
+			if(empty($data['single'])){ //if non single image show particular comments 
+				$comments_count = DB::table('comments')->where('image', $data['image'])->count();
+				$comments       = DB::table('comments')->join('users', 'comments.u_id', '=', 'users.id')->join('users_profile','comments.u_id', '=', 'users_profile.u_id')->where('image', $data['image'])->select('comments.id', 'comments.comment', 'comments.created', 'users.fullname', 'users.username', 'users_profile.profile_picture')->orderBy('created', 'asc')->get();
+			}
+			else if($data['single']){ //if single image show its comment
+				$comments_count = DB::table('comments')->where('image', $data['image'])->count();
+				$comments       = DB::table('comments')->join('users', 'comments.u_id', '=', 'users.id')->join('users_profile','comments.u_id', '=', 'users_profile.u_id')->where('feed_id', $data['feed_id'])->select('comments.id', 'comments.comment', 'comments.created', 'users.fullname', 'users.username', 'users_profile.profile_picture')->orderBy('created', 'asc')->get();
+			}
 		}
 		else if(empty($data['image'])){
 			$comments_count = DB::table('comments')->where('feed_id', $data['feed_id'])->count();

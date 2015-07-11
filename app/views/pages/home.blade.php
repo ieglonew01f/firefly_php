@@ -7,7 +7,7 @@
 @stop
 @section('content')
     <div class="content mrt80">
-      @include('includes.sidebar')
+      @include('includes.sidebar', $profile_data)
       
       <div class="container">
         <div class="row">

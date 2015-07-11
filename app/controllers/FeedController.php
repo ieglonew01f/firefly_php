@@ -64,13 +64,25 @@ class FeedController extends BaseController {
 	public function bake_special_post()
 	{
 		$feeds = new feeds;
-		$data = json_decode(Input::get('data'));
+		$data  = json_decode(Input::get('data'));
+		$type  = 0;
+
+		/* Check type here */
+		/* If is multi image then type = 3 */
+		if(count($data -> photo_array) > 1){
+			$type = 3;
+		}
+		/* If is a single image then type = 4 */
+		else if(count($data -> photo_array) == 1){ 
+			$type = 4;
+		}
+
 
 		$data  = array(
 			"content" => $data -> content,
 			"images"  => $data -> photo_array,
 			"u_id"    => Session::get('id'),
-			"type"    => 3, // for image update
+			"type"    => $type, // for image update
 			"created" => time()
 		);
 
@@ -182,9 +194,20 @@ class FeedController extends BaseController {
 	//load gallery comments
 	public function show_gallery_comments(){
 		$feeds = new feeds;
-		$data  = array(
-			"image"   => Input::get('image'),
-		);
+
+		if(Input::get('single')){ //if only a single image
+			$data  = array(
+				"image"   => Input::get('image'),
+				"feed_id" => Input::get('feed_id'),
+				"single"  => 1
+			);
+		}
+		else{
+			$data  = array(
+				"image"   => Input::get('image'),
+				"feed_id" => Input::get('feed_id')
+			);
+		}
 
 		return $feeds -> show_comment_data($data);
 	}
