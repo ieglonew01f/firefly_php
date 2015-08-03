@@ -8,6 +8,7 @@
     {{ HTML::script('public/assets/js/plugins/jquery.slimscroll.min.js'); }}
     {{ HTML::script('public/assets/js/plugins/jquery.grid-a-licious.min.js'); }}
     {{ HTML::script('public/assets/js/plugins/jqueryImageSlider/galleria-1.4.2.min.js'); }}
+    {{ HTML::script('public/assets/js/plugins/jqueryConfirm/jquery-confirm.min.js'); }}
     <!-- EOF PLUGINS -->
     
     <!-- PAGE LEVEL SCRIPTS -->

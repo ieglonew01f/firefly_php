@@ -38,6 +38,7 @@ Route::post('/show_comment', 'FeedController@show_comment');
 Route::post('/bake_photo_update', 'FeedController@bake_special_post');
 Route::post('/get_photo_gallery_data', 'FeedController@get_photo_gallery_data');
 Route::post('/show_gallery_comments', 'FeedController@show_gallery_comments');
+Route::post('/share_feed', 'FeedController@share_post');
 
 /*ROUTES FOR PROFILE COMPLETION*/
 Route::post('/bake_profile', 'ProfileController@bake_profile');

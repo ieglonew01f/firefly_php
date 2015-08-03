@@ -49,9 +49,9 @@ class Feeds extends Eloquent {
 
 			$user = DB::table('users')->join('users_profile', 'users_profile.u_id', '=', 'users.id')->where('users.id', $data['u_id'])->first();
 
-			$post_card_buttons = htmlfactory::bake_html("3", array("ncomments" => "comment"));
+			$post_card_buttons = htmlfactory::bake_html("3", array("ncomments" => "comment", "hasLikes" => "hidden", "likes_count" => "", "share" => "Share"));
 			$user_data         = array("fullname" => $user -> fullname, "profile_picture" => $user -> profile_picture, "username" => $user -> username);
-			$data              = array_merge($data, $user_data, array("feed_id" => $feed -> id, "class_lu" => "fa fa-heart-o like", "comments" => "", "post_card_btns" => $post_card_buttons, "view_prev_comment" => "hidden"));
+			$data              = array_merge($data, $user_data, array("feed_id" => $feed -> id, "class_lu" => "fa fa-heart-o like", "comments" => "", "post_card_btns" => $post_card_buttons, "view_prev_comment" => "hidden", "likes_count" => "", "post_activity" => ""));
 			//modifying created timestamp to readable timestamp
 			$data['created'] = $this -> time_stamp_builder($time);
 
@@ -99,9 +99,9 @@ class Feeds extends Eloquent {
 			//getting user data
 			$user = DB::table('users')->join('users_profile', 'users_profile.u_id', '=', 'users.id')->where('users.id', $data['u_id'])->first();
 
-			$post_card_buttons = htmlfactory::bake_html("3", array("ncomments" => "comment"));
+			$post_card_buttons = htmlfactory::bake_html("3", array("ncomments" => "comment", "hasLikes" => "hidden", "likes_count" => "", "share" => "share"));
 			$user_data         = array("fullname" => $user -> fullname, "profile_picture" => $user -> profile_picture, "username" => $user -> username);
-			$data              = array_merge($data, $data_ombed, $user_data, array("feed_id" => $feed -> id, "class_lu" => "fa fa-heart-o like", "comments" => "", "post_card_btns" => $post_card_buttons, "view_prev_comment" => "hidden"));
+			$data              = array_merge($data, $data_ombed, $user_data, array("feed_id" => $feed -> id, "class_lu" => "fa fa-heart-o like", "comments" => "", "post_card_btns" => $post_card_buttons, "view_prev_comment" => "hidden", "likes_count" => "", "post_activity" => ""));
 
 			//modifying created timestamp to readable timestamp
 			$data['created'] = $this -> time_stamp_builder($time);
@@ -146,9 +146,11 @@ class Feeds extends Eloquent {
 
 			$user = DB::table('users')->join('users_profile', 'users_profile.u_id', '=', 'users.id')->where('users.id', $data['u_id'])->first();
 
-			$post_card_buttons = htmlfactory::bake_html("3", array("ncomments" => "comment"));
+			$post_card_buttons = htmlfactory::bake_html("3", array("ncomments" => "comment", "hasLikes" => "hidden", "likes_count" => "", "share" => "share"));
+
 			$user_data         = array("fullname" => $user -> fullname, "profile_picture" => $user -> profile_picture, "username" => $user -> username);
-			$data              = array_merge($data, $user_data, array("feed_id" => $feed -> id, "class_lu" => "fa fa-heart-o like", "comments" => "", "post_card_btns" => $post_card_buttons, "view_prev_comment" => "hidden"));
+
+			$data              = array_merge($data, $user_data, array("feed_id" => $feed -> id, "class_lu" => "fa fa-heart-o like", "comments" => "", "post_card_btns" => $post_card_buttons, "view_prev_comment" => "hidden", "likes_count" => "", "post_activity" => ""));
 			//modifying created timestamp to readable timestamp
 			$data['created'] = $this -> time_stamp_builder($time);
 
@@ -158,9 +160,16 @@ class Feeds extends Eloquent {
 
 	//getting feeds by type
 
-	public function get_feeds($type){
+	public function get_feeds($type, $data){
 
-		$feeds   = DB::table('feeds')->orderBy('created', 'desc')->get(); // custom feed query ( raw )
+		//shows feed not owned by the session
+		if($type == 0){ //normal feed
+			$feeds = DB::table('feeds')->orderBy('created', 'desc')->get(); 
+		}
+		else if($type == 1){//profile feed
+			$feeds = DB::table('feeds')->where('u_id', $data['u_id'])->orderBy('created', 'desc')->get(); 
+		}
+
 		$content = "";
 
 		foreach ($feeds as $feeds){
@@ -235,6 +244,23 @@ class Feeds extends Eloquent {
 			//check if this feed_id has been liked by the session id
 			$feed = DB::table('feed_likes')->where('u_id', Session::get('id'))->where('feed_id', $feeds -> id)->first();
 
+			//counting number of likes in this feed
+			$likes_count = DB::table('feed_likes')->where('feed_id', $feeds -> id)->count();
+
+			//building like button
+			//if has 0 likes
+			if($likes_count == 0){
+				$hasLikes = "hidden";
+			}
+			else if($likes_count == 1){
+				$likes_count = '<b>'.$likes_count.'</b> Like';
+				$hasLikes    = "";
+			}
+			else{
+				$likes_count = '<b>'.$likes_count.'</b> Likes';
+				$hasLikes = "";
+			}
+
 			//if exist if post has been liked aready heart filled
 			if($feed){
 				$data = array_merge($data, array("class_lu" => "fa fa-heart text-heart unlike"));
@@ -254,6 +280,7 @@ class Feeds extends Eloquent {
 			}
 
 			$comment_array = "";
+
 
 			foreach ($comments as $comments){
 				//getting comments like count
@@ -310,20 +337,189 @@ class Feeds extends Eloquent {
 
 			//getting post card data buttons
 			if($comments_count < 1 || $comments_count == 0){
-				$comments_count = "comment";
+				$comments_count    = "comment";
 				$view_prev_comment = "hidden";
 			}
 			else{
 				$comments_count = $comments_count." comments";
 			}
 
-			$post_card_buttons = htmlfactory::bake_html("3", array("ncomments" => $comments_count));
+			//getting any activity
+			$activity = $this -> generate_activity($feeds -> id);
 
-			$data     = array_merge($data, array("comments" => $comment_array, "post_card_btns" => $post_card_buttons, "view_prev_comment" => $view_prev_comment));
+			//getting shares count
+			$shares  = DB::table('feed_share')->where('feed_id', $feeds -> id)->count();
+
+			($shares > 0 ? ($shares  = $shares.' '.($shares > 1 ? 'Shares' : 'Share')) : $shares = 'Share');
+
+			$post_card_buttons = htmlfactory::bake_html("3", array("ncomments" => $comments_count, "hasLikes" => $hasLikes, "likes_count" => $likes_count, "share" => $shares));
+
+			$data     = array_merge($data, array("likes_count" => $likes_count, "comments" => $comment_array, "post_card_btns" => $post_card_buttons, "view_prev_comment" => $view_prev_comment, "post_activity" => $activity));
 		    $content .= htmlfactory::bake_html("1", $data);
 		} 
 
 		return $content;
+	}
+
+	/* post activity generator
+	/* post activity like 12 people has liked this, 12 others has shared this etc
+	/* checking for this post activity
+	/* checking for any latest like not by post owner himself
+	*/
+
+	public function generate_activity($feed_id){
+
+		//checking for any latest like not by post owner himself/herself
+		$time_like = DB::table('feed_likes')->select('timestamp')->where('feed_id', $feed_id)->where('u_id', '!=', Session::get('id'))->orderBy('id', 'desc')->take(1)->get();
+		if($time_like){
+			$latest_like_time = $time_like[0] -> timestamp;
+		}
+		else{
+			$latest_like_time = 0;
+		}
+
+		//checking for any latest comment not by post owner himself/herself
+		$time_comment = DB::table('comments')->select('created')->where('feed_id', $feed_id)->where('u_id', '!=', Session::get('id'))->orderBy('id', 'desc')->take(1)->get();
+		if($time_comment){
+			$latest_comment_time = $time_comment[0] -> created; 
+
+		}
+		else{
+			$latest_comment_time = 0;
+		}
+
+		//checking for any latest shared can be owner himself/herself
+		$time_shared = DB::table('feed_share')->select('timestamp')->where('feed_id', $feed_id)->orderBy('id', 'desc')->take(1)->get();
+		if($time_shared){
+			$latest_shared_time = $time_shared[0] -> timestamp; 
+
+		}
+		else{
+			$latest_shared_time = 0;
+		}
+
+		$arr     = array( 'liked' => $latest_like_time, 'commented' => $latest_comment_time, 'shared' => $latest_shared_time );
+		$max_key = array_search(max($arr),$arr);
+		//return $latest_comment_time.' => '.$latest_shared_time.'->'.var_dump($time_shared).'->'.$feed_id;
+
+		switch ($max_key) {
+		    case "liked":
+				//get unique likes count
+				$unique_like_count_query = DB::select('SELECT COUNT(*) AS count FROM users WHERE id IN (SELECT u.id FROM feed_likes c, users u, feeds f WHERE c.u_id = u.id AND c.feed_id = f.id AND c.feed_id = '.$feed_id.' AND f.u_id != c.u_id AND u.id != '.Session::get('id').')');
+				$unique_like_count_query = $unique_like_count_query[0] -> count;
+
+				if($unique_like_count_query){				
+					if($unique_like_count_query == 1) { //if there is only a single like
+						//getting last guy who liked
+						$user = DB::select('SELECT username, fullname FROM users WHERE id IN (SELECT u.id FROM feed_likes c, users u, feeds f WHERE c.u_id = u.id AND c.feed_id = f.id AND c.feed_id = '.$feed_id.' AND f.u_id != c.u_id AND u.id != '.Session::get('id').') ORDER BY id DESC LIMIT 1');
+
+						return '<a href="/profile/'.$user[0] -> username.'"><b>'.$user[0] -> fullname.'</b></a> like this';
+						//return var_dump($user);
+					}
+					else if($unique_like_count_query == 2){
+						$activity_fullname = array();
+						$activity_username = array();
+
+						//getting last two guys who liked
+						$user = DB::select('SELECT username, fullname FROM users WHERE id IN (SELECT u.id FROM feed_likes c, users u, feeds f WHERE c.u_id = u.id AND c.feed_id = f.id AND c.feed_id = '.$feed_id.' AND f.u_id != c.u_id AND u.id != '.Session::get('id').') ORDER BY id DESC LIMIT 2');
+
+						foreach ($user as $user) {
+							array_push($activity_fullname, $user -> fullname);
+							array_push($activity_username, $user -> username);
+						}
+
+						return '<a href="/profile/'.$activity_username[0].'"><b>'.$activity_fullname[0].'</b></a> and <a href="/profile/'.$activity_username[1].'"><b>'.$activity_fullname[1].'</b></a> likes this';
+						//return '';
+					}
+					else if($unique_like_count_query > 2){
+						//getting last guy who liked
+						$user = DB::select('SELECT username, fullname FROM users WHERE id IN (SELECT u.id FROM feed_likes c, users u, feeds f WHERE c.u_id = u.id AND c.feed_id = f.id AND c.feed_id = '.$feed_id.' AND f.u_id != c.u_id AND u.id != '.Session::get('id').') ORDER BY id DESC LIMIT 1');
+
+						return '<a href="/profile/'.$user[0] -> username.'"><b>'.$user[0] -> fullname.'</b></a> and <a href=""><b>'.$unique_like_count_query.'</b></a> others likes this'; 
+					}
+				}
+				else{
+					return '';
+				}
+		        break;
+		    case "commented":
+				//get unique comments count
+				$unique_comments_count_query = DB::select('SELECT COUNT(*) AS count FROM users WHERE id IN (SELECT DISTINCT(u.id) FROM comments c, users u, feeds f WHERE c.u_id = u.id AND c.feed_id = f.id AND c.feed_id = '.$feed_id.' AND c.type = 0 AND f.u_id != c.u_id AND u.id != '.Session::get('id').')');
+
+				$unique_comments_count_query = $unique_comments_count_query[0] -> count;
+
+				if($unique_comments_count_query){				
+					if($unique_comments_count_query == 1) { //if there is only a single comment
+						//getting last guy who commented
+						$user = DB::select('SELECT username, fullname FROM users WHERE id IN (SELECT DISTINCT(u.id) FROM comments c, users u, feeds f WHERE c.u_id = u.id AND c.feed_id = f.id AND c.feed_id = '.$feed_id.' AND c.type = 0 AND f.u_id != c.u_id AND u.id != '.Session::get('id').') ORDER BY id DESC LIMIT 1');
+
+						return '<a href="/profile/'.$user[0] -> username.'"><b>'.$user[0] -> fullname.'</b></a> commented on this';
+					}
+					else if($unique_comments_count_query == 2){
+						$activity_fullname = array();
+						$activity_username = array();
+
+						//getting last two guys who commented
+						$user = DB::select('SELECT username, fullname FROM users WHERE id IN (SELECT DISTINCT(u.id) FROM comments c, users u, feeds f WHERE c.u_id = u.id AND c.feed_id = f.id AND c.feed_id = '.$feed_id.' AND c.type = 0 AND f.u_id != c.u_id AND u.id != '.Session::get('id').') ORDER BY id DESC LIMIT 2');
+
+						foreach ($user as $user) {
+							array_push($activity_fullname, $user -> fullname);
+							array_push($activity_username, $user -> username);
+						}
+
+						return '<a href="/profile/'.$activity_username[0].'"><b>'.$activity_fullname[0].'</b></a> and <a href="/profile/'.$activity_username[1].'"><b>'.$activity_fullname[1].'</b></a> commented on this';
+					}
+					else if($unique_comments_count_query > 2){
+						//getting last guy who commented
+						$user = DB::select('SELECT username, fullname FROM users WHERE id IN (SELECT DISTINCT(u.id) FROM comments c, users u, feeds f WHERE c.u_id = u.id AND c.feed_id = f.id AND c.feed_id = '.$feed_id.' AND c.type = 0 AND f.u_id != c.u_id AND u.id != '.Session::get('id').') ORDER BY id DESC LIMIT 1');
+
+						return '<a href="/profile/'.$user[0] -> username.'"><b>'.$user[0] -> fullname.'</b></a> and <a href=""><b>'.$unique_comments_count_query.'</b></a> commented on this';
+					}
+				}
+				else{
+					return '';
+				}
+		        break;
+		    case "shared":
+				//get unique shares count
+				$unique_share_count = DB::select('SELECT COUNT(*) AS count FROM users WHERE id IN (SELECT u.id FROM feed_share c, users u, feeds f WHERE c.u_id = u.id AND c.feed_id = f.id AND c.feed_id = '.$feed_id.' AND f.u_id != c.u_id AND u.id != '.Session::get('id').')');
+				$unique_share_count = $unique_share_count[0] -> count;
+
+				if($unique_share_count){				
+					if($unique_share_count == 1) { //if there is only a single like
+						//getting last guy who liked
+						$user = DB::select('SELECT username, fullname FROM users WHERE id IN (SELECT u.id FROM feed_share c, users u, feeds f WHERE c.u_id = u.id AND c.feed_id = f.id AND c.feed_id = '.$feed_id.' AND f.u_id != c.u_id AND u.id != '.Session::get('id').') ORDER BY id DESC LIMIT 1');
+
+						return '<a href="/profile/'.$user[0] -> username.'"><b>'.$user[0] -> fullname.'</b></a> shared this';
+						//return var_dump($user);
+					}
+					else if($unique_share_count == 2){
+						$activity_fullname = array();
+						$activity_username = array();
+
+						//getting last two guys who liked
+						$user = DB::select('SELECT username, fullname FROM users WHERE id IN (SELECT u.id FROM feed_share c, users u, feeds f WHERE c.u_id = u.id AND c.feed_id = f.id AND c.feed_id = '.$feed_id.' AND f.u_id != c.u_id AND u.id != '.Session::get('id').') ORDER BY id DESC LIMIT 2');
+
+						foreach ($user as $user) {
+							array_push($activity_fullname, $user -> fullname);
+							array_push($activity_username, $user -> username);
+						}
+
+						return '<a href="/profile/'.$activity_username[0].'"><b>'.$activity_fullname[0].'</b></a> and <a href="/profile/'.$activity_username[1].'"><b>'.$activity_fullname[1].'</b></a> shared this';
+						//return '';
+					}
+					else if($unique_share_count > 2){
+						//getting last guy who liked
+						$user = DB::select('SELECT username, fullname FROM users WHERE id IN (SELECT u.id FROM feed_share c, users u, feeds f WHERE c.u_id = u.id AND c.feed_id = f.id AND c.feed_id = '.$feed_id.' AND f.u_id != c.u_id AND u.id != '.Session::get('id').') ORDER BY id DESC LIMIT 1');
+
+						return '<a href="/profile/'.$user[0] -> username.'"><b>'.$user[0] -> fullname.'</b></a> and <a href=""><b>'.$unique_share_count.'</b></a> others shared this'; 
+					}
+				}
+				else{
+					return '';
+				}
+		        break;
+		}
 	}
 
 	//editing existing feeds
@@ -357,22 +553,25 @@ class Feeds extends Eloquent {
 			$feed = DB::table('feed_likes')->where('u_id', Session::get('id'))->where('feed_id', $data_id)->first();
 
 			//if current user has not liked this post insert feed like
+			//for feed like
 			if(!$feed){
 				$data = array(
-					"u_id"    => Session::get('id'),
-					"feed_id" => $data_id
+					"u_id"      => Session::get('id'),
+					"feed_id"   => $data_id,
+					"timestamp" => time()
 				);
 				DB::table('feed_likes')->insert($data);
 			}
 		}
-		else if($type === "2" || $type === 2){ //for comments
+		else if($type === "2" || $type === 2){ //for comments like
 			$comment = DB::table('comment_likes')->where('u_id', Session::get('id'))->where('comment_id', $data_id)->first();
 
 			//if current user has not liked this comment insert comment like
 			if(!$comment){
 				$data = array(
 					"u_id"       => Session::get('id'),
-					"comment_id" => $data_id
+					"comment_id" => $data_id,
+					"timestamp"  => time()
 				);
 				DB::table('comment_likes')->insert($data);
 			}
@@ -534,5 +733,17 @@ class Feeds extends Eloquent {
 		$result = array("user_data" => $user, "images" => $imgs);
 
 		return json_encode($result);
+	}
+
+	//share post
+
+	public function share_post($data){
+		//do not insert if already shared
+		$shared = DB::table('feed_share')->where('u_id', Session::get('id'))->where('feed_id', $data['feed_id'])->get();
+
+		//insert only if not shared already
+		if(!$shared){
+			DB::table('feed_share')->insert($data);
+		}
 	}
 }

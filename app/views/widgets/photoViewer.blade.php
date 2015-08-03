@@ -30,7 +30,9 @@
                 <div class="viewerDialogComments">
                   <div class="viewerDialogCommentsHolder">
                     <p class="hidden"><span data-icon="&#xe04a;"></span> <span id="comments_count"></span>+ Comments</p>
-                    <div id="gallery_comment_loader" class="loader loader-inner ball-pulse margin-bottom-sm hidden"><div></div><div></div><div></div></div>
+                    <div class="overlay-loader">
+                      <div id="gallery_comment_loader" class="loader loader-inner ball-pulse margin-bottom-sm hidden"><div></div><div></div><div></div></div>
+                    </div>
                     <div id="gallery_comments" class="comment comment-nbg">
                     </div>
                     <div class="comment-input">

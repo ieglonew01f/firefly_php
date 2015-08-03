@@ -23,7 +23,7 @@ class ProfileController extends BaseController {
 		$session_data     = $profile -> load_profile_data(Session::get('username'));
 
 		$data = array(
-			"feeds"              => $feeds -> get_feeds("0"),
+			"feeds"              => $feeds -> get_feeds(1, array('u_id' => $profile_data['u_id'])),
 			"profile_completion" => $profile_settings['percentage'],
 			"dom"                => $profile_settings['dom'],
 			"question"           => $profile_settings['question'],

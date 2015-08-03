@@ -23,7 +23,7 @@ class HomeController extends BaseController {
 		$profile_data     = $profile -> load_profile_data(Session::get('username'));
 
 		$data = array(
-			"feeds"              => $feeds -> get_feeds("0"),
+			"feeds"              => $feeds -> get_feeds(0, array('u_id' => Session::get('id'))),
 			"profile_completion" => $profile_settings['percentage'],
 			"dom"                => $profile_settings['dom'],
 			"question"           => $profile_settings['question'],

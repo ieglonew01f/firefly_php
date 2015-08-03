@@ -37,6 +37,7 @@ var gallery_comments      = $("#gallery_comments");
 var input_comment_gallery = $('input#comment_gallery');
 var gallery_loader        = $("#gallery_comment_loader");
 var gallery_comment_count = $("#comments_count");
+var overlay_loader        = $(".overlay-loader");
 //variables
 var data, matches, soundcloud, viemo, code, regExp, match, previous_comment_offset = 6, current_c_perc, handler_feeds = {}, photo_array = [], image_counter = 0, img_feed_id = 0;
 var youtube_vtitle, youtube_vdesc, youtube_vthumb, youtube_vcode, global_SoundCloud_Link, comment_card_obj, post_card_obj,exec = 0, multiples, remainder, isPhotoUpdate = false;
@@ -98,6 +99,9 @@ var init = function(){
 	//on click view lightbox for photos
 	$(document).on('click', '.feedPhotos', '', handler_feeds.showPhotoAlbum);
 
+	//share post
+	$(document).on('click', '.share-btn', '', handler_feeds.sharePost);
+
 	//ajax file upload listner
 	photo_upload_form.ajaxForm({
 		beforeSend: function() { //before sending form
@@ -138,12 +142,14 @@ var init = function(){
 			    data  : dataString,
 				beforeSend: function(){
 					gallery_comments.empty();
+					overlay_loader.removeClass('hidden');
 					gallery_loader.removeClass('hidden');
 				},
 				success: function(html){
 					gallery_comments.append(html);
 				},
 				complete: function(responseText){ 
+					overlay_loader.addClass('hidden');
 					gallery_loader.addClass('hidden');
 					//slim scroll on photo gallery comments
 					gallery_comments.slimScroll({
@@ -161,6 +167,48 @@ var init = function(){
 /* =============================================== HELPERS ==============================================*/
 
 handler_feeds  = {
+	sharePost: function(e){
+		var feed_id = $(this).parents('.post-container').data('id');
+		var post_card_obj = $(this).parents('.post-container');
+		$.confirm({
+		    title: 'Share post!',
+		    content: 'Would you like to share this post on your wall ?',
+		    confirmButton: 'Share',
+		    theme: 'supervan',
+		    keyboardEnabled: true,
+		    confirmButtonClass: 'btn-primary',
+		    animation: 'bottom',
+		    confirm: function(){
+
+				$.ajax({
+				    type  : 'POST',
+				    url   : '/share_feed',
+				    data  : {feed_id:feed_id},
+					beforeSend: function(){
+						post_card_obj.find('div#delete_loader').removeClass("hidden");
+						post_card_obj.find('div#post_dropdown').addClass("hidden");
+					},
+					success: function(html){
+
+					},
+					complete: function(responseText){ 
+						$.alert({
+						    title: 'Success!',
+						    content: 'This post has been successfully shared on your wall',
+						    keyboardEnabled: true,
+						    theme: 'supervan'
+						});
+						post_card_obj.find('div#post_dropdown').removeClass("hidden");
+						post_card_obj.find('div#delete_loader').addClass("hidden");
+
+					},
+					error: function(XMLHttpRequest, textStatus, errorThrown) {
+					    alert(errorThrown)
+					}
+				});
+		    }
+		});
+	},
 	addComment_gallery: function(e){
 		var keyCode    = e.keyCode || e.which;
 		var thisObj    = $(this);
@@ -303,7 +351,7 @@ handler_feeds  = {
 					text_perc_com.text('Your profile is now '+current_c_perc+' % complete');
 					progress_bar.attr('style', 'width:'+current_c_perc+'%');
 					progress_bar.attr('data-value', current_c_perc);
-					if(data) handler.show_next_profile_setup_data(data);
+					if(data) handler_feeds.show_next_profile_setup_data(data);
 				},
 				complete: function(responseText){ 
 
@@ -418,7 +466,7 @@ handler_feeds  = {
 		$(this).parents('div.media-body').children('div.edit-comment-box').removeClass("hidden");
 		$(this).parents('div.media-body').children('p.comment-data').hide();
 	},
-	edit_coment_closer(){
+	edit_coment_closer: function(){
 		$(this).parents('div.media-body').children('p.comment-data').show();
 		$(this).parents('div.media-body').children('div.edit-comment-box').addClass("hidden");
 	},
@@ -486,8 +534,10 @@ handler_feeds  = {
 			beforeSend: function(){
 				if(type == 1 || type == "1"){ //likes
 					if(data_type == 1 || data_type == "1"){ //for post
+						var like_counter = this_obj.parents('.post-container').find('.like-span').children('b');
 						this_obj.removeClass('like').addClass('unlike');
 						this_obj.removeClass('fa-heart-o').addClass('fa-heart').addClass('text-heart');
+						like_counter.text(parseInt(like_counter.text()) + 1);
 					}
 					else if(data_type == 2 || data_type == "2"){ //for comments
 						this_obj.removeClass('like').addClass('unlike');
@@ -511,8 +561,10 @@ handler_feeds  = {
 				}
 				else if(type == 2 || type == "2"){ //unlikes
 					if(data_type == 1 || data_type == "1"){ //for post
+						var like_counter = this_obj.parents('.post-container').find('.like-span').children('b');
 						this_obj.removeClass('unlike').addClass('like');
 						this_obj.addClass('fa-heart-o').removeClass('fa-heart').removeClass('text-heart');
+						like_counter.text(parseInt(like_counter.text()) - 1);
 					}
 					else if(data_type == 2 || data_type == "2"){ //for comments
 						this_obj.removeClass('unlike').addClass('like');
@@ -658,7 +710,7 @@ handler_feeds  = {
 						status_img_div.empty();
 					},
 					complete: function(responseText){ 
-						handler_feeds.init_photo_grid({gutter: 5});
+						handler_feeds.init_photo_grid({gutter: 1});
 					},
 					error: function(XMLHttpRequest, textStatus, errorThrown) {
 					    alert(errorThrown)

@@ -1,4 +1,4 @@
-    <div class="sidebar">
+    <div class="sidebar hidden">
       <ul class="list-unstyled top-sidebar-ul">
         <li>
           <div class="media">

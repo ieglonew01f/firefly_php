@@ -9,6 +9,7 @@
     {{ HTML::style('public/assets/css/font-awesome.min.css'); }}
     {{ HTML::style('public/assets/css/checkboxes.css'); }}
     {{ HTML::style('public/assets/css/lineicons.css'); }}
+    {{ HTML::style('public/assets/css/jquery-confirm.min.css'); }}
     {{ HTML::style('public/assets/css/jenkins.global.css'); }}
     <!-- PAGE LEVEL CSS -->
     @yield('page_css')

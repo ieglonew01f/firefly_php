@@ -15,11 +15,13 @@ class Htmlfactory {
 
 		$base_path = 'http://localhost'; //change it to site url
 
-		//session data
+		/* session data and declerables */
+		
 		$u_id_session            = Session::get('id');
 		$fullname_session        = Session::get('fullname');
 		$username_session        = Session::get('username');
 		$profile_picture_session = DB::table('users_profile')->where('u_id', $u_id_session)->first()->profile_picture; //get session user profile
+		$activity                = '';
 
 
 
@@ -52,7 +54,7 @@ class Htmlfactory {
 			}
 			else if($data['type'] === "3" || $data['type'] === 3 || $data['type'] === "4" || $data['type'] === 4){ //photo feed
 				$img_list = '';
-				$counter  = 4;
+				$counter  = 3;
 				foreach($data['images'] as $images){
 					$img_list .= '<div class="item"><img width="100" class="feedPhotos" data-id="'.$data['feed_id'].'" data-img="'.$images.'" src="'.$base_path.'/uploads/'.$images.'"></img></div>';
 
@@ -68,9 +70,22 @@ class Htmlfactory {
 						</div>
 						';
 			}
+
+
+			/*Generating post activity */
+			if($data['post_activity']){
+	            
+	            $activity = '
+	            	<div class="activity">
+		              	<h5 class="nmb nmt">'.$data['post_activity'].'</h5>
+		              	<hr class="hr-sm"/>
+	              	</div>';
+			}
+
 			return '
 	            <div data-id="'.$data['feed_id'].'" class="post-container">
 	              <div class="post-cards">
+	              	'.$activity.'
 	              	<div id="delete_loader" class="loader loader-inner ball-pulse pull-right hidden"><div></div><div></div><div></div></div>
 					<div id="post_dropdown" class="btn-group pull-right">
 	                  <button type="button" class="close font-size-18 text-muted dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -93,7 +108,7 @@ class Htmlfactory {
 	                  <div class="media-body">
 	                    <h4 class="media-heading nmb" id="media-heading">'.$data['fullname'].'</h4>
 	                    <small class="text-muted">'.$data['created'].'</small><br/>
-	                    <span data-type="1" class="post-card-button-inner mr-r '.$data['class_lu'].'"></span> <span data-icon="&#xe051;" class="post-card-button-inner"></span>
+	                    <span data-type="1" class="post-card-button-inner mr-r '.$data['class_lu'].'"></span> <span data-icon="&#xe051;" class="post-card-button-inner share-btn"></span>
 	                  </div>
 	                </div>
 					<div id="edit_panel" class="panel panel-default mrt10 hidden">
@@ -110,7 +125,7 @@ class Htmlfactory {
 					</div>
 		            <div class="comment-container hidden">
 		            	<div class="loader loader-inner ball-pulse hidden"><div></div><div></div><div></div></div>
-		            	<p><a id="view_prev_comm" class="'.$data['view_prev_comment'].'" href="javascript:;">View previous comments</a></p>
+		            	<p><a id="view_prev_comm" class="'.$data['view_prev_comment'].'" href="javascript:;"><b>View previous comments</b></a></p>
 		            	<div class="comments-holder">
 		            		'.$data['comments'].'
 		                </div>
@@ -131,6 +146,7 @@ class Htmlfactory {
 	        ';
 		}
 		else if($type === 2 || $type === "2"){ //comments
+
 			return '
         	<div data-id="'.$data['comment_id'].'" class="comment">
                 <div class="media nmt">
@@ -161,7 +177,7 @@ class Htmlfactory {
 		}
 		else if($type === 3 || $type === "3"){ //post card buttons
 			return '
-				<ul class="list-inline no-margin-bottom"><li><img width="32" height="32" src="public/assets/img/avatars/man_1.jpg"></img></li><li><img width="32" height="32" src="public/assets/img/avatars/man_2.jpg"></img></li><li><img width="32" height="32" src="public/assets/img/avatars/real_female1.jpg"></img></li><li><span class="no-likes">23 more likes</span></li><li><span id="comments_btn" class="span-comments no-likes">'.$data['ncomments'].'</span></li><li><span class="no-likes">21 Shares</span></li></ul>
+				<ul class="list-inline margin-top-sm"><li class="'.$data['hasLikes'].'"><span class="btn-flat-post-cards like-span"><i class="fa fa-heart-o"></i> '.$data['likes_count'].'</span></li><li><span id="comments_btn" class="btn-flat-post-cards"><span data-icon="&#xe04a;"></span> '.$data['ncomments'].'</span></li><li><span class="btn-flat-post-cards share"><span data-icon="&#xe051;"></span> <span class="share-text">'.$data['share'].'</span></span></li></ul>
 			';
 		}
 		else if($type === 4 || $type === "4"){ //for profile setup

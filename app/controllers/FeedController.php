@@ -15,7 +15,7 @@ class FeedController extends BaseController {
 
 	public function bake_post()
 	{
-		$feeds = new feeds;
+		$feeds   = new feeds;
 
 		$type    = Input::get('type');
 		$content = Input::get('content');
@@ -88,6 +88,19 @@ class FeedController extends BaseController {
 
 		return $feeds -> insert_post($data);
 
+	}
+
+	//share post
+	public function share_post(){
+
+		$data = array(
+			"u_id"      => Session::get('id'),
+			"feed_id"   => Input::get('feed_id'),
+			"timestamp" => time()
+		);
+
+		$feeds = new feeds;
+		$feeds -> share_post($data);
 	}
 
 	public function edit_post(){
