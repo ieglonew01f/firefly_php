@@ -15,8 +15,19 @@ class User extends Eloquent {
 		else {
 			//saving new user
 			$this::create($input);
+			$username = $this::where('email', $input['email']) -> where('password', $input['password']) ->first();
+			if($username){
+				$session_data  = array(
+					"id"       => $username -> id,
+					"email"    => $username -> email,
+					"username" => $username -> username
+				);
 
-			return 1;
+				Session::put($session_data);
+				return 1;
+			}
+			else
+				return 0;		//if insertion into DB failed
 		}
 	}
 
