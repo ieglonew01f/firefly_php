@@ -11,12 +11,13 @@ class Htmlfactory {
 		* type = 3 -> for baking post card buttons
 		* type = 4 -> for profile setup
 		* type = 5 -> for generating profile picture change modal
+		* type = 6 -> for generating chat list
 		*/
 
 		$base_path = 'http://localhost'; //change it to site url
 
 		/* session data and declerables */
-		
+
 		$u_id_session            = Session::get('id');
 		$fullname_session        = Session::get('fullname');
 		$username_session        = Session::get('username');
@@ -30,7 +31,7 @@ class Htmlfactory {
 				$content = '<p class="mrt10">'.$data['content'].'</p>';
 			}
 			else if($data['type'] === "1" || $data['type'] === 1){ //youtube feed
-				$content = '	
+				$content = '
 							<p class="mrt10">'.$data['content'].'</p>
 							<div id="video_frame">
 						        <div class="media vframe_media">
@@ -47,7 +48,7 @@ class Htmlfactory {
 						    </div>';
 			}
 			else if($data['type'] === "2" || $data['type'] === 2){ //soundcloud feed
-				$content = '	
+				$content = '
 						<p class="mrt10">'.$data['content'].'</p>
 						<iframe width="100%" class="margin-top-sm" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/'.$data['vcode'].'&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true"></iframe>
 						';
@@ -56,14 +57,14 @@ class Htmlfactory {
 				$img_list = '';
 				$counter  = 3;
 				foreach($data['images'] as $images){
-					$img_list .= '<div class="item"><img width="100" class="feedPhotos" data-id="'.$data['feed_id'].'" data-img="'.$images.'" src="'.$base_path.'/uploads/'.$images.'"></img></div>';
+					$img_list .= '<div class="item"><img width="100" class="feedPhotos" data-id="'.$data['feed_id'].'" data-img="'.$images.'" src="/uploads/'.$images.'"></img></div>';
 
 					if($counter == 0) break; //load only 4 images
 
 					$counter --;
 				}
 
-				$content = '	
+				$content = '
 						<p class="mrt10">'.$data['content'].'</p>
 						<div class="img-collage-div">
 							'.$img_list.'
@@ -73,8 +74,13 @@ class Htmlfactory {
 
 
 			/*Generating post activity */
+			//if a wall post then do this
+			if($data['isWall']){
+				$data['post_activity'] = '<a href="/profile/'.$data['username'].'"><b>'.$data['fullname'].'</b></a> <span class="text-muted text-bold">shared on</span> <a href="/profile/'.$data['wall_user_details']['username'].'"><b>'.$data['wall_user_details']['fullname'].'\'s</b></a> <span class="text-muted text-bold">wall</span>';
+			}
+			//if there is a post activity then do this
 			if($data['post_activity']){
-	            
+
 	            $activity = '
 	            	<div class="activity">
 		              	<h5 class="nmb nmt">'.$data['post_activity'].'</h5>
@@ -102,7 +108,7 @@ class Htmlfactory {
 	                <div class="media nmt">
 	                  <div class="media-left">
 	                    <a href="'.$base_path.'/profile/'.$data['username'].'">
-	                      <img width="64" height="64" class="media-object" src="'.$base_path.'/uploads/'.$data['profile_picture'].'">
+	                      <img width="64" height="64" class="media-object" src="/uploads/'.$data['profile_picture'].'">
 	                    </a>
 	                  </div>
 	                  <div class="media-body">
@@ -133,7 +139,7 @@ class Htmlfactory {
 			                <div class="media nmt">
 			                  <div class="media-left">
 			                    <a href="'.$base_path.'/profile/'.$username_session.'">
-			                      <img width="38" height="38" class="media-object" src="'.$base_path.'/uploads/'.$profile_picture_session.'">
+			                      <img width="38" height="38" class="media-object" src="/uploads/'.$profile_picture_session.'">
 			                    </a>
 			                  </div>
 			                  <div class="media-body">
@@ -152,7 +158,7 @@ class Htmlfactory {
                 <div class="media nmt">
                   <div class="media-left">
                     <a href="'.$base_path.'/profile/'.$data['username'].'">
-                      <img width="32" height="32" class="media-object" src="'.$base_path.'/uploads/'.$data['profile_picture'].'">
+                      <img width="32" height="32" class="media-object" src="/uploads/'.$data['profile_picture'].'">
                     </a>
                   </div>
                   <div class="media-body">
@@ -166,14 +172,14 @@ class Htmlfactory {
 		                    </li>
 		                    <li>
 		                    	<button class="btn btn-sm btn-flat comment-edit-save"><i class="fa fa-check"></i></button> <button class="btn btn-sm btn-flat comment-edit-closer"><i class="fa fa-times"></i></button>
-		                    </li>	
+		                    </li>
 		                </ul>
 	                </div>
                     <p class="nmt"><span data-type="2" class="button-tiny '.$data['is_liked'].' '.$data['like_class'].'" data-icon="&#xe068;"> <i class="text-bold text-primary">'.$data['comment_likes_count'].'</i></span> &nbsp; <span class="button-tiny edit-comment '.$data['delete_edit_class'].'" data-icon="&#xe060;"></span> &nbsp; <span class="button-tiny delete-comment fs15spandeletecom '.$data['delete_edit_class'].'" data-icon="&#xe082;"></span><p>
                   </div>
                 </div>
             </div>
-			';	
+			';
 		}
 		else if($type === 3 || $type === "3"){ //post card buttons
 			return '
@@ -303,6 +309,22 @@ class Htmlfactory {
 						</div>
 					</div>
 				</div>
+			';
+		}
+		else if($type === "6" || $type === 6){
+			return '
+				<li data-fullname="'.$data['fullname'].'" data-username="'.$data['username'].'">
+          <div class="media">
+            <div class="media-left">
+              <a href="/profile/'.$data['username'].'">
+                <img width="32" height="32" class="media-object" src="/uploads/'.$data['profile_picture'].'">
+              </a>
+            </div>
+            <div class="media-body vam"> <span class="label label-success pull-right green-ball">&nbsp;</span>
+              <h4 class="media-heading">'.$data['fullname'].'</h4>
+            </div>
+          </div>
+        </li>
 			';
 		}
 	}

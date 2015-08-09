@@ -31,7 +31,7 @@ var handler  = {
 			beforeSend: function(){
 
 			},
-			success: function(data){ 
+			success: function(data){
 				var fullname = {
 				    minlength: data.fullname_min_length,
 				    maxlength: data.fullname_max_length,
@@ -39,7 +39,7 @@ var handler  = {
 				    	minlength: "Fullname is too short",
 				    	maxlength: "Fullname is too long"
 					}
-				}	
+				}
 
 				var password = {
 				    minlength: data.password_min_length,
@@ -48,7 +48,7 @@ var handler  = {
 				    	minlength: "Password is too short",
 				    	maxlength: "Password is too long"
 					}
-				}	
+				}
 
 				var username_r = {
 				    minlength: data.username_min_length,
@@ -64,7 +64,7 @@ var handler  = {
 				username.rules('add', username_r);
 				count = 0;
 			},
-			complete: function(data){ 
+			complete: function(data){
 
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -95,7 +95,7 @@ var handler  = {
 	            },
 	            repassword: {
 	            	required: true,
-					equalTo: "#password"
+								equalTo: "#password"
 	            }
 	        },
 	        messages: {
@@ -131,7 +131,7 @@ var handler  = {
 				username.parent().removeClass("has-error");
 				username_label.text('Username').removeClass("text-danger");
 			},
-			success: function(responseText){ 
+			success: function(responseText){
 				if(responseText === "0" || responseText === 0){
 					username.parent().addClass("has-error");
 					username_label.text('This username is not available').addClass("text-danger");
@@ -143,8 +143,8 @@ var handler  = {
 					username_label.text('Username').removeClass("text-danger");
 				}
 			},
-			complete: function(responseText){ 
-				
+			complete: function(responseText){
+
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
 			    alert(errorThrown)
@@ -163,7 +163,7 @@ var handler  = {
 				beforeSend: function(){
 					email_input.parent().removeClass("has-error").find('span').text('Email').removeClass("text-danger");
 				},
-				success: function(responseText){ 
+				success: function(responseText){
 					if(responseText === "0" || responseText === 0){
 						email_input.parent().addClass("has-error").find('span').text('This email address is already registered with us').addClass("text-danger");
 					}
@@ -172,7 +172,7 @@ var handler  = {
 						username_test = false;
 					}
 				},
-				complete: function(responseText){ 
+				complete: function(responseText){
 				},
 				error: function(XMLHttpRequest, textStatus, errorThrown) {
 				    alert(errorThrown)

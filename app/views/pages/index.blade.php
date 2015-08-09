@@ -1,6 +1,6 @@
 @extends('layouts.default')
 @section('title')
-  Social Networking Script
+  Jenkins - Social Networking Script
 @stop
 @section('page_css')
   {{ HTML::style('public/assets/css/jenkins.index.css'); }}
@@ -31,7 +31,7 @@
             <p class="text-white ">Your social network <br/>Jenkins is the best way to create your own <br/> social network or online community in just 5 minutes without any programming knowledge.</p>
             <p class="text-white"><b>{{trans('messages.join')}}</b></p>
             <hr/>
-            <div class="row"> 
+            <div class="row">
               <div class="col-md-1">
                 <img width="50" height="50" src="public/assets/img/avatars/female_1.jpg" class="img-circle members-icons">
               </div>

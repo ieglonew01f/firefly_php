@@ -2,7 +2,7 @@
       <span><ul class="list-inline"><li class="li-grey-btn"><span class="text-primary" data-icon="&#xe060;"></span> Share something</li><li class="text-muted-md">|</li><li class="li-grey-btn photo-select"><span class="text-primary" data-icon="&#xe07f;"></span> Share photos</li><li class="text-muted-md">|</li><li class="li-grey-btn"><span class="text-primary" data-icon="&#xe062;"></span> Share Music</li><li class="text-muted-md">|</li><li class="li-grey-btn"><span data-icon="&#xe096;" class="text-primary"></span> Share a location</li></ul></span>
       <div class="tri-up"></div>
       <div class="form-group">
-        <textarea id="status" placeholder="Share something new.." class="text-area"></textarea>
+        <textarea id="status" placeholder="{{ $placeholder_text }}" class="text-area"></textarea>
       </div>
       <div class="status-img-container">
         <div class="row">
@@ -24,9 +24,9 @@
         </div>
       </div>
       <div id="loader" class="loader loader-inner ball-pulse pull-right mrt10 hidden"><div></div><div></div><div></div></div>
-      <div class="form-group">  
-        <button id="status_button" class="btn btn-primary btn-sm">Share</button>
-        <div class="btn-group">
+      <div class="form-group">
+        <button id="status_button" data-id="{{ $profile_data_id }}" class="btn btn-primary btn-sm">Share</button>
+        <div class="btn-group {{ $isProfile }}">
           <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
             <span data-icon="&#xe001;"></span> &nbsp; Public <span class="caret"></span>
           </button>

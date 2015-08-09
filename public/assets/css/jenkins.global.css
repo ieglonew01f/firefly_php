@@ -1,3 +1,61 @@
+@import url(http://fonts.googleapis.com/css?family=Stalemate);
+body{
+	color: #838383;
+	background: #FAFAFA;
+}
+h1,h2,h3,h4,h5,h6{
+	color: #838383;
+}
+@media (min-width: 1200px){
+  .container {
+    width: 970px;
+  }
+}
+.width-full{
+	width:100%;
+}
+.text-white{
+	color:white;
+}
+.navbar-brand{
+	font-family: 'Stalemate', cursive;
+	font-size:3.5em;
+	font-weight:bold;
+}
+.font-family-stale{
+	font-family: 'Stalemate', cursive;
+}
+.search-bar{
+	width: 250px !important;
+}
+.status-box{
+  padding: 15px;
+  border: 1px solid rgb(231, 231, 231);
+  border-radius: 5px;
+  padding-bottom:0px;
+  background:white;
+}
+.text-area{
+  outline: 0;
+  border: none;
+  width: 100%;
+  resize: none;
+}
+.progress{
+  height: 15px;
+}
+.line-height-1{
+	  line-height: 1;
+}
+.padding-xs{
+	padding:5px;
+}
+.hr-dashed{
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border: 0;
+  border-top: 1px dashed #eeeeee;
+}
 .tri-up {
 	/* Styling block element, not required */
 	position: relative;
@@ -92,6 +150,15 @@
 .nmt{
 	margin-top:0px;
 }
+.nml{
+	margin-left:0px;
+}
+.nmr{
+	margin-right:0px;
+}
+.npl{
+	padding-left:0px;
+}
 
 /* SIDEBAR CSS*/
 .sidebar{
@@ -140,8 +207,8 @@
 /* stop the glowing blue shadow */
 .add-on .form-control:focus {
  box-shadow:none;
- -webkit-box-shadow:none; 
- border-color:#cccccc; 
+ -webkit-box-shadow:none;
+ border-color:#cccccc;
 }
 .border-bottom{
   border-bottom: 1px solid rgb(231, 231, 231);
@@ -2059,7 +2126,7 @@
     background-image: -webkit-linear-gradient(transparent 0%, transparent 70%, #fff 30%, #fff 100%);
     background-image: linear-gradient(transparent 0%, transparent 70%, #fff 30%, #fff 100%);
     width: 100%;
-    height: 100%; 
+    height: 100%;
 }
 
 /* other css */
@@ -2238,7 +2305,7 @@ font-size: 15px;
   border: 1px solid rgb(79, 147, 190);
   text-transform: none;
   color:rgb(79, 147, 190);
-  border-radius:4px; 
+  border-radius:4px;
 }
 .btn-transparent-primary:hover, .btn-transparent-primary:focus, .btn-transparent-primary:active{
   background: rgb(79, 147, 190);
@@ -2422,4 +2489,63 @@ font-size: 15px;
   margin-top:0px !important;
   background:white !important;
   color:#303f53 !important;
+}
+.tiny-chat-header{
+	padding:7px;
+	color:white;
+	background:#158cba;
+	border-top-right-radius: 4px;
+	border-top-left-radius: 4px;
+	border: 1px solid #157EA7;
+}
+.tiny-chat-footer{
+	position: absolute;
+	bottom: 0px;
+	width: 100%;
+	height: 35px;
+}
+.tiny-chat-body{
+	overflow-y: scroll;
+	height: 208px;
+}
+.tiny-chat-container{
+	position: fixed;
+  width: 270px;
+  height: 280px;
+  z-index: 999;
+  background-color: #e9eaed;
+  bottom: 10px;
+  left: 220px;
+  border-radius: 4px;
+}
+.tiny-chat-message-in{
+	background: white;
+	padding: 5px;
+	border: 1px solid #e5e6e9;
+	border-radius: 4px;
+	border-color: #e5e6e9 #dfe0e4 #d0d1d5;
+	margin-left: 3px;
+	max-width: 155px;
+	word-break: break-all;
+}
+.tiny-chat-message-out{
+  background: aliceblue;
+	padding: 5px;
+	border: 1px solid #e5e6e9;
+	border-radius: 4px;
+	border-color: #e5e6e9 #dfe0e4 #d0d1d5;
+	max-width: 155px;
+	word-break: break-all;
+}
+.col-msg{
+	width: auto;
+  margin-left: 7px;
+  padding: 0px;
+  position: relative;
+  float: left;
+  height: 0px;
+}
+.green-ball{
+	border-radius: 100px;
+	margin-top: 4px;
 }

@@ -5,6 +5,11 @@ body{
 h1,h2,h3,h4,h5,h6{
 	color: #838383;
 }
+@media (min-width: 1200px){
+	.container {
+	    width: 1170px !important;
+	}
+}
 .jumbotron h1, .jumbotron .h1 {
   color: white;
 }

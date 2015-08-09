@@ -134,7 +134,7 @@ var handler  = {
 					progress_bar.attr('data-value', current_c_perc);
 					if(data) handler.show_next_profile_setup_data(data);
 				},
-				complete: function(responseText){ 
+				complete: function(responseText){
 
 				},
 				error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -177,7 +177,7 @@ var handler  = {
 				thisObj.parent().parent().find('.comments-holder').prepend(html);
 				if(multiples > 0) thisObj.show();
 			},
-			complete: function(responseText){ 
+			complete: function(responseText){
 
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -208,7 +208,7 @@ var handler  = {
 				success: function(html){
 					comment_card_obj.fadeOut("slow");
 				},
-				complete: function(responseText){ 
+				complete: function(responseText){
 				},
 				error: function(XMLHttpRequest, textStatus, errorThrown) {
 				    alert(errorThrown)
@@ -234,7 +234,7 @@ var handler  = {
 					this_obj.parents('.media-body').children('#comment_edit_loader').addClass("hidden");
 					this_obj.parents('div.media-body').children('p.comment-data').text(comment).show();
 				},
-				complete: function(responseText){ 
+				complete: function(responseText){
 
 				},
 				error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -271,7 +271,7 @@ var handler  = {
 				success: function(html){
 					thisObj.parents('.comment-container').children('.comments-holder').append(html);
 				},
-				complete: function(responseText){ 
+				complete: function(responseText){
 					thisObj.val("");
 				},
 				error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -282,7 +282,7 @@ var handler  = {
 	},
 	like_unlike_handler: function(event){
 		var type        = event.data.type;
-		var this_obj    = $(this); 
+		var this_obj    = $(this);
 		var data_type   = this_obj.data("type");
 
 		if(type == 1 || type == "1"){ //for like handle
@@ -335,7 +335,7 @@ var handler  = {
 						}
 						else{
 							this_obj.children('i').text('+1');
-						}	
+						}
 					}
 				}
 				else if(type == 2 || type == "2"){ //unlikes
@@ -359,14 +359,14 @@ var handler  = {
 						}
 						else{
 							this_obj.children('i').text('');
-						 }	
+						 }
 					}
 				}
 			},
 			success: function(html){
 
 			},
-			complete: function(responseText){ 
+			complete: function(responseText){
 
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -457,10 +457,10 @@ var handler  = {
 		if(text_status != ""){
 			//if a youtube video
 			if(code){
-				var dataString = "content="+text_status.val()+"&youtube_vcode="+youtube_vcode+"&youtube_vthumb="+youtube_vthumb+"&youtube_vdesc="+youtube_vdesc+"&youtube_vtitle="+youtube_vtitle+"&type="+1;		
+				var dataString = "content="+text_status.val()+"&youtube_vcode="+youtube_vcode+"&youtube_vthumb="+youtube_vthumb+"&youtube_vdesc="+youtube_vdesc+"&youtube_vtitle="+youtube_vtitle+"&type="+1;
 			}
 			else if(global_SoundCloud_Link){ //if sound cloud
-				var dataString = "content="+text_status.val()+"&soundcloud_code="+global_SoundCloud_Link+"&type="+2;	
+				var dataString = "content="+text_status.val()+"&soundcloud_code="+global_SoundCloud_Link+"&type="+2;
 			}
 			else{
 				var dataString = "content="+text_status.val()+"&type="+0;
@@ -481,7 +481,7 @@ var handler  = {
 					status_button.removeAttr("disabled").text("share");
 					video_frame.addClass("hidden");
 				},
-				complete: function(responseText){ 
+				complete: function(responseText){
 
 				},
 				error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -519,7 +519,7 @@ var handler  = {
 				this_post_card.find('p.mrt10').text(this_post_card.find('textarea').val());
 				this_post_card.find('div#edit_loader').addClass("hidden");
 			},
-			complete: function(responseText){ 
+			complete: function(responseText){
 
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -549,7 +549,7 @@ var handler  = {
 			success: function(html){
 				post_card_obj.fadeOut("slow");
 			},
-			complete: function(responseText){ 
+			complete: function(responseText){
 
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {

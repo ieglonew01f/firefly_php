@@ -52,3 +52,8 @@ Route::post('/change_pp', 'UploadController@change_profile_picture');
 Route::post('/set_avatar', 'UploadController@set_avatar');
 Route::post('/photo_update', 'UploadController@photo_update');
 
+/*ROUTES FOR INBOX PAGE */
+Route::get('/inbox', 'InboxController@index');
+
+/*ROUTES FOR CHAT CONTROLLER*/
+Route::post('/chat_list', 'ChatController@get_chatlist');

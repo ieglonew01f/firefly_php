@@ -16,16 +16,17 @@ class FeedController extends BaseController {
 	public function bake_post()
 	{
 		$feeds   = new feeds;
-
 		$type    = Input::get('type');
 		$content = Input::get('content');
 
 		if($type === 0 || $type === "0"){ //normal feed
 			$data = array(
-				"u_id"    => Session::get('id'), 
+				"u_id"    => Session::get('id'),
 				"content" => $content,
 				"created" => time(),
-				"type"    => 0
+				"type"    => 0,
+				"isWall"  => Input::get('isWall'),
+				"wall_id" => Input::get('wall_id')
 			);
 		}
 		else if($type === 1 || $type === "1"){ //youtube feed
@@ -42,7 +43,9 @@ class FeedController extends BaseController {
 				"content" => $content,
 				"u_id"    => Session::get('id'),
 				"type"    => 1,
-				"created" => time()
+				"created" => time(),
+				"isWall"  => Input::get('isWall'),
+				"wall_id" => Input::get('wall_id')
 			);
 		}
 		else if($type === 2 || $type === "2"){  //soundcloud feed
@@ -53,7 +56,9 @@ class FeedController extends BaseController {
 				"content" => $content,
 				"u_id"    => Session::get('id'),
 				"type"    => 2,
-				"created" => time()
+				"created" => time(),
+				"isWall"  => Input::get('isWall'),
+				"wall_id" => Input::get('wall_id')
 			);
 		}
 
@@ -73,7 +78,7 @@ class FeedController extends BaseController {
 			$type = 3;
 		}
 		/* If is a single image then type = 4 */
-		else if(count($data -> photo_array) == 1){ 
+		else if(count($data -> photo_array) == 1){
 			$type = 4;
 		}
 
@@ -83,11 +88,13 @@ class FeedController extends BaseController {
 			"images"  => $data -> photo_array,
 			"u_id"    => Session::get('id'),
 			"type"    => $type, // for image update
-			"created" => time()
+			"created" => time(),
+			"isWall"  => $data -> isWall,
+			"wall_id" => $data -> wall_id
 		);
 
 		return $feeds -> insert_post($data);
-
+		
 	}
 
 	//share post
@@ -110,12 +117,12 @@ class FeedController extends BaseController {
 			"u_id"       => Session::get('id'),
 			"updated_at" => time()
 		);
-		
+
 		$feeds = new feeds;
 		$feeds -> edit_post($data);
 	}
 
-	public function delete_post(){		
+	public function delete_post(){
 		$feeds = new feeds;
 		$feeds -> delete_post(Input::get('feed_id'));
 	}
@@ -137,7 +144,7 @@ class FeedController extends BaseController {
 			}
 			else if(Input::get('type') === "unlike"){
 				$feeds -> unlike_post_or_comment(2, Input::get('comment_id'));
-			}	
+			}
 		}
 	}
 

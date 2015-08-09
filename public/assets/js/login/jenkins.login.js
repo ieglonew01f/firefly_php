@@ -57,7 +57,7 @@ var handler  = {
 				beforeSend: function(){
 					failed_msg.addClass("hidden");
 				},
-				success: function(responseText){ 
+				success: function(responseText){
 					if(responseText === "0" || responseText === 0){
 						failed_msg.removeClass("hidden")
 					}
@@ -66,7 +66,7 @@ var handler  = {
 						failed_msg.addClass("hidden");
 					}
 				},
-				complete: function(responseText){ 
+				complete: function(responseText){
 
 				},
 				error: function(XMLHttpRequest, textStatus, errorThrown) {

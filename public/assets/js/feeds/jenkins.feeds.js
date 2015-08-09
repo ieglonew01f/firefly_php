@@ -38,9 +38,17 @@ var input_comment_gallery = $('input#comment_gallery');
 var gallery_loader        = $("#gallery_comment_loader");
 var gallery_comment_count = $("#comments_count");
 var overlay_loader        = $(".overlay-loader");
+var sidebar_chat_list     = $(".sidebar-chat-list");
+var jenkins_session_data  = $('#jenkins_session_data');
+
 //variables
-var data, matches, soundcloud, viemo, code, regExp, match, previous_comment_offset = 6, current_c_perc, handler_feeds = {}, photo_array = [], image_counter = 0, img_feed_id = 0;
+var online_users, friend_list = FRIEND_LIST_ARRAY, data, matches, soundcloud, viemo, code, regExp, match, previous_comment_offset = 6, current_c_perc, handler_feeds = {}, photo_array = [], image_counter = 0, img_feed_id = 0;
 var youtube_vtitle, youtube_vdesc, youtube_vthumb, youtube_vcode, global_SoundCloud_Link, comment_card_obj, post_card_obj,exec = 0, multiples, remainder, isPhotoUpdate = false;
+
+var session_username = jenkins_session_data.data('username');
+var session_fullname = jenkins_session_data.data('fullname');
+var session_id       = jenkins_session_data.data('id');
+var session_pp       = jenkins_session_data.data('pp');
 
 /* SET API KEY FOR YOUTUBE */
 var apiKey = "AIzaSyDLAPqnX5JQ6bqcxZJaxrlaFRLqCQMBZQM";
@@ -50,6 +58,70 @@ var scapiKey = "243727134d2c71ba214ef1ec60a371d3";
 //init function
 var init = function(){
 	//workers
+
+	//chat works
+	//register on node.js network
+	comet.register({'id':session_id, 'username': session_username, 'fullname': session_fullname});
+
+	//recieve message handler
+	comet.new_message(function(data){
+		//building html
+		var html = '<div class="padding-xs"><div class="row nml nmr"><div class="col-sm-1 npl"><img class="media-object" src="/uploads/'+data.by_pp+'" style="width: 28px; height: 28px;"></div><div class="col-msg"><div class="tiny-chat-message-in">'+data.message+'</div></div></div></div>';
+
+		//if div is not present in the dom
+		if($('.tiny-chat-container[data-username='+data.by_username+']').length <= 0) {
+			$('body').append('<div data-username="'+data.by_username+'" class="tiny-chat-container"><div class="tiny-chat-header">'+data.by_fullname+'</div><div class="tiny-chat-body">'+html+'</div><div class="tiny-chat-footer"><input autocomplete="off" id="tiny-chat-input" class="form-control" placeholder="Type a message.."></input></div></div>');
+			var tinyChatBody = $('.tiny-chat-container[data-username="'+data.by_username+'"]').find('.tiny-chat-body');
+			tinyChatBody.animate({ scrollTop: tinyChatBody[0].scrollHeight}, 1000);
+		}
+		else if($('.tiny-chat-container[data-username='+data.by_username+']').length > 0) {
+			var tinyChatBody = $('.tiny-chat-container[data-username="'+data.by_username+'"]').find('.tiny-chat-body');
+			tinyChatBody.append(html);
+			tinyChatBody.animate({ scrollTop: tinyChatBody[0].scrollHeight}, 1000);
+		}
+	});
+
+	//refresh chat list if new user
+	//send friendlist to socket server and check who is online and get list of friends online
+	comet.chat_list(friend_list, function(friends_online){
+		//make ajax call to get friends_online details
+		if(friends_online.length > 0){
+			handler_feeds.populateOnlineChatList(friends_online);
+		}
+	});
+
+	$(document).on('click', '.sidebar-chat-list li', '', function(){
+		$('body').append('<div data-username="'+$(this).data('username')+'" data-fullname="'+$(this).data('fullname')+'" class="tiny-chat-container"><div class="tiny-chat-header">'+$(this).data('fullname')+'</div><div class="tiny-chat-body"></div><div class="tiny-chat-footer"><input autocomplete="off" id="tiny-chat-input" class="form-control" placeholder="Type a message.."></input></div>');
+	});
+
+	//send message handler
+	$(document).on('keydown', '#tiny-chat-input', '', function(e){
+		var keyCode = e.keyCode || e.which;
+	  if (keyCode == 13) {
+			//check for empty msg
+			if($('#tiny-chat-input').val() != ''){
+				//get username
+				var username = $(this).parents('.tiny-chat-container').data('username');
+				var fullname = $(this).parents('.tiny-chat-container').data('fullname');
+				var message  = $(this).val();
+
+				//building html
+				var html = '<div class="padding-xs"><div class="row nml nmr"><div class="tiny-chat-message-out pull-right">'+message+'</div></div></div>';
+
+				comet.send_message({for_username:username, by_username:session_username, by_pp:session_pp, by_fullname:session_fullname, message:message}, function(data){
+					var tinyChatBody = $('.tiny-chat-container[data-username="'+username+'"]').find('.tiny-chat-body');
+					tinyChatBody.append(html);
+					tinyChatBody.animate({ scrollTop: tinyChatBody[0].scrollHeight}, 1000);
+				});
+
+				$('#tiny-chat-input').val('');
+				//$('#typing'+$('#id').val()).remove(); //remove is typing of this user
+			}
+	  }
+	});
+
+	//eof chat workers
+
 	handler_feeds.soundcloud_init();
 	handler_feeds.auto_grow();
 	handler_feeds.init_photo_grid({gutter: 1});
@@ -113,7 +185,7 @@ var init = function(){
 		},
 		complete: function(response) { // on complete
 			$('.loader-col').remove();
-			status_img_div.append('<div class="col-xs-2 img-col"><img class="img-uploads-stdiv" src="uploads/thumb_'+response.responseText+'"></img></div>');
+			status_img_div.append('<div class="col-xs-2 img-col"><img class="img-uploads-stdiv" src="/uploads/thumb_'+response.responseText+'"></img></div>');
 			status_img_div.append('<div class="col-xs-2 next-img-col"><div class="upload-next-img-div"><i class="fa fa-plus"></i></div>');
 			photo_array.push(response.responseText);
 		}
@@ -148,7 +220,7 @@ var init = function(){
 				success: function(html){
 					gallery_comments.append(html);
 				},
-				complete: function(responseText){ 
+				complete: function(responseText){
 					overlay_loader.addClass('hidden');
 					gallery_loader.addClass('hidden');
 					//slim scroll on photo gallery comments
@@ -167,6 +239,25 @@ var init = function(){
 /* =============================================== HELPERS ==============================================*/
 
 handler_feeds  = {
+	populateOnlineChatList: function(friend_list){
+		$.ajax({
+				type  : 'POST',
+				url   : '/chat_list',
+				data  : { friend_list : friend_list },
+			beforeSend: function(){
+
+			},
+			success: function(html){
+				sidebar_chat_list.html(html);
+			},
+			complete: function(responseText){
+
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
+					alert(errorThrown)
+			}
+		});
+	},
 	sharePost: function(e){
 		var feed_id = $(this).parents('.post-container').data('id');
 		var post_card_obj = $(this).parents('.post-container');
@@ -179,33 +270,32 @@ handler_feeds  = {
 		    confirmButtonClass: 'btn-primary',
 		    animation: 'bottom',
 		    confirm: function(){
+					$.ajax({
+					    type  : 'POST',
+					    url   : '/share_feed',
+					    data  : {feed_id:feed_id},
+						beforeSend: function(){
+							post_card_obj.find('div#delete_loader').removeClass("hidden");
+							post_card_obj.find('div#post_dropdown').addClass("hidden");
+						},
+						success: function(html){
 
-				$.ajax({
-				    type  : 'POST',
-				    url   : '/share_feed',
-				    data  : {feed_id:feed_id},
-					beforeSend: function(){
-						post_card_obj.find('div#delete_loader').removeClass("hidden");
-						post_card_obj.find('div#post_dropdown').addClass("hidden");
-					},
-					success: function(html){
+						},
+						complete: function(responseText){
+							$.alert({
+							    title: 'Success!',
+							    content: 'This post has been successfully shared',
+							    keyboardEnabled: true,
+							    theme: 'supervan'
+							});
+							post_card_obj.find('div#post_dropdown').removeClass("hidden");
+							post_card_obj.find('div#delete_loader').addClass("hidden");
 
-					},
-					complete: function(responseText){ 
-						$.alert({
-						    title: 'Success!',
-						    content: 'This post has been successfully shared on your wall',
-						    keyboardEnabled: true,
-						    theme: 'supervan'
-						});
-						post_card_obj.find('div#post_dropdown').removeClass("hidden");
-						post_card_obj.find('div#delete_loader').addClass("hidden");
-
-					},
-					error: function(XMLHttpRequest, textStatus, errorThrown) {
-					    alert(errorThrown)
-					}
-				});
+						},
+						error: function(XMLHttpRequest, textStatus, errorThrown) {
+						    alert(errorThrown)
+						}
+					});
 		    }
 		});
 	},
@@ -224,7 +314,7 @@ handler_feeds  = {
 				success: function(html){
 					gallery_comments.append(html);
 				},
-				complete: function(responseText){ 
+				complete: function(responseText){
 					thisObj.val("");
 				},
 				error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -259,7 +349,7 @@ handler_feeds  = {
 				viewerDialogMediaBody.children('.media-body').find('h4').text(data.user_data.fullname); //setting fullname
 				viewerDialogMediaBody.children('.media-left').find('a').attr('href', '/profile/'+data.user_data.username+''); //setting href for profile
 				viewerDialogMediaBody.children('.media-left').find('a').children('img').attr('src', '/uploads/'+data.user_data.profile_picture+''); //setting profile picture
-				viewerDialogMediaBody.children('.media-body').find('small').text(created) //set the time when post was created 
+				viewerDialogMediaBody.children('.media-body').find('small').text(created) //set the time when post was created
 
 				//set feed id for input comment
 				input_comment_gallery.attr('data-feed', thisObj.data('id'));
@@ -274,7 +364,7 @@ handler_feeds  = {
 				image_counter = data.images.length;
 
 			},
-			complete: function(responseTet){ 
+			complete: function(responseTet){
 
 				viewerModal.modal('show');
 		        Galleria.loadTheme('http://localhost/public/assets/js/plugins/jqueryImageSlider/themes/classic/galleria.classic.js');
@@ -353,7 +443,7 @@ handler_feeds  = {
 					progress_bar.attr('data-value', current_c_perc);
 					if(data) handler_feeds.show_next_profile_setup_data(data);
 				},
-				complete: function(responseText){ 
+				complete: function(responseText){
 
 				},
 				error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -396,7 +486,7 @@ handler_feeds  = {
 				thisObj.parent().parent().find('.comments-holder').prepend(html);
 				if(multiples > 0) thisObj.show();
 			},
-			complete: function(responseText){ 
+			complete: function(responseText){
 
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -427,7 +517,7 @@ handler_feeds  = {
 				success: function(html){
 					comment_card_obj.fadeOut("slow");
 				},
-				complete: function(responseText){ 
+				complete: function(responseText){
 				},
 				error: function(XMLHttpRequest, textStatus, errorThrown) {
 				    alert(errorThrown)
@@ -453,7 +543,7 @@ handler_feeds  = {
 					this_obj.parents('.media-body').children('#comment_edit_loader').addClass("hidden");
 					this_obj.parents('div.media-body').children('p.comment-data').text(comment).show();
 				},
-				complete: function(responseText){ 
+				complete: function(responseText){
 
 				},
 				error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -490,7 +580,7 @@ handler_feeds  = {
 				success: function(html){
 					thisObj.parents('.comment-container').children('.comments-holder').append(html);
 				},
-				complete: function(responseText){ 
+				complete: function(responseText){
 					thisObj.val("");
 				},
 				error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -501,7 +591,7 @@ handler_feeds  = {
 	},
 	like_unlike_handler: function(event){
 		var type        = event.data.type;
-		var this_obj    = $(this); 
+		var this_obj    = $(this);
 		var data_type   = this_obj.data("type");
 
 		if(type == 1 || type == "1"){ //for like handle
@@ -556,7 +646,7 @@ handler_feeds  = {
 						}
 						else{
 							this_obj.children('i').text('+1');
-						}	
+						}
 					}
 				}
 				else if(type == 2 || type == "2"){ //unlikes
@@ -582,14 +672,14 @@ handler_feeds  = {
 						}
 						else{
 							this_obj.children('i').text('');
-						 }	
+						 }
 					}
 				}
 			},
 			success: function(html){
 
 			},
-			complete: function(responseText){ 
+			complete: function(responseText){
 
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -677,22 +767,59 @@ handler_feeds  = {
 		}
 	},
 	share_status: function(){
-		var status = text_status.val().replace(/\r\n|\r|\n/g,"<br />");
-		if(status != "" || isPhotoUpdate == true || global_SoundCloud_Link != "" || code != ""){
-			//if a youtube video
-			if(code){
-				var dataString = "content="+status+"&youtube_vcode="+youtube_vcode+"&youtube_vthumb="+youtube_vthumb+"&youtube_vdesc="+youtube_vdesc+"&youtube_vtitle="+youtube_vtitle+"&type="+1;		
-			}
-			else if(global_SoundCloud_Link){ //if sound cloud
-				var dataString = "content="+status+"&soundcloud_code="+global_SoundCloud_Link+"&type="+2;	
-			}
-			else if(isPhotoUpdate){ //if a photo update
-				var dataString = {content: status, photo_array: photo_array}
-				dataString     = JSON.stringify(dataString);
+		//if share status is on a wall then do this
+		if($(this).data('id')){
+			var wall_id = $(this).data('id');
+			var status  = text_status.val().replace(/\r\n|\r|\n/g,"<br />");
+			if(status != "" || isPhotoUpdate == true || global_SoundCloud_Link != "" || code != ""){
+				//if a youtube video
+				if(code){
+					var dataString = "content="+status+"&youtube_vcode="+youtube_vcode+"&youtube_vthumb="+youtube_vthumb+"&youtube_vdesc="+youtube_vdesc+"&youtube_vtitle="+youtube_vtitle+"&type="+1+"&isWall="+1+"&wall_id="+wall_id;
+				}
+				else if(global_SoundCloud_Link){ //if sound cloud
+					var dataString = "content="+status+"&soundcloud_code="+global_SoundCloud_Link+"&type="+2+"&isWall="+1+"&wall_id="+wall_id;
+				}
+				else if(isPhotoUpdate){ //if a photo update
+					var dataString = {content: status, photo_array: photo_array, isWall: 1, wall_id: wall_id}
+					dataString     = JSON.stringify(dataString);
+					$.ajax({
+					    type  : 'POST',
+					    url   : '/bake_photo_update',
+					    data  : {data : dataString},
+						beforeSend: function(){
+							loader.removeClass("hidden");
+							status_button.attr("disabled","disabled");
+							handler_feeds.reset_oembd_data();
+						},
+						success: function(html){
+							loader.addClass("hidden");
+							$(html).hide().prependTo(feed_content).fadeIn("slow");
+							text_status.val('');
+							status_button.removeAttr("disabled").text("share");
+							video_frame.addClass("hidden");
+							isPhotoUpdate = false;
+							global_SoundCloud_Link = '';
+							code = '';
+							status_img_div.empty();
+						},
+						complete: function(responseText){
+							handler_feeds.init_photo_grid({gutter: 1});
+						},
+						error: function(XMLHttpRequest, textStatus, errorThrown) {
+						    alert(errorThrown)
+						}
+					});
+
+					return;
+				}
+				else{
+					var dataString = "content="+status+"&type="+0+"&isWall="+1+"&wall_id="+wall_id;
+				}
+
 				$.ajax({
 				    type  : 'POST',
-				    url   : '/bake_photo_update',
-				    data  : {data : dataString},
+				    url   : '/share_post',
+				    data  : dataString,
 					beforeSend: function(){
 						loader.removeClass("hidden");
 						status_button.attr("disabled","disabled");
@@ -707,49 +834,93 @@ handler_feeds  = {
 						isPhotoUpdate = false;
 						global_SoundCloud_Link = '';
 						code = '';
-						status_img_div.empty();
 					},
-					complete: function(responseText){ 
-						handler_feeds.init_photo_grid({gutter: 1});
+					complete: function(responseText){
+
 					},
 					error: function(XMLHttpRequest, textStatus, errorThrown) {
 					    alert(errorThrown)
 					}
 				});
-
-				return;
 			}
-			else{
-				var dataString = "content="+status+"&type="+0;
-			}
-
-			$.ajax({
-			    type  : 'POST',
-			    url   : '/share_post',
-			    data  : dataString,
-				beforeSend: function(){
-					loader.removeClass("hidden");
-					status_button.attr("disabled","disabled");
-					handler_feeds.reset_oembd_data();
-				},
-				success: function(html){
-					loader.addClass("hidden");
-					$(html).hide().prependTo(feed_content).fadeIn("slow");
-					text_status.val('');
-					status_button.removeAttr("disabled").text("share");
-					video_frame.addClass("hidden");
-					isPhotoUpdate = false;
-					global_SoundCloud_Link = '';
-					code = '';
-				},
-				complete: function(responseText){ 
-
-				},
-				error: function(XMLHttpRequest, textStatus, errorThrown) {
-				    alert(errorThrown)
-				}
-			});
 		}
+		else{ //else normal post share
+			var wall_id = 0; //reset
+			var status = text_status.val().replace(/\r\n|\r|\n/g,"<br />");
+			if(status != "" || isPhotoUpdate == true || global_SoundCloud_Link != "" || code != ""){
+				//if a youtube video
+				if(code){
+					var dataString = "content="+status+"&youtube_vcode="+youtube_vcode+"&youtube_vthumb="+youtube_vthumb+"&youtube_vdesc="+youtube_vdesc+"&youtube_vtitle="+youtube_vtitle+"&type="+1+"&isWall="+0+"&wall_id="+wall_id;
+				}
+				else if(global_SoundCloud_Link){ //if sound cloud
+					var dataString = "content="+status+"&soundcloud_code="+global_SoundCloud_Link+"&type="+2+"&isWall="+0+"&wall_id="+wall_id;
+				}
+				else if(isPhotoUpdate){ //if a photo update
+					var dataString = {content: status, photo_array: photo_array, isWall: 0, wall_id: wall_id}
+					dataString     = JSON.stringify(dataString);
+					$.ajax({
+					    type  : 'POST',
+					    url   : '/bake_photo_update',
+					    data  : {data : dataString},
+						beforeSend: function(){
+							loader.removeClass("hidden");
+							status_button.attr("disabled","disabled");
+							handler_feeds.reset_oembd_data();
+						},
+						success: function(html){
+							loader.addClass("hidden");
+							$(html).hide().prependTo(feed_content).fadeIn("slow");
+							text_status.val('');
+							status_button.removeAttr("disabled").text("share");
+							video_frame.addClass("hidden");
+							isPhotoUpdate = false;
+							global_SoundCloud_Link = '';
+							code = '';
+							status_img_div.empty();
+						},
+						complete: function(responseText){
+							handler_feeds.init_photo_grid({gutter: 1});
+						},
+						error: function(XMLHttpRequest, textStatus, errorThrown) {
+						    alert(errorThrown)
+						}
+					});
+
+					return;
+				}
+				else{
+					var dataString = "content="+status+"&type="+0+"&isWall="+0+"&wall_id="+wall_id;
+				}
+
+				$.ajax({
+				    type  : 'POST',
+				    url   : '/share_post',
+				    data  : dataString,
+					beforeSend: function(){
+						loader.removeClass("hidden");
+						status_button.attr("disabled","disabled");
+						handler_feeds.reset_oembd_data();
+					},
+					success: function(html){
+						loader.addClass("hidden");
+						$(html).hide().prependTo(feed_content).fadeIn("slow");
+						text_status.val('');
+						status_button.removeAttr("disabled").text("share");
+						video_frame.addClass("hidden");
+						isPhotoUpdate = false;
+						global_SoundCloud_Link = '';
+						code = '';
+					},
+					complete: function(responseText){
+
+					},
+					error: function(XMLHttpRequest, textStatus, errorThrown) {
+					    alert(errorThrown)
+					}
+				});
+			}
+		}
+		alert(dataString)
 	},
 	edit_post: function(){
 		var this_post_card = $(this).parents('.post-container');
@@ -780,7 +951,7 @@ handler_feeds  = {
 				this_post_card.find('p.mrt10').text(this_post_card.find('textarea').val());
 				this_post_card.find('div#edit_loader').addClass("hidden");
 			},
-			complete: function(responseText){ 
+			complete: function(responseText){
 
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -810,7 +981,7 @@ handler_feeds  = {
 			success: function(html){
 				post_card_obj.fadeOut("slow");
 			},
-			complete: function(responseText){ 
+			complete: function(responseText){
 
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {

@@ -8,7 +8,7 @@
 @section('content')
     <div class="content mrt50">
       @include('includes.sidebar', $session_data)
-      
+
       <div class="container">
         <div class="row">
           <div class="col-md-12">
@@ -18,8 +18,7 @@
         <div class="row">
           <div class="col-md-7">
             @include('widgets.profileSetup', array('percentage' => $profile_completion, 'profile_data' => $profile_data))
-            @include('includes.statusdiv')
-
+            @include('includes.statusdiv', ['isProfile' => 'hidden', 'placeholder_text' => 'Write on wall..', 'profile_data_id' => $profile_data['u_id']])
             <div id="feeds_cont">
               {{$feeds}}
             </div>

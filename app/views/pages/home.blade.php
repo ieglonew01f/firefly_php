@@ -8,12 +8,12 @@
 @section('content')
     <div class="content mrt80">
       @include('includes.sidebar', $profile_data)
-      
+
       <div class="container">
         <div class="row">
           <div class="col-md-7">
 
-            @include('includes.statusdiv')
+            @include('includes.statusdiv', ['isProfile' => '', 'placeholder_text' => 'Share something new...', 'profile_data_id' => ''])
 
             <div id="feeds_cont">
               {{$feeds}}
@@ -30,6 +30,9 @@
     </div>
 @stop
 @section('page_js')
+  <script type="text/javascript">
+    var FRIEND_LIST_ARRAY = {{ $profile_data['friends_array'] }}
+  </script>
   {{ HTML::script('//connect.soundcloud.com/sdk.js'); }}
   {{ HTML::script('public/assets/js/plugins/bootbox.min.js') }}
   {{ HTML::script('public/assets/js/plugins/autogrow.js') }}

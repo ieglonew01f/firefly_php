@@ -1,10 +1,29 @@
 <?php
 
-class Profiles extends Eloquent {
+class Chat extends Eloquent {
 
 	protected $fillable = ['u_id', 'gender', 'schooling', 'profile_picture'];
 	public $timestamps  = false;
 	protected $table    = 'users_profile';
+
+	//throws chat list for view
+	public function chat_list($data){
+		$chat_list = '';
+		
+		foreach($data as $value){
+			//get user details
+			$user = DB::table('users_profile')->join('users', 'users.id', '=', 'users_profile.u_id')->where('users.username', '=', $value)->first();
+			$data = array(
+				"id"              => $user -> id,
+				"fullname"        => $user -> fullname,
+				"username"        => $user -> username,
+				"profile_picture" => $user -> profile_picture
+			);
+			$chat_list .= htmlfactory::bake_html("6", $data);
+		}
+
+		return $chat_list;
+	}
 
 	//update or bake profile data
 	public function update_or_bake_profile_data($data){
@@ -84,8 +103,7 @@ class Profiles extends Eloquent {
 		$follow_button_data = DB::table('followers')->join('users', 'users.id', '=', 'followers.following')->where('users.username', '=', $username)->first();
 
 		//generate friends array for the session user
-		$first = DB::table('friends')->join('users', 'users.id', '=', 'friends.by_id')->where('friends.for_id', '=', Session::get('id'));
-		$friends_list = DB::table('friends')->join('users', 'users.id', '=', 'friends.for_id')->where('friends.by_id', '=', Session::get('id'))->union($first)->get();
+		$friends_list = DB::table('friends')->join('users', 'users.id', '=', 'friends.for_id')->where('friends.by_id', '=', Session::get('id'))->get();
 
 		foreach($friends_list as $friends_list){
 			array_push($friends_array, $friends_list -> username);
