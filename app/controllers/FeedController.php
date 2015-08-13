@@ -205,7 +205,8 @@ class FeedController extends BaseController {
 		$data  = array(
 			"feed_id"   => Input::get('feed_id'),
 			"offset"    => Input::get('offset'),
-			"remainder" => Input::get('remainder')
+			"remainder" => Input::get('remainder'),
+			"image"		=> ""
 		);
 
 		return $feeds -> show_comment_data($data);
