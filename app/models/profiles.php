@@ -74,13 +74,15 @@ class Profiles extends Eloquent {
 		privacy settings.
 	*/
 	public function load_profile_data($username){
-		$website_url   = 'http://localhost'; //change this as required
-		$friends_array = [];
+		$website_url       = 'http://localhost'; //change this as required
+		$friends_array     = [];
+		$friendship_status = '10';
+		$friendship_text   = 'Cancle friend request';
 
 		$data = DB::table('users_profile')->join('users', 'users.id', '=', 'users_profile.u_id')->where('users.username', '=', $username)->first();
 
 		//generate friendship button
-		$button_data        = DB::table('friends')->join('users', 'users.id', '=', 'friends.for_id')->where('users.username', '=', $username)->first();
+		$button_data        = DB::table('friends')->join('users', 'users.id', '=', 'friends.for_id')->where('users.username', '=', $username)->where('friends.by_id', '=', Session::get('id'))->first();
 		$follow_button_data = DB::table('followers')->join('users', 'users.id', '=', 'followers.following')->where('users.username', '=', $username)->first();
 
 		//generate friends array for the session user
@@ -96,12 +98,11 @@ class Profiles extends Eloquent {
 
 			$modal_data =  htmlfactory::bake_html("5", array());
 
-
 			//generating buttons
 			$friendship_button = '';
-			$follow_button  = '';
-			$message_button = '<a href="'.$website_url.'/inbox/" class="btn btn-success btn-transparent btn-sm">Messages</a>';
-			$more_button    = '
+			$follow_button     = '';
+			$message_button    = '<a href="'.$website_url.'/inbox/" class="btn btn-success btn-transparent btn-sm">Messages</a>';
+			$more_button       = '
 	          <div class="btn-group">
 	            <button type="button" class="btn btn-default btn-transparent btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">More <span class="caret"></span></button>
 	            <ul class="dropdown-menu mrt10" role="menu">
@@ -117,11 +118,30 @@ class Profiles extends Eloquent {
 		}
 		else{
 			if($button_data){ //if exist
-				if($button_data -> status == '01') //request sent
+				if($button_data -> status == '01'){ //request sent
 					$friendship_button = '<button type="button" class="btn btn-default btn-transparent btn-sm dropdown-toggle button_friend" data-toggle="dropdown" aria-expanded="false">Friend request sent <span class="caret"></span></button>';
+				}
+				else if($button_data -> status == '11'){ //friends
+					$friendship_button = '<button type="button" class="btn btn-default btn-transparent btn-sm dropdown-toggle button_friend" data-toggle="dropdown" aria-expanded="false">Friends <span class="caret"></span></button>';
+					$friendship_status = '00';
+					$friendship_text   = 'Unfriend';
+				}
 			}
-			else{ // nothing found show add friend button
-				$friendship_button = '<button type="button" data-type="01"  data-id="'.$data -> u_id.'" class="btn btn-default btn-transparent btn-sm dropdown-toggle button_friend friend" aria-expanded="false">Add as a friend</button>';
+			else{ // nothing found check if this profile has sent you a friend request you = session id
+				$button_data_inner = DB::table('friends')->join('users', 'users.id', '=', 'friends.by_id')->where('users.username', '=', $username)->where('friends.for_id', '=', Session::get('id'))->first();
+				if($button_data_inner){ //if so then show accept friend request button
+					if($button_data_inner -> status == '01'){ //request sent
+						$friendship_button = '<button type="button" data-type="11"  data-id="'.$data -> u_id.'" class="btn btn-default btn-transparent btn-sm dropdown-toggle button_friend friend" aria-expanded="false">Accept friend request</button>';
+					}
+					else if($button_data_inner -> status == '11'){ //friends
+						$friendship_button = '<button type="button" class="btn btn-default btn-transparent btn-sm dropdown-toggle button_friend" data-toggle="dropdown" aria-expanded="false">Friends <span class="caret"></span></button>';
+						$friendship_status = '00';
+						$friendship_text   = 'Unfriend';
+					}
+				}
+				else{
+					$friendship_button = '<button type="button" data-type="01"  data-id="'.$data -> u_id.'" class="btn btn-default btn-transparent btn-sm dropdown-toggle button_friend friend" aria-expanded="false">Add as a friend</button>';
+				}
 			}
 
 			//generate follower button
@@ -157,6 +177,8 @@ class Profiles extends Eloquent {
 			"banner"            => $data -> banner,
 			/* ----------- META DATA  ------------*/
 			"friendship_button" => $friendship_button,
+			"friendship_text"   => $friendship_text,
+			"friendship_status" => $friendship_status,
 			"follow_button"     => $follow_button,
 			"message_button"    => $message_button,
 			"more_button"       => $more_button,
@@ -167,30 +189,50 @@ class Profiles extends Eloquent {
 
 	//add or remove friends
 	public function add_or_remove_friends_follow_or_unfollow_people($data){
-		/* type = 01 -> add friend / request sent
-		   type = 11 -> confirm friendship
-		   type = 01 -> reject friend request
-		   type = 10 -> cancle friend request
-		   type = 2  -> follow target id
-		   type = 3  -> unfollow target id
+		/* type = 01  -> add friend / request sent
+		   type = 11  -> confirm friendship
+		   type = 10  -> cancle friend request
+		   type = 22  -> reject friend request
+			 type = 00  -> remove from friend list / unfriend
+		   type = 2   -> follow target id
+		   type = 3   -> unfollow target id
 		*/
 
 		$for_id = $data['profile_id'];
 		$type   = $data['type'];
 
-		if($data['type'] == 01 || $data['type'] == "01"){ //sent a friend request
+		if($data['type'] == 01 || $data['type'] == "01"){ //send a friend request
 			//send friend request
-
 			//check if request already exists
-			$data = DB::table('friends')->where('by_id', Session::get('id'))->where('for_id', $for_id)->first();
+			$join = DB::table('friends')->where('by_id', $for_id)->where('for_id', Session::get('id'));
+			$data = DB::table('friends')->where('by_id', Session::get('id'))->where('for_id', $for_id)->union($join)->first();
 
 			if(!$data){ //if returned nothing then insert friend request
 				DB::table('friends')->insert(array('by_id' => Session::get('id'), 'for_id' => $for_id, 'status' => '01'));
+				notifications::throw_notification('3', array('by_id' => Session::get('id'), 'for_id' => $for_id));
 			}
 		}
 		else if($data['type'] == 10 || $data['type'] == "10"){ //cancle friend request
 			DB::table('friends')->where('by_id', Session::get('id'))->where('for_id', $for_id)->where('status', '01')->delete(); //delete the request
 		}
+		else if($data['type'] == 11 || $data['type'] == "11"){ //accept friend request
+			DB::table('friends')->where('for_id', Session::get('id'))->where('by_id', $for_id)->update(['status' => 11]);
+			//delete pervious notification (friend request notification)
+			DB::table('notifications')->where('type', '3')->where('for_id', Session::get('id'))->where('by_id', $for_id)->delete();
+			notifications::throw_notification('4', array('for_id' => $for_id, 'by_id' => Session::get('id')));
+		}
+		else if($data['type'] == 00 || $data['type'] == "00"){ //unfriend
+			$query = DB::table('friends')->where('by_id', Session::get('id'))->where('for_id', $for_id)->delete();
+			if(!$query){
+				DB::table('friends')->where('for_id', Session::get('id'))->where('by_id', $for_id)->delete();
+			}
+		}
+		else if($data['type'] == 22 || $data['type'] == "22"){ //reject friend request
+			DB::table('friends')->where('by_id', $for_id)->where('for_id', Session::get('id'))->delete();
+			//delete pervious notification (friend request notification)
+			DB::table('notifications')->where('type', '3')->where('for_id', Session::get('id'))->where('by_id', $for_id)->delete();
+		}
+
 		else if($data['type'] == 2 || $data['type'] == "2"){ //follow some one ;)
 			//follow profile_id
 
@@ -199,6 +241,7 @@ class Profiles extends Eloquent {
 
 			if(!$data){ //if returned nothing then insert follower data
 				DB::table('followers')->insert(array('follower' => Session::get('id'), 'following' => $for_id));
+				notifications::throw_notification('5', array('by_id' => Session::get('id'), 'for_id' => $for_id));
 			}
 		}
 		else if($data['type'] == 3 || $data['type'] == "3"){ //unfollow somone ;D

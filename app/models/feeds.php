@@ -184,10 +184,14 @@ class Feeds extends Eloquent {
 
 		//shows feed not owned by the session
 		if($type == 0){ //normal feed
-			$feeds = DB::table('feeds')->orderBy('created', 'desc')->get();
+			$feeds = DB::table('feeds')->orderBy('created', 'desc')->skip($data['offset'])->take(10)->get();
 		}
 		else if($type == 1){//profile feed
-			$feeds = DB::table('feeds')->where('u_id', $data['u_id'])->orWhere('wall_id', $data['u_id'])->orderBy('created', 'desc')->get();
+			$feeds = DB::table('feeds')->where('u_id', $data['u_id'])->orWhere('wall_id', $data['u_id'])->orderBy('created', 'desc')->skip($data['offset'])->take(10)->get();
+		}
+
+		if(!$feeds){
+			return '';
 		}
 
 		$content = "";
@@ -392,7 +396,7 @@ class Feeds extends Eloquent {
 			$post_card_buttons = htmlfactory::bake_html("3", array("ncomments" => $comments_count, "hasLikes" => $hasLikes, "likes_count" => $likes_count, "share" => $shares));
 
 			$data     = array_merge($data, array("likes_count" => $likes_count, "comments" => $comment_array, "post_card_btns" => $post_card_buttons, "view_prev_comment" => $view_prev_comment, "post_activity" => $activity, "wall_user_details" => $wall_user_dat));
-		    $content .= htmlfactory::bake_html("1", $data);
+		  $content .= htmlfactory::bake_html("1", $data);
 		}
 
 		return $content;
@@ -524,11 +528,11 @@ class Feeds extends Eloquent {
 
 				if($unique_share_count){
 					if($unique_share_count == 1) { //if there is only a single share
-						//getting last guy who liked
+						//getting last guy who shared
 						$user = DB::select('SELECT username, fullname FROM users WHERE id IN (SELECT u.id FROM feed_share c, users u, feeds f WHERE c.u_id = u.id AND c.feed_id = f.id AND c.feed_id = '.$feed_id.' AND f.u_id != c.u_id AND u.id != '.Session::get('id').') ORDER BY id DESC LIMIT 1');
 
 						return '<a href="/profile/'.$user[0] -> username.'"><b>'.$user[0] -> fullname.'</b></a> shared this';
-						//return var_dump($user);
+						//echo var_dump($user);
 					}
 					else if($unique_share_count == 2){
 						$activity_fullname = array();
@@ -592,12 +596,15 @@ class Feeds extends Eloquent {
 			//if current user has not liked this post insert feed like
 			//for feed like
 			if(!$feed){
-				$data = array(
+				//get feed owner
+				$owner = DB::table('feeds')->select('u_id')->where('id', $data_id)->first();
+				$data  = array(
 					"u_id"      => Session::get('id'),
 					"feed_id"   => $data_id,
 					"timestamp" => time()
 				);
 				DB::table('feed_likes')->insert($data);
+				notifications::throw_notification('1', array('by_id' => Session::get('id'), 'for_id' => $owner -> u_id));
 			}
 		}
 		else if($type === "2" || $type === 2){ //for comments like
@@ -605,12 +612,14 @@ class Feeds extends Eloquent {
 
 			//if current user has not liked this comment insert comment like
 			if(!$comment){
-				$data = array(
+				$owner = DB::table('comments')->select('u_id')->where('id', $data_id)->first();
+				$data  = array(
 					"u_id"       => Session::get('id'),
 					"comment_id" => $data_id,
 					"timestamp"  => time()
 				);
 				DB::table('comment_likes')->insert($data);
+				notifications::throw_notification('6', array('by_id' => Session::get('id'), 'for_id' => $owner -> u_id));
 			}
 		}
 	}
@@ -639,6 +648,8 @@ class Feeds extends Eloquent {
 		$users = DB::table('users')->join('users_profile', 'users_profile.u_id', '=', 'users.id')->where('users.id', Session::get('id'))->first();
 
 		if($comment_id){
+			$owner = DB::table('comments')->join('feeds', 'feeds.id', '=', 'comments.feed_id')->where('comments.id', $comment_id)->select('feeds.u_id')->first();
+			notifications::throw_notification('2', array('by_id' => Session::get('id'), 'for_id' => $owner -> u_id));
 			$data = array(
 				"view_prev_comment"   => "",
 				"delete_edit_class"   => "",
@@ -773,14 +784,15 @@ class Feeds extends Eloquent {
 	}
 
 	//share post
-
 	public function share_post($data){
 		//do not insert if already shared
 		$shared = DB::table('feed_share')->where('u_id', Session::get('id'))->where('feed_id', $data['feed_id'])->get();
 
 		//insert only if not shared already
 		if(!$shared){
+			$owner = DB::table('feeds')->select('u_id')->where('id', $data['feed_id'])->first();
 			DB::table('feed_share')->insert($data);
+			notifications::throw_notification('7', array('by_id' => Session::get('id'), 'for_id' => $owner -> u_id));
 		}
 		else{ //else just update the timestamp
 			DB::table('feed_share')->where('u_id', Session::get('id'))->where('feed_id', $data['feed_id'])->update(['timestamp' => time()]);

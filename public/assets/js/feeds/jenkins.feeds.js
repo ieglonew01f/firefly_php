@@ -40,10 +40,11 @@ var gallery_comment_count = $("#comments_count");
 var overlay_loader        = $(".overlay-loader");
 var sidebar_chat_list     = $(".sidebar-chat-list");
 var jenkins_session_data  = $('#jenkins_session_data');
+var feed_container        = $('div#feeds_cont');
 
 //variables
 var online_users, friend_list = FRIEND_LIST_ARRAY, data, matches, soundcloud, viemo, code, regExp, match, previous_comment_offset = 6, current_c_perc, handler_feeds = {}, photo_array = [], image_counter = 0, img_feed_id = 0;
-var youtube_vtitle, youtube_vdesc, youtube_vthumb, youtube_vcode, global_SoundCloud_Link, comment_card_obj, post_card_obj,exec = 0, multiples, remainder, isPhotoUpdate = false;
+var youtube_vtitle, youtube_vdesc, youtube_vthumb, youtube_vcode, global_SoundCloud_Link, comment_card_obj, post_card_obj,exec = 0, multiples, remainder, isPhotoUpdate = false, offset = 0, endOfFeed = false;
 
 var session_username = jenkins_session_data.data('username');
 var session_fullname = jenkins_session_data.data('fullname');
@@ -244,18 +245,18 @@ handler_feeds  = {
 				type  : 'POST',
 				url   : '/chat_list',
 				data  : { friend_list : friend_list },
-			beforeSend: function(){
+				beforeSend: function(){
 
-			},
-			success: function(html){
-				sidebar_chat_list.html(html);
-			},
-			complete: function(responseText){
+				},
+				success: function(html){
+					sidebar_chat_list.html(html);
+				},
+				complete: function(responseText){
 
-			},
-			error: function(XMLHttpRequest, textStatus, errorThrown) {
-					alert(errorThrown)
-			}
+				},
+				error: function(XMLHttpRequest, textStatus, errorThrown) {
+						alert(errorThrown)
+				}
 		});
 	},
 	sharePost: function(e){
@@ -920,7 +921,6 @@ handler_feeds  = {
 				});
 			}
 		}
-		alert(dataString)
 	},
 	edit_post: function(){
 		var this_post_card = $(this).parents('.post-container');

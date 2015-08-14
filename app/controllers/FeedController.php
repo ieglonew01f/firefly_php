@@ -94,7 +94,7 @@ class FeedController extends BaseController {
 		);
 
 		return $feeds -> insert_post($data);
-		
+
 	}
 
 	//share post
@@ -237,5 +237,17 @@ class FeedController extends BaseController {
 	public function get_photo_gallery_data(){
 		$feeds = new feeds;
 		return $feeds -> load_photo_gallery_data(Input::all());
+	}
+
+	//load more feeds on scroll bottom
+	public function load_more_feeds(){
+		$feeds = new feeds;
+
+		$data  = array(
+			"offset" => Input::get('offset'),
+			"u_id"   => Session::get('id')
+		);
+
+		return $feeds -> get_feeds(Input::get('type'), $data);
 	}
 }

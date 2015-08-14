@@ -41,5 +41,4 @@
   {{ HTML::script('public/assets/js/plugins/jquery.form.js'); }}
   {{ HTML::script('public/assets/js/feeds/jenkins.feeds.js'); }}
   {{ HTML::script('public/assets/js/profile/jenkins.profile.js'); }}
-  {{ HTML::script('public/assets/js/people/jenkins.people.js'); }}
 @stop

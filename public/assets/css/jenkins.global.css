@@ -159,10 +159,15 @@ h1,h2,h3,h4,h5,h6{
 .npl{
 	padding-left:0px;
 }
+.notif-badge{
+	position: absolute;
+	left: 23px;
+	top: 5px;
+}
 
 /* SIDEBAR CSS*/
 .sidebar{
-  width: 210px;
+	width:210px;
   height: 100%;
   position: fixed;
   left: 0;
@@ -170,6 +175,11 @@ h1,h2,h3,h4,h5,h6{
   background: white;
   top: 0;
   border: 1px solid rgb(230, 230, 230);
+}
+@media screen and (max-width: 1366px){
+	.sidebar{
+		width:175px;
+	}
 }
 .heading-sidebar-name{
   font-size: 1.3em;
@@ -2144,6 +2154,9 @@ h1,h2,h3,h4,h5,h6{
   background-color: #f6f7f8;
   border-radius: 5px;
 }
+.bg-white{
+  background-color:white;
+}
 .mrt380{
   margin-top: 300px;
 }
@@ -2548,4 +2561,41 @@ font-size: 15px;
 .green-ball{
 	border-radius: 100px;
 	margin-top: 4px;
+}
+.notification-dropdown{
+	width:300px;
+	padding-bottom:0px;
+}
+.notification-dropdown > li > a{
+	padding: 3px 6px;
+}
+.notification-dropdown div > li > a:hover{
+  background-color: #FAFAFA;
+	text-decoration:none;
+}
+.small-mh{
+	font-size: 13px;
+	font-weight: bolder;
+}
+.dropdowns-fa{
+	font-size: 20px;
+	margin-top: 5px;
+}
+.notification-see-all{
+	background:#FAFAFA;
+}
+.notification-dropdown div > li >a {
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: normal;
+    line-height: 1.42857143;
+    color: #999999;
+    white-space: nowrap;
+}
+.notification-dropdown div > li > a {
+    padding: 3px 6px;
+}
+.notification-dropdown > li > a:hover, .notification-dropdown > li > a:focus {
+	background:#ECECEC;
 }

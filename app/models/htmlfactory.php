@@ -12,6 +12,8 @@ class Htmlfactory {
 		* type = 4 -> for profile setup
 		* type = 5 -> for generating profile picture change modal
 		* type = 6 -> for generating chat list
+		* type = 7 -> for generating notification list
+		* type = 8 -> End of feeds reached
 		*/
 
 		$base_path = 'http://localhost'; //change it to site url
@@ -326,6 +328,98 @@ class Htmlfactory {
           </div>
         </li>
 			';
+		}
+		else if($type === "7" || $type === 7){
+
+			$body = "";
+
+			switch ($data['type']) {
+				case '1':
+					$body = '
+						<p class="nmb nmt padding-none">
+							<h4 class="media-heading small-mh nmb" id="media-heading">'.$data['fullname'].' - '.$data['timestamp'].'</h4>
+							<small class="text-muted"><span class="icon-like text-primary"></span> <b>Liked your post</b></small>
+						</p>
+					';
+				break;
+				case '2':
+					$body = '
+						<p class="nmb nmt padding-none">
+							<h4 class="media-heading small-mh nmb" id="media-heading">'.$data['fullname'].' - '.$data['timestamp'].'</h4>
+							<small class="text-muted"><span class="icon-like text-primary"></span> <b>Commented on your post</b></small>
+						</p>
+					';
+					break;
+
+				case '3':
+					$body = '
+						<p class="pull-right">
+						 <button data-origin="notification" data-id="'.$data['id'].'" data-type="11" class="btn btn-sm btn-flat friend"><i class="fa fa-check"></i></button>
+						 <button data-origin="notification" data-id="'.$data['id'].'" data-type="22" class="btn btn-sm btn-flat friend"><i class="fa fa-times"></i></button>
+						</p>
+						<p class="nmb nmt padding-none">
+							<h4 class="media-heading small-mh nmb" id="media-heading">'.$data['fullname'].'</h4>
+							<small class="text-muted"><span class="icon-user-follow text-success"></span> <b>New friend request</b></small>
+						</p>
+					';
+				break;
+
+				case '4':
+					$body = '
+						<p class="nmb nmt padding-none">
+							<h4 class="media-heading small-mh nmb" id="media-heading">'.$data['fullname'].' - '.$data['timestamp'].'</h4>
+							<small class="text-muted"><span class="icon-like text-primary"></span> <b>Accepted your friend request</b></small>
+						</p>
+					';
+				break;
+
+				case '5':
+					$body = '
+						<p class="nmb nmt padding-none">
+							<h4 class="media-heading small-mh nmb" id="media-heading">'.$data['fullname'].' - '.$data['timestamp'].'</h4>
+							<small class="text-muted"><span class="icon-like text-primary"></span> <b>Started following you</b></small>
+						</p>
+					';
+				break;
+
+					case '6':
+						$body = '
+							<p class="nmb nmt padding-none">
+							<h4 class="media-heading small-mh nmb" id="media-heading">'.$data['fullname'].' - '.$data['timestamp'].'</h4>
+								<small class="text-muted"><span class="icon-like text-primary"></span> <b>Liked your comment</b></small>
+							</p>
+						';
+					break;
+
+					case '7':
+						$body = '
+							<p class="nmb nmt padding-none">
+							<h4 class="media-heading small-mh nmb" id="media-heading">'.$data['fullname'].' - '.$data['timestamp'].'</h4>
+								<small class="text-muted"><span class="icon-like text-primary"></span> <b>Shared your post</b></small>
+							</p>
+						';
+					break;
+			}
+
+			return '
+				<li class="li-notif">
+					<a href="#">
+						<div class="media nmt">
+							<div class="media-left">
+								<span>
+									<img width="32" height="32" class="media-object" src="/uploads/'.$data['profile_picture'].'">
+								</span>
+							</div>
+							<div class="media-body notif-mediabody">
+								'.$body.'
+							</div>
+						</div>
+					</a>
+				</li>
+			';
+		}
+		else if($type === "8" || $type === 8){
+			return '<a href="javascript:void(0)" class="btn btn-default"><b>No more feeds</b></a>';
 		}
 	}
 }

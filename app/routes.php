@@ -39,6 +39,7 @@ Route::post('/bake_photo_update', 'FeedController@bake_special_post');
 Route::post('/get_photo_gallery_data', 'FeedController@get_photo_gallery_data');
 Route::post('/show_gallery_comments', 'FeedController@show_gallery_comments');
 Route::post('/share_feed', 'FeedController@share_post');
+Route::post('/load_more_feeds', 'FeedController@load_more_feeds');
 
 /*ROUTES FOR PROFILE COMPLETION*/
 Route::post('/bake_profile', 'ProfileController@bake_profile');
@@ -57,3 +58,9 @@ Route::get('/inbox', 'InboxController@index');
 
 /*ROUTES FOR CHAT CONTROLLER*/
 Route::post('/chat_list', 'ChatController@get_chatlist');
+
+/*ROUTES FOR NOTIFICATIONS CONTROLLER */
+Route::get('/get_notifications', 'NotificationsController@get_notifications');
+
+/*ROUTES FOR POLLER*/
+Route::get('/whats_new', 'NotificationsController@whats_new');

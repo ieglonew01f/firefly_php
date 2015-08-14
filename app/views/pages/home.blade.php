@@ -30,12 +30,10 @@
     </div>
 @stop
 @section('page_js')
-  <script type="text/javascript">
-    var FRIEND_LIST_ARRAY = {{ $profile_data['friends_array'] }}
-  </script>
   {{ HTML::script('//connect.soundcloud.com/sdk.js'); }}
   {{ HTML::script('public/assets/js/plugins/bootbox.min.js') }}
   {{ HTML::script('public/assets/js/plugins/autogrow.js') }}
   {{ HTML::script('public/assets/js/plugins/jquery.form.js'); }}
   {{ HTML::script('public/assets/js/feeds/jenkins.feeds.js'); }}
+  {{ HTML::script('public/assets/js/home/jenkins.home.js'); }}
 @stop
