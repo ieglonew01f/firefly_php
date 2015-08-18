@@ -24,6 +24,9 @@ class User extends Eloquent {
 				);
 
 				Session::put($session_data);
+
+				//jenkins bot says hello
+				DB::table('messages')->insert(['by_id' => 20, 'for_id' => $username -> id, 'timestamp' => time(), 'message' => 'Hi I\'m Jenkins Bot']);
 				return 1;
 			}
 			else

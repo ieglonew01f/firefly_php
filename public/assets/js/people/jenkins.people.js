@@ -7,33 +7,61 @@
 	 type = 2   -> follow target id
 	 type = 3   -> unfollow target id
 */
+
 //cache
-var friend_button  = $(".button_friend");
-var btn_gp         = $(".btn-group");
-var friendliText   = $(".friendliText");
-
-
+var friend_button    = $(".button_friend");
+var btn_gp           = $(".btn-group");
+var friendliText     = $(".friendliText");
+var result_container = $('.search-results-container');
+var search_bar_input = $('.search-bar');
 //variables
 
 
 //init function
 var init = function(){
-	//workers
-	$('.search-bar').typeahead({
-	  minLength: 3,
-	  highlight: true
-	},
-	{
-	  name: 'my-dataset',
-	  source: {'rahulkumar':'avc'}
-	});
+
 	//friendship handler
 	$(document).on('click', '.friend', '', handler.do_people); //do people ;)
 	$(document).on('click', 'button.follow', '', handler.do_people);
+
+	//search bar handler
+	$('.search-bar').keyup(function(){
+		if($(this).val()){
+			handler.search_bar_handler($(this).val());
+		}
+	});
+	//handler.search_bar_handler();
 }
 
 //helpers
 var handler  = {
+	search_bar_handler: function(keyword){
+		$.ajax({
+		    type  : 'POST',
+		    url   : '/search_people',
+		    data  : { keyword : keyword },
+			beforeSend: function(){
+				result_container.html('<div class="loader loader-inner ball-pulse text-center" style="margin-top: 100px;"><div></div><div></div><div></div></div>');
+			},
+			success: function(data){
+				if(data){
+						result_container.html(data);
+				}
+				else{
+						result_container.html('<div class="allcaughtup text-center" style="margin-top: 85px;"><b><span class="icon-bulb"></span> Nothing to see here</b></div>');
+				}
+			},
+			complete: function(responseText){
+				//workers
+				result_container.slimScroll({
+					height: '220px'
+				});
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
+			    alert(errorThrown)
+			}
+		});
+	},
 	do_people: function(event){
 		event.stopPropagation();
 		var this_var   = $(this);

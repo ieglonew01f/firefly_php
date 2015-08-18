@@ -25,6 +25,7 @@ Route::get('/home', 'HomeController@index');
 
 /*ROUTES FOR PROFILE PAGE*/
 Route::get('/profile/{username}', 'ProfileController@profile');
+ROute::post('/search_people', 'ProfileController@search_people');
 
 /*ROUTES FOR FEEDS */
 Route::post('/share_post', 'FeedController@bake_post');
@@ -54,7 +55,7 @@ Route::post('/set_avatar', 'UploadController@set_avatar');
 Route::post('/photo_update', 'UploadController@photo_update');
 
 /*ROUTES FOR INBOX PAGE */
-Route::get('/inbox', 'InboxController@index');
+Route::get('/inbox/{username}', 'InboxController@index');
 
 /*ROUTES FOR CHAT CONTROLLER*/
 Route::post('/chat_list', 'ChatController@get_chatlist');
@@ -64,3 +65,8 @@ Route::get('/get_notifications', 'NotificationsController@get_notifications');
 
 /*ROUTES FOR POLLER*/
 Route::get('/whats_new', 'NotificationsController@whats_new');
+
+/*ROUTES FOR INBOX*/
+Route::post('/get_conv', 'InboxController@get_conv');
+Route::post('/save_conv', 'InboxController@save_conv');
+Route::post('/search_conv', 'InboxController@search_conv');

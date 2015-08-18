@@ -26,7 +26,7 @@ var notif_handler  = {
 		    url   : '/get_notifications',
 			beforeSend: function(){
 				notif_badge.text('');
-				notification_container.html('<div class="loader loader-inner ball-pulse text-center" style="margin-top: 100px;"><div></div><div></div><div></div></div>');
+				notification_container.html('<div class="loader loader-inner ball-pulse text-center" style="margin-top: 85px;"><div></div><div></div><div></div></div>');
 			},
 			success: function(html){
 				if(html){

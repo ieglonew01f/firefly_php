@@ -16,9 +16,22 @@
             <ul class="nav navbar-nav navbar-right">
               <li>
                 <form class="navbar-form navbar-left" role="search">
-                  <div class="form-group">
-                    <input type="text" class="search-bar form-control" placeholder="Search for people and more ..">
-                  </div>
+                    <div class="btn-group">
+                      <input autocomplete="off" type="text" id="keywords" placeholder="Search for people and more ..." class="search-bar form-control dropdown-toggle" data-toggle="dropdown" style="width:300px !important;">
+                      <ul class="dropdown-menu notification-dropdown margin-top-sm" role="menu">
+                        <div class="search-results-container">
+
+                        </div>
+                        <li>
+
+                          <a href="#" class="bg-grey notification-see-all">
+                            <div class="text-center">
+                              <small><b>SEE ALL</b></small>
+                            </div>
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
                 </form>
               </li>
               <li class="dropdown notifications-dropdown-main">
@@ -35,7 +48,7 @@
                   </li>
                 </ul>
               </li>
-              <li><a href="#"><span data-icon="&#xe03f;"></span> Inbox</a></li>
+              <li><a href="/inbox/{{ Session::get('username') }}"><span data-icon="&#xe03f;"></span> Inbox</a></li>
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span data-icon="&#xe005;"></span> Profile <span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu">

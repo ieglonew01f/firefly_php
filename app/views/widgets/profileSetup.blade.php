@@ -9,7 +9,7 @@
       <div class="media question-container">
         <div class="media-left">
           <a href="#">
-            <img width="50" height="50" class="media-object" src="{{ $profile_data['base_url'] }}/uploads/{{ $profile_data['profile_picture'] }}">
+            <img width="50" height="50" class="media-object" src="/uploads/{{ $profile_data['profile_picture'] }}">
           </a>
         </div>
         <div class="media-body line-height-1 question-bank">

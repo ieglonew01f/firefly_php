@@ -66,7 +66,7 @@ var init = function(){
 	//load more feeds on scroll bottom
 	$(window).scroll(function() {
 	 if($(window).scrollTop() + $(window).height() == $(document).height()) {
-		 handler_home.loadMoreFeeds();
+		 handler.loadMoreFeeds();
 	 }
 	});
 }

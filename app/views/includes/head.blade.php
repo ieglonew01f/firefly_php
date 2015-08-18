@@ -7,6 +7,7 @@
     {{ HTML::style('public/assets/css/jenkins.main.min.css'); }}
     <!-- FONT AWESOME AND OTHER CSS-->
     {{ HTML::style('public/assets/css/font-awesome.min.css'); }}
+    {{ HTML::style('public/assets/css/animate.css'); }}
     {{ HTML::style('public/assets/css/checkboxes.css'); }}
     {{ HTML::style('public/assets/css/lineicons.css'); }}
     {{ HTML::style('public/assets/css/jquery-confirm.min.css'); }}

@@ -8,7 +8,7 @@
 @section('content')
     <div class="content mrt80">
       @include('includes.sidebar', $profile_data)
-      @include('includes.inbox', $profile_data)
+      @include('includes.inbox', ['profile_data' => $profile_data, 'inbox_data' => $inbox_data, 'inbox_chatter_data' => $inbox_chatter_data])
       @include('includes.utility')
     </div>
 @stop
@@ -18,4 +18,5 @@
   {{ HTML::script('public/assets/js/plugins/autogrow.js') }}
   {{ HTML::script('public/assets/js/plugins/jquery.form.js'); }}
   {{ HTML::script('public/assets/js/feeds/jenkins.feeds.js'); }}
+  {{ HTML::script('public/assets/js/inbox/jenkins.inbox.js'); }}
 @stop

@@ -6,17 +6,20 @@ class Htmlfactory {
 	public static function bake_html($type, $data){
 
 		/*
-		* type = 1 -> for baking posts
-		* type = 2 -> for comments html data
-		* type = 3 -> for baking post card buttons
-		* type = 4 -> for profile setup
-		* type = 5 -> for generating profile picture change modal
-		* type = 6 -> for generating chat list
-		* type = 7 -> for generating notification list
-		* type = 8 -> End of feeds reached
+		* type =  1 -> for baking posts
+		* type =  2 -> for comments html data
+		* type =  3 -> for baking post card buttons
+		* type =  4 -> for profile setup
+		* type =  5 -> for generating profile picture change modal
+		* type =  6 -> for generating chat list
+		* type =  7 -> for generating notification list
+		* type =  8 -> Search results generator
+		* type =  9 -> Inbox Contact list
+		* type = 10 -> Generating inbox conv list
+		* type = 11 -> For conv listing
 		*/
 
-		$base_path = 'http://localhost'; //change it to site url
+		#$base_path = 'http://localhost'; //change it to site url
 
 		/* session data and declerables */
 
@@ -109,7 +112,7 @@ class Htmlfactory {
 	                </div>
 	                <div class="media nmt">
 	                  <div class="media-left">
-	                    <a href="'.$base_path.'/profile/'.$data['username'].'">
+	                    <a href="/profile/'.$data['username'].'">
 	                      <img width="64" height="64" class="media-object" src="/uploads/'.$data['profile_picture'].'">
 	                    </a>
 	                  </div>
@@ -140,7 +143,7 @@ class Htmlfactory {
 		                <div class="comment-input">
 			                <div class="media nmt">
 			                  <div class="media-left">
-			                    <a href="'.$base_path.'/profile/'.$username_session.'">
+			                    <a href="/profile/'.$username_session.'">
 			                      <img width="38" height="38" class="media-object" src="/uploads/'.$profile_picture_session.'">
 			                    </a>
 			                  </div>
@@ -159,7 +162,7 @@ class Htmlfactory {
         	<div data-id="'.$data['comment_id'].'" class="comment">
                 <div class="media nmt">
                   <div class="media-left">
-                    <a href="'.$base_path.'/profile/'.$data['username'].'">
+                    <a href="/profile/'.$data['username'].'">
                       <img width="32" height="32" class="media-object" src="/uploads/'.$data['profile_picture'].'">
                     </a>
                   </div>
@@ -238,76 +241,76 @@ class Htmlfactory {
 				<div class="slimscroll-avatar">
 					<div class="row">
 						<div class="col-xs-2">
-							<img data-name="boy_1.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/boy_1.jpg"></img>
+							<img data-name="boy_1.jpg" class="img-cthumbnail" src="/public/assets/img/avatars/boy_1.jpg"></img>
 						</div>
 						<div class="col-xs-2">
-							<img data-name="boy_2.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/boy_2.jpg"></img>
+							<img data-name="boy_2.jpg" class="img-cthumbnail" src="/public/assets/img/avatars/boy_2.jpg"></img>
 						</div>
 						<div class="col-xs-2">
-							<img data-name="boy_3.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/boy_3.jpg"></img>
+							<img data-name="boy_3.jpg" class="img-cthumbnail" src="/public/assets/img/avatars/boy_3.jpg"></img>
 						</div>
 						<div class="col-xs-2">
-							<img data-name="boy_4.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/boy_4.jpg"></img>
+							<img data-name="boy_4.jpg" class="img-cthumbnail" src="/public/assets/img/avatars/boy_4.jpg"></img>
 						</div>
 						<div class="col-xs-2">
-							<img data-name="boy_5.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/boy_5.jpg"></img>
+							<img data-name="boy_5.jpg" class="img-cthumbnail" src="/public/assets/img/avatars/boy_5.jpg"></img>
 						</div>
 						<div class="col-xs-2">
-							<img data-name="boy_6.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/boy_6.jpg"></img>
+							<img data-name="boy_6.jpg" class="img-cthumbnail" src="/public/assets/img/avatars/boy_6.jpg"></img>
 						</div>
 						<div class="col-xs-2">
-							<img data-name="female_1.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/female_1.jpg"></img>
+							<img data-name="female_1.jpg" class="img-cthumbnail" src="/public/assets/img/avatars/female_1.jpg"></img>
 						</div>
 						<div class="col-xs-2">
-							<img data-name="female_2.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/female_2.jpg"></img>
+							<img data-name="female_2.jpg" class="img-cthumbnail" src="/public/assets/img/avatars/female_2.jpg"></img>
 						</div>
 						<div class="col-xs-2">
-							<img data-name="female_3.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/female_3.jpg"></img>
+							<img data-name="female_3.jpg" class="img-cthumbnail" src="/public/assets/img/avatars/female_3.jpg"></img>
 						</div>
 						<div class="col-xs-2">
-							<img data-name="female_4.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/female_4.jpg"></img>
+							<img data-name="female_4.jpg" class="img-cthumbnail" src="/public/assets/img/avatars/female_4.jpg"></img>
 						</div>
 						<div class="col-xs-2">
-							<img data-name="female_5.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/female_5.jpg"></img>
+							<img data-name="female_5.jpg" class="img-cthumbnail" src="/public/assets/img/avatars/female_5.jpg"></img>
 						</div>
 						<div class="col-xs-2">
-							<img data-name="female_6.jpg"  class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/female_6.jpg"></img>
+							<img data-name="female_6.jpg"  class="img-cthumbnail" src="/public/assets/img/avatars/female_6.jpg"></img>
 						</div>
 						<div class="col-xs-2">
-							<img data-name="boy_7.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/boy_7.jpg"></img>
+							<img data-name="boy_7.jpg" class="img-cthumbnail" src="/public/assets/img/avatars/boy_7.jpg"></img>
 						</div>
 						<div class="col-xs-2">
-							<img data-name="boy_8.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/boy_8.jpg"></img>
+							<img data-name="boy_8.jpg" class="img-cthumbnail" src="/public/assets/img/avatars/boy_8.jpg"></img>
 						</div>
 						<div class="col-xs-2">
-							<img data-name="boy_9.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/boy_9.jpg"></img>
+							<img data-name="boy_9.jpg" class="img-cthumbnail" src="/public/assets/img/avatars/boy_9.jpg"></img>
 						</div>
 						<div class="col-xs-2">
-							<img data-name="boy_10.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/boy_10.jpg"></img>
+							<img data-name="boy_10.jpg" class="img-cthumbnail" src="/public/assets/img/avatars/boy_10.jpg"></img>
 						</div>
 						<div class="col-xs-2">
-							<img data-name="boy_11.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/boy_11.jpg"></img>
+							<img data-name="boy_11.jpg" class="img-cthumbnail" src="/public/assets/img/avatars/boy_11.jpg"></img>
 						</div>
 						<div class="col-xs-2">
-							<img data-name="female_7.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/female_7.jpg"></img>
+							<img data-name="female_7.jpg" class="img-cthumbnail" src="/public/assets/img/avatars/female_7.jpg"></img>
 						</div>
 						<div class="col-xs-2">
-							<img data-name="female_8.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/female_8.jpg"></img>
+							<img data-name="female_8.jpg" class="img-cthumbnail" src="/public/assets/img/avatars/female_8.jpg"></img>
 						</div>
 						<div class="col-xs-2">
-							<img data-name="female_9.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/female_9.jpg"></img>
+							<img data-name="female_9.jpg" class="img-cthumbnail" src="/public/assets/img/avatars/female_9.jpg"></img>
 						</div>
 						<div class="col-xs-2">
-							<img data-name="female_10.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/female_10.jpg"></img>
+							<img data-name="female_10.jpg" class="img-cthumbnail" src="/public/assets/img/avatars/female_10.jpg"></img>
 						</div>
 						<div class="col-xs-2">
-							<img data-name="female_11.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/female_11.jpg"></img>
+							<img data-name="female_11.jpg" class="img-cthumbnail" src="/public/assets/img/avatars/female_11.jpg"></img>
 						</div>
 						<div class="col-xs-2">
-							<img data-name="female_12.jpg" class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/female_12.jpg"></img>
+							<img data-name="female_12.jpg" class="img-cthumbnail" src="/public/assets/img/avatars/female_12.jpg"></img>
 						</div>
 						<div class="col-xs-2">
-							<img data-name="female_13.jpg"  class="img-cthumbnail" src="'.$base_path.'/public/assets/img/avatars/female_13.jpg"></img>
+							<img data-name="female_13.jpg"  class="img-cthumbnail" src="/public/assets/img/avatars/female_13.jpg"></img>
 						</div>
 					</div>
 				</div>
@@ -419,7 +422,99 @@ class Htmlfactory {
 			';
 		}
 		else if($type === "8" || $type === 8){
-			return '<a href="javascript:void(0)" class="btn btn-default"><b>No more feeds</b></a>';
+			return '
+				<li class="li-notif">
+					<a href="/profile/'.$data['username'].'">
+						<div class="media nmt">
+							<div class="media-left">
+								<span>
+									<img width="32" height="32" class="media-object" src="/uploads/'.$data['profile_picture'].'">
+								</span>
+							</div>
+							<div class="media-body notif-mediabody">
+								<p class="nmb nmt padding-none">
+								<h4 class="media-heading small-mh nmb" id="media-heading">'.$data['fullname'].'</h4>
+									<small class="text-muted"><b>'.$data['college'].'</b></small>
+								</p>
+							</div>
+						</div>
+					</a>
+				</li>
+			';
+		}
+		else if($type === "9" || $type === 9){
+			return '
+				<div data-username="'.$data['username'].'" data-id="'.$data['id'].'" class="contact">
+					<div class="media nmt">
+						<div class="media-left">
+							<span>
+								<img width="42" height="42" class="media-object" src="/uploads/'.$data['profile_picture'].'">
+							</span>
+						</div>
+						<div class="media-body notif-mediabody">
+							<p class="nmb nmt padding-none">
+							<h4 class="media-heading small-mh nmb" id="media-heading">'.$data['fullname'].'</h4>
+								<small class="text-muted"><b>'.$data['college'].'</b></small>
+							</p>
+						</div>
+					</div>
+	            </div>
+			';
+		}
+		else if($type === "10" || $type === 10){
+
+			if($data['isOutbound']){
+				return '
+					<div class="row margin-bottom-sm">
+						<div class="message-outgoing margin-bottom-md">
+								<div class="message-box wa pull-right">
+										<div class="message-out fs15">
+												'.$data['message'].' <small class="mrl-sm fs10 text-muted">'.$data['timestamp'].'</small>
+										</div>
+								</div>
+						</div>
+					</div>
+					';
+			}
+			else {
+				return '
+					<div class="row margin-bottom-sm">
+						<div class="message-incomming">
+				            <div class="message-box">
+				                <div class="row">
+				                    <div class="col-md-2">
+				                        <img class="media-object img-circle" data-src="holder.js/64x64" alt="64x64" src="/uploads/'.$data['profile_picture'].'" data-holder-rendered="true" style="width: 54px; height: 54px;">
+				                    </div>
+				                    <div class="col-md-10 wa">
+				                        <div class="message-in fs15">
+				                            '.$data['message'].' <small class="mrl-sm fs10 text-muted">'.$data['timestamp'].'</small>
+				                        </div>
+				                    </div>
+				                </div>
+				            </div>
+				      	</div>
+					</div>
+				';
+			}
+		}
+		else if($type === "11" || $type === 11){
+			return '
+				<div data-username="'.$data['username'].'" data-id="'.$data['id'].'" class="contact">
+					<div class="media nmt">
+						<div class="media-left">
+							<span>
+								<img width="42" height="42" class="media-object" src="/uploads/'.$data['profile_picture'].'">
+							</span>
+						</div>
+						<div class="media-body notif-mediabody"> <span class="fs10 text-muted pull-right">'.$data['timestamp'].'</span>
+							<p class="nmb nmt padding-none">
+							<h4 class="media-heading small-mh nmb" id="media-heading">'.$data['fullname'].'</h4>
+								<small class="text-muted"><b>'.$data['message'].'</b></small>
+							</p>
+						</div>
+					</div>
+	            </div>
+			';
 		}
 	}
 }

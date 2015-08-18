@@ -58,4 +58,9 @@ class ProfileController extends BaseController {
 		return $profiles -> add_or_remove_friends_follow_or_unfollow_people($data);
 	}
 
+	//search people
+	public function search_people(){
+		$profiles = new profiles;
+		return $profiles -> get_peoples_array(["key" => Input::get('keyword')]);
+	}
 }

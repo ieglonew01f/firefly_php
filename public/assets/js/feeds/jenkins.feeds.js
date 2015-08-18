@@ -60,7 +60,7 @@ var scapiKey = "243727134d2c71ba214ef1ec60a371d3";
 var init = function(){
 	//workers
 
-	//chat works
+	//chat workers
 	//register on node.js network
 	comet.register({'id':session_id, 'username': session_username, 'fullname': session_fullname});
 
@@ -356,10 +356,10 @@ handler_feeds  = {
 				input_comment_gallery.attr('data-feed', thisObj.data('id'));
 
 				//set clicked image as first
-				dom_data.push({ image: 'http://localhost/uploads/'+clicked_img });
+				dom_data.push({ image: '/uploads/'+clicked_img });
 
 				$.each(data.images, function(index, data) {
-				    dom_data.push({ image: 'http://localhost/uploads/'+data.image });
+				    dom_data.push({ image: '/uploads/'+data.image });
 				});
 
 				image_counter = data.images.length;
@@ -368,7 +368,7 @@ handler_feeds  = {
 			complete: function(responseTet){
 
 				viewerModal.modal('show');
-		        Galleria.loadTheme('http://localhost/public/assets/js/plugins/jqueryImageSlider/themes/classic/galleria.classic.js');
+		        Galleria.loadTheme('/public/assets/js/plugins/jqueryImageSlider/themes/classic/galleria.classic.js');
 
 		        Galleria.run('.img-container', {
 				    dataSource: dom_data,

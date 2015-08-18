@@ -42,15 +42,41 @@ var comet = (function($){
     });
   }
 
-  socket.on('test', function (data) {
-    console.log(data)
-  });
+  //throw is typing
+  var is_typing = function(data, callback){
+    socket.emit('is typing', data);
+    callback();
+  }
+
+  //throw is not typing
+  var no_is_typing = function(data, callback){
+    socket.emit('is not typing', data);
+    callback();
+  }
+
+  //get / set is typing
+  var set_typing = function(callback){
+    socket.on('set typing', function (data) {
+      callback(data); 
+    });
+  }
+
+  //set not typing
+  var set_not_typing = function(callback){
+    socket.on('set not typing', function (data) {
+      callback(data); 
+    });
+  }
 
   return {
-      register     : register,
-      chat_list    : chat_list,
-      send_message : send_message,
-      new_message  : new_message
+      register       : register,
+      chat_list      : chat_list,
+      send_message   : send_message,
+      new_message    : new_message,
+      is_typing      : is_typing,
+      set_typing     : set_typing,
+      set_not_typing : set_not_typing,
+      no_is_typing   : no_is_typing
   };
 
 })(jQuery);

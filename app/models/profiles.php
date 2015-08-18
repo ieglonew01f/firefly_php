@@ -193,7 +193,7 @@ class Profiles extends Eloquent {
 		   type = 11  -> confirm friendship
 		   type = 10  -> cancle friend request
 		   type = 22  -> reject friend request
-			 type = 00  -> remove from friend list / unfriend
+		   type = 00  -> remove from friend list / unfriend
 		   type = 2   -> follow target id
 		   type = 3   -> unfollow target id
 		*/
@@ -255,4 +255,56 @@ class Profiles extends Eloquent {
 			}
 		}
 	}
+
+	//get peoples array by keyword
+	public function get_peoples_array($data){
+		$query = DB::table('users')->join('users_profile', 'users_profile.u_id', '=', 'users.id')->where('users.fullname', 'LIKE', '%'.$data['key'].'%')->get();
+		$users = '';
+
+		foreach($query as $query){
+			$users .= htmlfactory::bake_html("8", ['id' => $query -> id, 'fullname' => $query -> fullname, 'username' => $query -> username, 'profile_picture' => $query -> profile_picture, 'college' => $query -> college]);
+		}
+
+		return $users;
+	}
+
+	//load inbox data
+	public function load_inbox_data(){
+	
+		$id     = Session::get('id');
+		$users  = [];
+		$html   = "";
+		//get all unique user inbound/outbound for current user
+		$query  = DB::select("SELECT * FROM messages WHERE for_id = '$id' UNION SELECT * FROM messages WHERE by_id = '$id' ORDER BY id DESC");
+
+		foreach($query as $query) {
+
+			$for_id = $query -> for_id;
+			$by_id  = $query -> by_id;
+
+			//generate for_id ie not equals session id
+			if($for_id != $id){
+				if(!in_array($for_id, $users)){
+					array_push($users, $for_id); 
+				}
+			}
+			else{
+				if(!in_array($by_id, $users)){
+					array_push($users, $by_id); //byId is not session id
+				}
+			}
+		}
+
+		foreach($users as $for_id) {
+
+			//get the latest conv list for the current user
+			$message   = DB::select("SELECT * FROM messages where (by_id = '$id' and for_id = '$for_id') OR (by_id = '$for_id' and for_id = '$id') ORDER BY id DESC LIMIT 1"); //if exist then
+			$query     = DB::table('users')->join('users_profile', 'users_profile.u_id', '=', 'users.id')->where('users.id', '=', $for_id)->first();
+
+			$html     .= htmlfactory::bake_html("11", ['id' => $query -> u_id, 'fullname' => $query -> fullname, 'username' => $query -> username, 'profile_picture' => $query -> profile_picture, 'message' => $message[0] -> message, 'timestamp' => timeago::time_ago($message[0] -> timestamp)]);
+		}
+
+		return $html;
+	}
+
 }
