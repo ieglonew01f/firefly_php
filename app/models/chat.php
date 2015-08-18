@@ -49,6 +49,7 @@ class Chat extends Eloquent {
 				"profile_picture" => $user -> profile_picture,
 				"username"        => $user -> username,
 				"message"         => $query -> message,
+				"timestamp"       => timeago::time_ago($query -> timestamp),
 				"isOutbound"      => $isOutbound
 			);
 
