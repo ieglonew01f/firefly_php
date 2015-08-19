@@ -32,7 +32,6 @@ class HomeController extends BaseController {
 		);
 
 		return View::make('pages.home', $data);
-		//just for example sake change i am adding this comment here concider it as your original task ok just an example
 	}
 
 }
