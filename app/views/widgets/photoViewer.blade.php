@@ -38,8 +38,8 @@
                     <div class="comment-input">
                       <div class="media nmt">
                         <div class="media-left">
-                          <a href="{{ $base_url}}/profile/{{ $username }}">
-                            <img width="38" height="38" class="media-object" src="{{ $base_url }}/uploads/{{ $profile_picture }}">
+                          <a href="/profile/{{ $username }}">
+                            <img width="38" height="38" class="media-object" src="/uploads/{{ $profile_picture }}">
                           </a>
                         </div>
                         <div class="media-body">
