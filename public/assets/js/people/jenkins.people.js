@@ -21,20 +21,20 @@ var search_bar_input = $('.search-bar');
 var init = function(){
 
 	//friendship handler
-	$(document).on('click', '.friend', '', handler.do_people); //do people ;)
-	$(document).on('click', 'button.follow', '', handler.do_people);
+	$(document).on('click', '.friend', '', handler_people.do_people); //do people ;)
+	$(document).on('click', 'button.follow', '', handler_people.do_people);
 
 	//search bar handler
 	$('.search-bar').keyup(function(){
 		if($(this).val()){
-			handler.search_bar_handler($(this).val());
+			handler_people.search_bar_handler($(this).val());
 		}
 	});
 	//handler.search_bar_handler();
 }
 
 //helpers
-var handler  = {
+var handler_people  = {
 	search_bar_handler: function(keyword){
 		$.ajax({
 		    type  : 'POST',
