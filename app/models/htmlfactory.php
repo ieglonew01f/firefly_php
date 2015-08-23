@@ -16,7 +16,8 @@ class Htmlfactory {
 		* type =  8 -> Search results generator
 		* type =  9 -> Inbox Contact list
 		* type = 10 -> Generating inbox conv list
-		* type = 11 -> For conv listing
+		* type = 11 -> for conv listing
+		* type = 12 -> for generating inbox modal new message data
 		*/
 
 		#$base_path = 'http://localhost'; //change it to site url
@@ -510,6 +511,25 @@ class Htmlfactory {
 							<p class="nmb nmt padding-none">
 							<h4 class="media-heading small-mh nmb" id="media-heading">'.$data['fullname'].'</h4>
 								<small class="text-muted"><b>'.$data['message'].'</b></small>
+							</p>
+						</div>
+					</div>
+	            </div>
+			';
+		}
+		else if($type === "12" || $type === 12){
+			return '
+				<div data-username="'.$data['username'].'" class="contact-modal">
+					<div class="media nmt">
+						<div class="media-left">
+							<span>
+								<img width="42" height="42" class="media-object" src="/uploads/'.$data['profile_picture'].'">
+							</span>
+						</div>
+						<div class="media-body notif-mediabody">
+							<p class="nmb nmt padding-none">
+							<h4 class="media-heading small-mh nmb" id="media-heading">'.$data['fullname'].'</h4>
+								<small class="text-muted"><b>'.$data['college'].'</b></small> <a href="/inbox/'.$data['username'].'" class="btn btn-transparent-primary btn-sm pull-right">Message</a>
 							</p>
 						</div>
 					</div>

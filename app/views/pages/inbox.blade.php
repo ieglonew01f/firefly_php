@@ -10,6 +10,7 @@
       @include('includes.sidebar', $profile_data)
       @include('includes.inbox', ['profile_data' => $profile_data, 'inbox_data' => $inbox_data, 'inbox_chatter_data' => $inbox_chatter_data])
       @include('includes.utility')
+      @include('includes.modalcommon', ['modal_body' => $inbox_modal])
     </div>
 @stop
 @section('page_js')

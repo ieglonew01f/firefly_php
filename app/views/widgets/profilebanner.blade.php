@@ -11,7 +11,7 @@
           </div>
           <div class="media-body media-align-bottom">
             <h1 class="media-heading text-white text-shadow">{{ $fullname }}</h1>
-            <small class="text-white text-shadow">50 Followers - 20 Friends - 12 Following</small><br>
+            <small class="text-white text-shadow">{{ $followers }} Followers - {{ $friends }} Friends - {{ $following }} Following</small><br>
           </div>
         </div>
       </div>

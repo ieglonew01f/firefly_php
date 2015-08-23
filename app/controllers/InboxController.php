@@ -24,8 +24,10 @@ class InboxController extends BaseController {
 		//getting profile data
 		$profile_data = $profile -> load_profile_data(Session::get('username'));
 		$inbox_data   = $profile -> load_inbox_data();
+		$inbox_modal  = $profile -> load_inbox_modal_data();
 
 		$data = array(
+			"inbox_modal"        => $inbox_modal,
 			"inbox_data"         => $inbox_data,
 			"profile_data"       => $profile_data,
 			"inbox_chatter_data" => $inbox_chatter_data
@@ -50,6 +52,6 @@ class InboxController extends BaseController {
 
 	public function search_conv(){
 		$chat = new chat;
-		$chat -> search_conv_byKeyword(['keyword' => Input::get('keyword')]);
+		return $chat -> search_conv_byKeyword(['keyword' => Input::get('keyword')]);
 	}
 }

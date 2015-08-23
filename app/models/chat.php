@@ -94,9 +94,9 @@ class Chat extends Eloquent {
 
 		$html = '';
 		if(!$query){
-			$html = '<div class="alert alert-warning alert-default alert-dismissible text-center margin-top-lg" role="alert">
+			$html = '<div class="alert alert-warning alert-warning alert-dismissible text-center margin-top-lg" role="alert">
 							  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							  <strong><span class="icon-bulb"></span> Nothing left to see here</strong>
+							  <strong><span class="icon-bubble"></span> Nothing left to see here, there is no conversation between you and your friend. Psst ! don\'t be shy to say hello </strong>
 							</div>';
 		}
 		else {
@@ -150,8 +150,42 @@ class Chat extends Eloquent {
 	}
 
 	//search conv
+	public function search_conv_byKeyword($data){
+		$keyword = $data['keyword'];
+		$id      = Session::get('id');
+		$users   = [];
+		$html    = "";
+		//get all unique user inbound/outbound for current user
+		$query   = DB::select("SELECT * FROM messages WHERE for_id = '$id' UNION SELECT * FROM messages WHERE by_id = '$id' ORDER BY id DESC");
 
-	public function search_conv_byKeyword($keyword){
-		
+		foreach($query as $query) {
+
+			$for_id = $query -> for_id;
+			$by_id  = $query -> by_id;
+
+			//generate for_id ie not equals session id
+			if($for_id != $id){
+				if(!in_array($for_id, $users)){
+					array_push($users, $for_id); 
+				}
+			}
+			else{
+				if(!in_array($by_id, $users)){
+					array_push($users, $by_id); //byId is not session id
+				}
+			}
+		}
+
+		foreach($users as $for_id) {
+
+			//get the latest conv list for the current user
+			$message   = DB::select("SELECT * FROM messages where (by_id = '$id' and for_id = '$for_id') OR (by_id = '$for_id' and for_id = '$id') ORDER BY id DESC LIMIT 1"); //if exist then
+			$query     = DB::table('users')->join('users_profile', 'users_profile.u_id', '=', 'users.id')->where('users.id', '=', $for_id)->where('users.fullname', 'LIKE', '%'.$keyword.'%')->first();
+
+			if($query)
+				$html .= htmlfactory::bake_html("11", ['id' => $query -> u_id, 'fullname' => $query -> fullname, 'username' => $query -> username, 'profile_picture' => $query -> profile_picture, 'message' => $message[0] -> message, 'timestamp' => timeago::time_ago($message[0] -> timestamp)]);
+		}
+
+		return $html;
 	}
 }

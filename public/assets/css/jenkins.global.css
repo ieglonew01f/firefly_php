@@ -19,6 +19,11 @@ h1,h2,h3,h4,h5,h6{
 .tt-hint {
   color: #999
 }
+.alert-warning {
+    color: #8a6d3b;
+    background-color: #fcf8e3;
+    border-color: #faebcc;
+}
 .tt-menu {
   width: 100%;
   margin-top: 4px;
@@ -2649,4 +2654,10 @@ font-size: 15px;
 }
 .notification-dropdown > li > a:hover, .notification-dropdown > li > a:focus {
 	background:#ECECEC;
+}
+.sidebar-ul-links a:hover, .sidebar-ul-links:focus{
+  text-decoration:none;
+}
+.sidebar-ul-links a{
+  color:#838383;
 }

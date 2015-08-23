@@ -70,3 +70,8 @@ Route::get('/whats_new', 'NotificationsController@whats_new');
 Route::post('/get_conv', 'InboxController@get_conv');
 Route::post('/save_conv', 'InboxController@save_conv');
 Route::post('/search_conv', 'InboxController@search_conv');
+
+/*ROUTES FOR SETTINGS*/
+Route::get('/settings', 'SettingsController@index');
+Route::post('/save_settings', 'SettingsController@save_settings');
+

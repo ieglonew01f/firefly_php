@@ -6,7 +6,7 @@
                     <div class="top-menu">
                         <div class="row">
                             <div class="col-xs-3"><img class="media-object" style="width:32px;height:32px;" src="/uploads/{{ $profile_data['profile_picture'] }}" alt="..."/></div>
-                            <div class="col-xs-9"><button title="Inbox Settings" class="btn btn-transparent-primary btn-sm pull-right mrls"><span data-icon="&#xe060;"></span></button><button title="New Message" class="btn btn-transparent-primary btn-sm pull-right new-message-inbox"><i class="fa fa-plus"></i></button></div>
+                            <div class="col-xs-9"><a href="/settings" title="Inbox Settings" class="btn btn-transparent-primary btn-sm pull-right mrls"><span data-icon="&#xe060;"></span></a><button title="New Message" class="btn btn-transparent-primary btn-sm pull-right new-message-inbox"><i class="fa fa-plus"></i></button></div>
                         </div>
                     </div>
                     <div class="search-bar-inbox">

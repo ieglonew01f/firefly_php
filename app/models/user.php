@@ -36,13 +36,23 @@ class User extends Eloquent {
 
 	public function validate_username($username){
 
-		$user = $this::where('username', $username)->first();
-		if($user) {
+		//if session exists
+		if(Session::get('id')){
+			if($username == Session::get('username')){
+				return 1;
+			}
+			else{
+				$user = $this::where('username', $username)->first();
+			}
+		}
+		else{
+			$user = $this::where('username', $username)->first();
+		}
 
+		if($user) {
 			return 0; // failure
 		}
 		else {
-
 			return 1;
 		}
 	}

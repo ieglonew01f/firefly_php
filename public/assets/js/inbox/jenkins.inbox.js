@@ -6,6 +6,9 @@ var inbox_whois          = $("#inbox-whois");
 var inbox_fullname       = $("#inbox-whois-fullname");
 var comet_input_inbox    = $('.chatter-input-comet');
 var jenkins_session_data = $('#jenkins_session_data');
+var contact_list_inbox   = $('.contact-list-inbox');
+var new_message_btn      = $('.new-message-inbox');
+var utility_modal        = $('#total_utility_modal');
 
 //variables
 var session_username = jenkins_session_data.data('username');
@@ -23,7 +26,7 @@ var init = function(){
 		start: 'bottom'
 	});
 
-	$('.contact').click(inbox_handler.show_conv);
+	$(document).on('click', '.contact', '', inbox_handler.show_conv);
 
 	//chat workers
 	//register on node.js network
@@ -104,38 +107,40 @@ var init = function(){
 	//eof chat workers
 
 	//search conv
-	//$('.search-conv').keyup(inbox_handler.conv_search_handler($(this).val()));
+	$('.search-conv').keyup(inbox_handler.conv_search_handler);
 
 	//new message inbox click
-
-	$('.new-message-inbox').click(inbox_handler.new_message_handler);
+	new_message_btn.click(inbox_handler.new_message_handler);
 
 }
 
 //helpers
 var inbox_handler  = {
 	new_message_handler: function(){
-
+		utility_modal.find('.modal-title').html('<span data-icon="&#xe095;"></span> New Message');
+		utility_modal.modal('show').find('.modal-dialog').attr('style', 'max-width: 400px;').find('.modal-body').attr('style', 'padding:0;');
 	},
-	conv_search_handler: function(keyword){
-		$.ajax({
-		    type  : 'POST',
-		    url   : '/search_conv',
-		    data  : { keyword : keyword },
-			beforeSend: function(){
-				//result_container.html('<div class="loader loader-inner ball-pulse text-center" style="margin-top: 100px;"><div></div><div></div><div></div></div>');
-			},
-			success: function(data){
-				//result_container.html(data);
-			},
-			complete: function(responseText){
-				//workers
+	conv_search_handler: function(){
+		var keyword = $(this).val();
+		//if(keyword.length > 3){
+			$.ajax({
+			    type  : 'POST',
+			    url   : '/search_conv',
+			    data  : { keyword : keyword },
+				beforeSend: function(){
+					contact_list_inbox.html('<div class="loader loader-inner ball-pulse text-center" style="margin-top: 100px;"><div></div><div></div><div></div></div>');
+				},
+				success: function(data){
+					contact_list_inbox.html(data);
+				},
+				complete: function(responseText){
 
-			},
-			error: function(XMLHttpRequest, textStatus, errorThrown) {
-			    alert(errorThrown)
-			}
-		});
+				},
+				error: function(XMLHttpRequest, textStatus, errorThrown) {
+				    alert(errorThrown)
+				}
+			});
+		//}
 	},
 	isTyping: function(flag, data){
 		if(flag){
@@ -201,7 +206,7 @@ var inbox_handler  = {
 					}
 				},
 				complete: function(responseText){
-
+					chatter_inbox.animate({ scrollTop: chatter_inbox[0].scrollHeight}, 400);
 				},
 				error: function(XMLHttpRequest, textStatus, errorThrown) {
 				    alert(errorThrown)

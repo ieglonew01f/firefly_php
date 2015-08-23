@@ -81,6 +81,8 @@ class Profiles extends Eloquent {
 
 		$data = DB::table('users_profile')->join('users', 'users.id', '=', 'users_profile.u_id')->where('users.username', '=', $username)->first();
 
+		$profile_id = $data -> u_id;
+
 		//generate friendship button
 		$button_data        = DB::table('friends')->join('users', 'users.id', '=', 'friends.for_id')->where('users.username', '=', $username)->where('friends.by_id', '=', Session::get('id'))->first();
 		$follow_button_data = DB::table('followers')->join('users', 'users.id', '=', 'followers.following')->where('users.username', '=', $username)->first();
@@ -101,7 +103,7 @@ class Profiles extends Eloquent {
 			//generating buttons
 			$friendship_button = '';
 			$follow_button     = '';
-			$message_button    = '<a href="'.$website_url.'/inbox/" class="btn btn-success btn-transparent btn-sm">Messages</a>';
+			$message_button    = '<a href="/inbox/'.Session::get('username').'" class="btn btn-success btn-transparent btn-sm">Messages</a>';
 			$more_button       = '
 	          <div class="btn-group">
 	            <button type="button" class="btn btn-default btn-transparent btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">More <span class="caret"></span></button>
@@ -153,10 +155,16 @@ class Profiles extends Eloquent {
 			}
 
 			//generate message button
-			$message_button = '<a href="'.$website_url.'/inbox/'.$username.'" class="btn btn-success btn-transparent btn-sm">Message</a>';
+			$message_button = '<a href="/inbox/'.$username.'" class="btn btn-success btn-transparent btn-sm">Message</a>';
 			$more_button    = '';
 			$modal_data     = '';
 		}
+
+		//load friends/followers/following data
+		//$friends_count = DB::select('SELECT count(id) as count FROM friends WHERE id IN (SELECT id FROM friends WHERE by_id = "$profile_id" UNION SELECT id FROM friends WHERE for_id = "$profile_id")');
+		$friends_count = DB::table('friends')->select('id')->where('for_id', $profile_id)->orWhere('by_id', $profile_id)->where('status', '11')->count();
+		$followers     = DB::table('followers')->where('following', $profile_id)->count();
+		$following     = DB::table('followers')->where('follower', $profile_id)->count();
 
 		//throw all profile data
 
@@ -175,6 +183,10 @@ class Profiles extends Eloquent {
 			"relationship"      => $data -> relationship,
 			"profile_picture"   => $data -> profile_picture,
 			"banner"            => $data -> banner,
+			"about"             => $data -> about,
+			"friends"           => $friends_count,
+			"followers"         => $followers,
+			"following"         => $following,
 			/* ----------- META DATA  ------------*/
 			"friendship_button" => $friendship_button,
 			"friendship_text"   => $friendship_text,
@@ -183,7 +195,7 @@ class Profiles extends Eloquent {
 			"message_button"    => $message_button,
 			"more_button"       => $more_button,
 			"modal_body"        => $modal_data,
-			"friends_array"     => json_encode($friends_array)
+			"friends_array"     => json_encode($friends_array)    
 		);
 	}
 
@@ -304,6 +316,18 @@ class Profiles extends Eloquent {
 			$html     .= htmlfactory::bake_html("11", ['id' => $query -> u_id, 'fullname' => $query -> fullname, 'username' => $query -> username, 'profile_picture' => $query -> profile_picture, 'message' => $message[0] -> message, 'timestamp' => timeago::time_ago($message[0] -> timestamp)]);
 		}
 
+		return $html;
+	}
+
+	//load new message modal content
+	public function load_inbox_modal_data(){
+		$first        = DB::table('friends')->join('users', 'users.id', '=', 'friends.by_id')->where('friends.for_id', '=', Session::get('id'))->join('users_profile', 'users.id', '=', 'users_profile.u_id');
+		$friends_list = DB::table('friends')->join('users', 'users.id', '=', 'friends.for_id')->join('users_profile', 'users.id', '=', 'users_profile.u_id')->where('friends.by_id', '=', Session::get('id'))->union($first)->get();
+		$html         = "";
+
+		foreach($friends_list as $friends_list) {
+			$html .= htmlfactory::bake_html("12", ['fullname' => $friends_list -> fullname, 'username' => $friends_list -> username, 'profile_picture' => $friends_list -> profile_picture, 'college' => $friends_list -> college]);
+		}
 		return $html;
 	}
 
