@@ -40,5 +40,6 @@
   {{ HTML::script('public/assets/js/plugins/autogrow.js') }}
   {{ HTML::script('public/assets/js/plugins/jquery.form.js'); }}
   {{ HTML::script('public/assets/js/feeds/jenkins.feeds.js'); }}
+  {{ HTML::script('public/assets/js/plugins/jqueryDraggableBackground/draggable_background.js'); }}
   {{ HTML::script('public/assets/js/profile/jenkins.profile.js'); }}
 @stop

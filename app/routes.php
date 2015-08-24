@@ -53,6 +53,7 @@ Route::post('/change_banner', 'UploadController@change_banner');
 Route::post('/change_pp', 'UploadController@change_profile_picture');
 Route::post('/set_avatar', 'UploadController@set_avatar');
 Route::post('/photo_update', 'UploadController@photo_update');
+Route::post('/save_banner_position', 'UploadController@set_banner_position');
 
 /*ROUTES FOR INBOX PAGE */
 Route::get('/inbox/{username}', 'InboxController@index');

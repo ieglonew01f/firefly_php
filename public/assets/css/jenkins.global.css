@@ -16,6 +16,9 @@ h1,h2,h3,h4,h5,h6{
      -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
           box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
 }
+.background-transparent-hover:hover, .background-transparent-hover:focus, .background-transparent-hover:active{
+  background:transparent !important;
+}
 .tt-hint {
   color: #999
 }
@@ -2660,4 +2663,7 @@ font-size: 15px;
 }
 .sidebar-ul-links a{
   color:#838383;
+}
+.cursor-resize{
+  cursor: n-resize;
 }

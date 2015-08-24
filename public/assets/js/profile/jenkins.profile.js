@@ -12,12 +12,16 @@ var total_utility_modal         = $('#total_utility_modal');
 var slimscroll_avatar_div       = $('div.slimscroll-avatar');
 var click_thumbnail             = $('img.img-cthumbnail');
 var feed_container              = $('div#feeds_cont');
+var resize_banner               = $('.btn-resize');
+var close_resize_banner         = $('.banner-resize-close-btn');
+var save_resize_banner          = $('.banner-resize-save-btn');
 //variables
 var handler = {};
-var offset = 0, endOfFeed = false;
+var offset = 0, endOfFeed = false, backgroundPosition;
 
 //init function
 var init = function(){
+
 	//init slim scroll
 	slimscroll_avatar_div.slimScroll({
         height: '250px'
@@ -26,6 +30,9 @@ var init = function(){
 	//workers
 	change_banner_btn.click(handler.click_file);
 	file_change_banner.change(handler.change_banner);
+	resize_banner.click(handler.banner_resize);
+	close_resize_banner.click(handler.banner_resize_close);
+	save_resize_banner.click(handler.banner_resize_save);
 
 	//change profile picture upload from computer
 	upload_profile_pbt.click(handler.click_file_profile_picture);
@@ -73,6 +80,39 @@ var init = function(){
 
 //helpers
 handler  = {
+	banner_resize: function(){
+		$('#banner_resize').backgroundDraggable({ bound: false, axis: 'y', 
+			  done: function() {
+			    backgroundPosition = $('#banner_resize').css('background-position');
+			  }
+		});
+		$('#banner_resize').addClass('cursor-resize').find('.row').hide();
+		$('.resize-save-offset').removeClass('hidden');
+	},
+	banner_resize_save: function(){
+		var self = $(this);
+		$.ajax({
+			 type     : 'POST',
+			 url      : '/save_banner_position',
+			 data     : { banner_position : backgroundPosition },
+			 beforeSend: function(){
+			 	self.addClass('background-transparent-hover').html('<div class="loader loader-inner ball-pulse"><div></div><div></div><div></div></div>');
+			 },
+			 success: function(html){
+			 	self.html('Save and Close').removeClass('background-transparent-hover');
+			 },
+			 complete: function(data){
+			 	handler.banner_resize_close();
+			 },
+			 error: function(XMLHttpRequest, textStatus, errorThrown) {
+				 alert(errorThrown)
+			 }
+	 	});
+	},
+	banner_resize_close: function(){
+		$('#banner_resize').removeClass('cursor-resize').find('.row').show();
+		$('.resize-save-offset').addClass('hidden');
+	},
 	loadMoreFeeds: function(){
 		if(!endOfFeed){ //while not end of feed reached
 			offset = parseInt(offset) + 10; //load next 10 feeds

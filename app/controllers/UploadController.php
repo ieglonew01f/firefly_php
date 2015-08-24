@@ -252,4 +252,12 @@ class UploadController extends BaseController {
         }
     }
 
+    //save banner position
+    public function set_banner_position(){
+        $position = Input::get('banner_position');
+        //save to db
+        $profile = new profiles;
+        $profile -> update_or_bake_profile_data(array('column_name' => 'banner_position', 'value' => $position, 'profile_setup' => false));
+    }
+
 }

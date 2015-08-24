@@ -110,6 +110,7 @@ class Profiles extends Eloquent {
 	            <ul class="dropdown-menu mrt10" role="menu">
 	              <li><a href="javascript:;" class="friend"><b><span class="text-muted" data-icon="&#xe060;"></span> Edit profile</b></a></li>
 	              <li><a href="javascript:;" class="change-banner"><b><span class="text-muted" data-icon="&#xe07f;"></span> Change Banner</b></a></li>
+	              <li><a href="javascript:;" class="btn-resize"><b><span class="text-muted icon-frame"></span> Resize Banner</b></a></li>
 	              <li><a href="javascript:;" class="friend"><b><span class="text-muted" data-icon="&#xe082;"></span> Remove banner</b></a></li>
 	              <li class="divider"></li>
 	              <li><a href="javascript:;" data-toggle="modal" data-target="#total_utility_modal" class="change-profile-picture"><b><span class="text-muted" data-icon="&#xe07f;"></span> Change Profile Picture</b></a></li>
@@ -183,6 +184,7 @@ class Profiles extends Eloquent {
 			"relationship"      => $data -> relationship,
 			"profile_picture"   => $data -> profile_picture,
 			"banner"            => $data -> banner,
+			"banner_position"   => $data -> banner_position,
 			"about"             => $data -> about,
 			"friends"           => $friends_count,
 			"followers"         => $followers,

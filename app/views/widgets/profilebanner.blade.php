@@ -1,6 +1,6 @@
 <div class="profile-banner-container">
   <div class="banner-loader"><div class="loader loader-inner ball-pulse"><div></div><div></div><div></div></div> <span data-icon="&#xe084;"></span><span class="text"></span></div>
-  <div class="well well-banner" @if ($banner) style="background:url('/uploads/{{ $banner }}');background-size:cover;" @endif>
+  <div id="banner_resize" class="well well-banner" @if ($banner) style="background:url('/uploads/{{ $banner }}');background-size:cover;background-position:{{ $banner_position }}" @endif>
     <div class="row">
       <div class="col-md-6">
         <div class="media media-profile">
@@ -42,6 +42,7 @@
         <li class="li-icons"><span data-icon="&#xe07f;" class="text-primary"></span> Photos</li>
       </ul>
     </span>
+    <div class="resize-save-offset pull-right hidden"><button class="btn btn-transparent-primary banner-resize-save-btn">Save and Close</button> <button class="btn btn-transparent-primary banner-resize-close-btn">Cancel</button></div>
   </div>
 </div>
 <form class="banner_form" method="post" enctype="multipart/form-data" action="/change_banner">
