@@ -6,7 +6,7 @@
         <div class="media media-profile">
           <div class="media-left">
             <a href="/profile/{{ $username }}">
-              <img width="128" height="128" class="media-object profile-img" src="/uploads/{{ $profile_picture }}">
+              <img width="128" height="128" class="media-object profile-img" src="/uploads/thumb_{{ $profile_picture }}">
             </a>
           </div>
           <div class="media-body media-align-bottom">
