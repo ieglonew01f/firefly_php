@@ -8,8 +8,8 @@
               </a>
             </div>
             <div class="media-body line-height-1">
-              <h4 class="media-heading" id="media-heading">{{ $fullname }}</h4>
-              <a href="">Edit profile</a>
+              <h5 class="media-heading" id="media-heading"><b>{{ $fullname }}</b></h5>
+              <a href="/settings">Edit profile</a>
             </div>
           </div>
         </li>
@@ -25,17 +25,16 @@
       <div class="sidebar-lables"><span class="text-success" data-icon="&#xe04a;"></span> &nbsp; Chat</div>
       <!-- CHAT ELEMENTS -->
       <span id="jenkins_session_data" type="hidden" data-pp="{{ $profile_picture }}"data-username="{{ $username }}" data-fullname="{{ $fullname }}" data-id="{{ $u_id }}"></span>
-      <form class="navbar-form add-on-f" role="search">
-        <div class="input-group add-on wf">
-          <input type="text" class="form-control" placeholder="Search" name="srch-term" id="srch-term">
-          <div class="input-group-btn">
-            <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
-          </div>
-        </div>
-      </form>
+      <div class="input-group">
+        <span class="input-group-addon background-transparent nbl" id="search-addon"><i class="fa fa-search text-muted"></i></span>
+        <input type="text" class="custom-input search-conv nbr" placeholder="Search" aria-describedby="search-addon">
+      </div>
       <ul class="list-unstyled sidebar-chat-list">
 
       </ul>
+      <div class="active-chats">
+        {{ $profile_data['open_chat_list'] }}
+      </div>
     </div>
     <script type="text/javascript">
       var FRIEND_LIST_ARRAY = {{ $profile_data['friends_array'] }}

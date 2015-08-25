@@ -1,0 +1,134 @@
+@import url(http://fonts.googleapis.com/css?family=Stalemate);
+body{
+	color: #838383;
+	background: #FAFAFA;
+}
+h1,h2,h3,h4,h5,h6{
+	color: #838383;
+}
+.width-full{
+	width:100%;
+}
+.text-white{
+	color:white;
+}
+.navbar-brand{
+	font-family: 'Stalemate', cursive;
+	font-size:3.5em;
+	font-weight:bold;
+}
+.font-family-stale{
+	font-family: 'Stalemate', cursive;
+}
+.search-bar{
+	width: 250px !important;
+}
+.status-box{
+  padding: 15px;
+  border: 1px solid rgb(231, 231, 231);
+  border-radius: 5px;
+  padding-bottom:0px;
+  background:white;
+}
+.text-area{
+  outline: 0;
+  border: none;
+  width: 100%;
+  resize: none;
+}
+.progress{
+  height: 15px;
+}
+.line-height-1{
+	  line-height: 1;
+}
+.hr-dashed{
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border: 0;
+  border-top: 1px dashed #eeeeee;
+}
+
+/* SIDEBAR CSS*/
+.sidebar{
+  width: 210px;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  z-index: 9999;
+  background: white;
+  top: 0;
+  border: 1px solid rgb(230, 230, 230);
+}
+.heading-sidebar-name{
+  font-size: 1.3em;
+}
+.top-sidebar-ul > li{
+ padding:20px;
+}
+.sidebar-top-icon{
+  font-size: 1.5em;
+  line-height: 1.9;
+}
+.sidebar-ul-links{
+  font-size: 1.1em;
+}
+.sidebar-ul-links > li {
+  border-top: 1px solid rgb(231, 231, 231);
+  padding: 10px 10px 10px 25px;
+  -webkit-transition: all .3s ease-in-out;
+  -moz-transition: all .3s ease-in-out;
+  -o-transition: all .3s ease-in-out;
+  transition: all .3s ease-in-out;
+}
+.sidebar-ul-links > li:hover {
+  cursor:pointer;
+  background:rgb(231, 231, 231);
+}
+.add-on-f{
+  width: 100%;
+  padding-right: 0px;
+  padding-left: 2px;
+}
+.add-on .input-group-btn > .btn {
+  height: 38px;
+}
+/* stop the glowing blue shadow */
+.add-on .form-control:focus {
+ box-shadow:none;
+ -webkit-box-shadow:none; 
+ border-color:#cccccc; 
+}
+.border-bottom{
+  border-bottom: 1px solid rgb(231, 231, 231);
+}
+.sidebar-lables{
+  border-top: 1px solid rgb(231, 231, 231);
+  font-size: 1.2em;
+  padding-left: 20px;
+  margin-bottom: 10px;
+  margin-top:20px;
+  font-weight: bold;
+  background: rgb(238, 238, 238);
+}
+.vam{
+  vertical-align: middle;
+}
+.sidebar-chat-list > li{
+  border-top: 1px solid rgb(231, 231, 231);
+  padding: 8px;
+  -webkit-transition: all .3s ease-in-out;
+  -moz-transition: all .3s ease-in-out;
+  -o-transition: all .3s ease-in-out;
+  transition: all .3s ease-in-out;
+}
+.sidebar-chat-list > li:hover{
+  cursor:pointer;
+  background:rgb(231, 231, 231);
+}
+.label-round{
+  border-radius: 50px;
+}
+.wf{
+  width:100%;
+}

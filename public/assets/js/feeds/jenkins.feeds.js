@@ -67,19 +67,69 @@ var init = function(){
 	//recieve message handler
 	comet.new_message(function(data){
 		//building html
-		var html = '<div class="padding-xs"><div class="row nml nmr"><div class="col-sm-1 npl"><img class="media-object" src="/uploads/'+data.by_pp+'" style="width: 28px; height: 28px;"></div><div class="col-msg"><div class="tiny-chat-message-in">'+data.message+'</div></div></div></div>';
+		var chat_message_box = ''+
+			'<div class="row margin-bottom-sm">'+
+				'<div class="chat-incomming">'+
+		           '<div class="chat-message-box">'+
+		                '<div class="row">'+
+		                    '<div class="col-md-1">'+
+		                        '<img class="media-object img-circle" data-src="holder.js/64x64" alt="64x64" src="/uploads/'+data.by_pp+'" data-holder-rendered="true" style="width: 34px; height: 34px;">'+
+		                    '</div>'+
+		                    '<div class="col-md-10 wa">'+
+		                        '<div class="chat-in fs15">'+
+		                            data.message+
+		                        '</div>'+
+		                    '</div>'+
+		                '</div>'+
+		            '</div>'+
+		      	'</div>'+
+			'</div>';
 
-		//if div is not present in the dom
-		if($('.tiny-chat-container[data-username='+data.by_username+']').length <= 0) {
-			$('body').append('<div data-username="'+data.by_username+'" class="tiny-chat-container"><div class="tiny-chat-header">'+data.by_fullname+'</div><div class="tiny-chat-body">'+html+'</div><div class="tiny-chat-footer"><input autocomplete="off" id="tiny-chat-input" class="form-control" placeholder="Type a message.."></input></div></div>');
-			var tinyChatBody = $('.tiny-chat-container[data-username="'+data.by_username+'"]').find('.tiny-chat-body');
-			tinyChatBody.animate({ scrollTop: tinyChatBody[0].scrollHeight}, 1000);
+		//if chatbox is not open already
+		if($('.chat-box-outer[data-username='+data.by_username+']').length <= 0) {
+			//check for any other open chat boxes
+			//and count them
+			var chat_boxes_count = $('.chat-box-outer').length;
+			var left_position    = parseInt($('.chat-box-outer').width)*parseInt(chat_boxes_count);
+
+			var chat_body = ''+
+				'<div style="left:'+left_position+'px !important;" data-username="'+data.by_username+'" data-fullname="'+data.by_username+'" class="chat-box-outer">'+
+				    '<div class="well chat-box-head nmb">'+
+						'<button id="close-chat-box" type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+						  '<span aria-hidden="true" class="text-black">&times;</span>'+
+						'</button>'+
+				        '<div class="media nmt">'+
+				          '<div class="media-left hidden">'+
+				            '<a href="/profile/'+data.by_username+'">'+
+				              '<img id="inbox-whois" class="media-object img-circle" style="width:28px;height:28px;" src="/uploads/'+data.by_pp+'" alt="...">'+
+				            '</a>'+
+				          '</div>'+
+				          '<div class="media-body">'+
+				            '<h5 id="inbox-whois-fullname" class="media-heading fwb nmb">'+data.by_fullname+'</h5>'+
+				          '</div>'+
+				        '</div>'+
+				    '</div>'+
+				    '<div class="well chat-box-inner nmb">'+
+				    	chat_message_box+
+				    '</div>'+
+				    '<div class="well chat-box-well-input">'+
+				        '<input class="chat-box-input" placeholder="Type a message..."/>'+
+				    '</div>'+
+				'</div>';
+
+			$('body').append(chat_body);
+			handler_feeds.saveActiveConversation(data.by_username, 1);
+			var chatBody = $('.chat-box-outer[data-username="'+data.by_username+'"]').find('.chat-box-inner');
+			chatBody.animate({ scrollTop: chatBody[0].scrollHeight}, 400);
 		}
-		else if($('.tiny-chat-container[data-username='+data.by_username+']').length > 0) {
-			var tinyChatBody = $('.tiny-chat-container[data-username="'+data.by_username+'"]').find('.tiny-chat-body');
-			tinyChatBody.append(html);
-			tinyChatBody.animate({ scrollTop: tinyChatBody[0].scrollHeight}, 1000);
+		else if($('.chat-box-outer[data-username='+data.by_username+']').length > 0) {
+			var chatBody = $('.chat-box-outer[data-username="'+data.by_username+'"]').find('.chat-box-inner');
+			chatBody.append(chat_message_box);
+			chatBody.animate({ scrollTop: chatBody[0].scrollHeight}, 400);
 		}
+
+		//play sound
+		ion.sound.play("ping");
 	});
 
 	//refresh chat list if new user
@@ -89,33 +139,88 @@ var init = function(){
 		if(friends_online.length > 0){
 			handler_feeds.populateOnlineChatList(friends_online);
 		}
+		else{
+			//nobody is online 
+			sidebar_chat_list.empty();
+		}
 	});
 
+	//user clicks on a contact list to chat with
 	$(document).on('click', '.sidebar-chat-list li', '', function(){
-		$('body').append('<div data-username="'+$(this).data('username')+'" data-fullname="'+$(this).data('fullname')+'" class="tiny-chat-container"><div class="tiny-chat-header">'+$(this).data('fullname')+'</div><div class="tiny-chat-body"></div><div class="tiny-chat-footer"><input autocomplete="off" id="tiny-chat-input" class="form-control" placeholder="Type a message.."></input></div>');
+
+		//check if chat box is not already open
+		if($('.chat-box-outer[data-username='+$(this).data('username')+']').length <= 0) {
+			//check for any other open chat boxes
+			//and count them
+			var chat_boxes_count = $('.chat-box-outer').length;
+			var left_position    = parseInt(parseInt($('.chat-box-outer').width())*parseInt(chat_boxes_count + 1) - 35);
+
+			var chat_body = ''+
+				'<div style="left:'+left_position+'px !important;" data-username="'+$(this).data('username')+'" data-fullname="'+$(this).data('fullname')+'" class="chat-box-outer">'+
+				    '<div class="well chat-box-head nmb">'+
+						'<button id="close-chat-box" type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+						  '<span aria-hidden="true" class="text-black">&times;</span>'+
+						'</button>'+
+				        '<div class="media nmt">'+
+				          '<div class="media-left hidden">'+
+				            '<a href="/profile/'+$(this).data('username')+'">'+
+				              '<img id="inbox-whois" class="media-object img-circle" style="width:28px;height:28px;" src="/uploads/thumb_'+$(this).data('pp')+'" alt="...">'+
+				            '</a>'+
+				          '</div>'+
+				          '<div class="media-body">'+
+				            '<h5 id="inbox-whois-fullname" class="media-heading fwb nmb">'+$(this).data('fullname')+'</h5>'+
+				          '</div>'+
+				        '</div>'+
+				    '</div>'+
+				    '<div class="well chat-box-inner nmb">'+
+
+				    '</div>'+
+				    '<div class="well chat-box-well-input">'+
+				        '<input class="chat-box-input" placeholder="Type a message..."/>'+
+				    '</div>'+
+				'</div>';
+
+			$('body').append(chat_body);
+			handler_feeds.saveActiveConversation($(this).data('username'), 1);
+		}
+		else{
+
+		}
 	});
+
+	//when user clicks on close chat box
+	$(document).on('click', '#close-chat-box', '', handler_feeds.close_chat_box);
 
 	//send message handler
-	$(document).on('keydown', '#tiny-chat-input', '', function(e){
+	$(document).on('keydown', '.chat-box-input', '', function(e){
 		var keyCode = e.keyCode || e.which;
 	  if (keyCode == 13) {
 			//check for empty msg
-			if($('#tiny-chat-input').val() != ''){
+			if($('.chat-box-input').val() != ''){
 				//get username
-				var username = $(this).parents('.tiny-chat-container').data('username');
-				var fullname = $(this).parents('.tiny-chat-container').data('fullname');
+				var username = $(this).parents('.chat-box-outer').data('username');
+				var fullname = $(this).parents('.chat-box-outer').data('fullname');
 				var message  = $(this).val();
 
-				//building html
-				var html = '<div class="padding-xs"><div class="row nml nmr"><div class="tiny-chat-message-out pull-right">'+message+'</div></div></div>';
+				//chat message outbound html
+				var chat_message_box = ''+
+					'<div class="row margin-bottom-sm">'+
+						'<div class="chat-outgoing margin-bottom-md">'+
+							'<div class="chat-message-box wa pull-right">'+
+								'<div class="chat-out fs15">'+
+									message+
+								'</div>'+
+							'</div>'+
+						'</div>'+
+					'</div>';
 
 				comet.send_message({for_username:username, by_username:session_username, by_pp:session_pp, by_fullname:session_fullname, message:message}, function(data){
-					var tinyChatBody = $('.tiny-chat-container[data-username="'+username+'"]').find('.tiny-chat-body');
-					tinyChatBody.append(html);
-					tinyChatBody.animate({ scrollTop: tinyChatBody[0].scrollHeight}, 1000);
+					var chatBody = $('.chat-box-outer[data-username="'+username+'"]').find('.chat-box-inner');
+					chatBody.append(chat_message_box);
+					chatBody.animate({ scrollTop: chatBody[0].scrollHeight}, 400);
 				});
 
-				$('#tiny-chat-input').val('');
+				$('.chat-box-input').val('');
 				//$('#typing'+$('#id').val()).remove(); //remove is typing of this user
 			}
 	  }
@@ -240,23 +345,48 @@ var init = function(){
 /* =============================================== HELPERS ==============================================*/
 
 handler_feeds  = {
+	close_chat_box: function(){
+		self = $(this);
+		var username = self.parents('.chat-box-outer').data('username');
+		self.parents('.chat-box-outer').remove();
+		handler_feeds.saveActiveConversation(username, 0);
+	},
+	saveActiveConversation: function(with_username, type){
+		$.ajax({
+			type  : 'POST',
+			url   : '/save_active_conversation',
+			data  : { with_username : with_username, type:type },
+			beforeSend: function(){
+
+			},
+			success: function(html){
+
+			},
+			complete: function(responseText){
+
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
+				alert(errorThrown)
+			}
+		});
+	},
 	populateOnlineChatList: function(friend_list){
 		$.ajax({
-				type  : 'POST',
-				url   : '/chat_list',
-				data  : { friend_list : friend_list },
-				beforeSend: function(){
+			type  : 'POST',
+			url   : '/chat_list',
+			data  : { friend_list : friend_list },
+			beforeSend: function(){
 
-				},
-				success: function(html){
-					sidebar_chat_list.html(html);
-				},
-				complete: function(responseText){
+			},
+			success: function(html){
+				sidebar_chat_list.html(html);
+			},
+			complete: function(responseText){
 
-				},
-				error: function(XMLHttpRequest, textStatus, errorThrown) {
-						alert(errorThrown)
-				}
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
+				alert(errorThrown)
+			}
 		});
 	},
 	sharePost: function(e){

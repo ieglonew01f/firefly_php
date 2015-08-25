@@ -18,6 +18,7 @@ class Htmlfactory {
 		* type = 10 -> Generating inbox conv list
 		* type = 11 -> for conv listing
 		* type = 12 -> for generating inbox modal new message data
+		* type = 13 -> for generating chat boxes
 		*/
 
 		#$base_path = 'http://localhost'; //change it to site url
@@ -319,18 +320,18 @@ class Htmlfactory {
 		}
 		else if($type === "6" || $type === 6){
 			return '
-				<li data-fullname="'.$data['fullname'].'" data-username="'.$data['username'].'">
-          <div class="media">
-            <div class="media-left">
-              <a href="/profile/'.$data['username'].'">
-                <img width="32" height="32" class="media-object" src="/uploads/'.$data['profile_picture'].'">
-              </a>
-            </div>
-            <div class="media-body vam"> <span class="label label-success pull-right green-ball">&nbsp;</span>
-              <h4 class="media-heading">'.$data['fullname'].'</h4>
-            </div>
-          </div>
-        </li>
+				<li data-fullname="'.$data['fullname'].'" data-username="'.$data['username'].'" data-pp="'.$data['profile_picture'].'"">
+		          <div class="media">
+		            <div class="media-left">
+		              <a href="/profile/'.$data['username'].'">
+		                <img width="32" height="32" class="media-object" src="/uploads/'.$data['profile_picture'].'">
+		              </a>
+		            </div>
+		            <div class="media-body vam"> <span class="label label-success pull-right green-ball">&nbsp;</span>
+		              <h5 class="media-heading nmb mrt3"><b>'.$data['fullname'].'</b></h5>
+		            </div>
+		          </div>
+		        </li>
 			';
 		}
 		else if($type === "7" || $type === 7){
@@ -534,6 +535,33 @@ class Htmlfactory {
 						</div>
 					</div>
 	            </div>
+			';
+		}
+		else if($type === "13" || $type === 13){
+			return '
+				<div style="left:'.$data['left'].'px !important;" data-username="'.$data['username'].'" data-fullname="'.$data['fullname'].'" class="chat-box-outer">
+				    <div class="well chat-box-head nmb">
+						<button id="close-chat-box" type="button" class="close" data-dismiss="alert" aria-label="Close">
+						  <span aria-hidden="true" class="text-black">&times;</span>
+						</button>
+				        <div class="media nmt">
+				          <div class="media-left hidden">
+				            <a href="/profile/'.$data['username'].'">
+				              <img id="inbox-whois" class="media-object img-circle" style="width:28px;height:28px;" src="" alt="...">
+				            </a>
+				          </div>
+				          <div class="media-body">
+				            <h5 id="inbox-whois-fullname" class="media-heading fwb nmb">'.$data['fullname'].'</h5>
+				          </div>
+				        </div>
+				    </div>
+				    <div class="well chat-box-inner nmb">
+
+				    </div>
+				    <div class="well chat-box-well-input">
+				        <input class="chat-box-input" placeholder="Type a message..."/>
+				    </div>
+				</div>
 			';
 		}
 	}

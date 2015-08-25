@@ -167,6 +167,22 @@ class Profiles extends Eloquent {
 		$followers     = DB::table('followers')->where('following', $profile_id)->count();
 		$following     = DB::table('followers')->where('follower', $profile_id)->count();
 
+		//get open conversations 
+		$open_chat_query = DB::table('conversation')->join('users', 'users.id', '=', 'conversation.with_id')->where('u_id', Session::get('id'))->get();
+
+		if($open_chat_query){
+			$open_chats_html = "";
+			$left = 230;
+			foreach ($open_chat_query as $open_chat_query) {
+				$open_chats_html .= htmlfactory::bake_html("13", ['fullname' => $open_chat_query -> fullname, 'username' => $open_chat_query -> fullname, 'left' => $left]);
+				$left = $left + (230 - 35);
+			}
+		}
+		else{
+			$open_chats_html = "";
+		}
+
+
 		//throw all profile data
 
 		return array(
@@ -197,7 +213,8 @@ class Profiles extends Eloquent {
 			"message_button"    => $message_button,
 			"more_button"       => $more_button,
 			"modal_body"        => $modal_data,
-			"friends_array"     => json_encode($friends_array)    
+			"friends_array"     => json_encode($friends_array),
+			"open_chat_list"    => $open_chats_html   
 		);
 	}
 

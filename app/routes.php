@@ -60,6 +60,7 @@ Route::get('/inbox/{username}', 'InboxController@index');
 
 /*ROUTES FOR CHAT CONTROLLER*/
 Route::post('/chat_list', 'ChatController@get_chatlist');
+Route::post('/save_active_conversation', 'ChatController@save_active_conversation');
 
 /*ROUTES FOR NOTIFICATIONS CONTROLLER */
 Route::get('/get_notifications', 'NotificationsController@get_notifications');

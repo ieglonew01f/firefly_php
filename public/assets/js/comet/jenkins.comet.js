@@ -5,7 +5,7 @@ var comet = (function($){
   var session_username      = jenkins_session_data.data('username');
 
   /* SERVER ADDRESS */
-  var socket = io.connect('http://192.168.0.4:3000');
+  var socket = io.connect('http://192.168.0.3:3000');
 
   //register user on the socket network
   var register = function(data){

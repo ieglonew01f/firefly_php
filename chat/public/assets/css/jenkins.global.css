@@ -1,0 +1,91 @@
+@media (min-width: 1200px){
+	.container {
+	  width: 970px; 
+	}
+}
+.tri-up {
+	/* Styling block element, not required */
+	position: relative;
+	margin-top: 15px;
+	padding-bottom: 10px;
+	border-top: 1px solid #E7E7E7;
+	background: #FFFFFF;
+}
+
+/* Required for Down Triangle */
+.tri-up:before, .tri-up:after {
+	content: "";
+	position: absolute;
+	width: 0;
+	height: 0;
+	border-style: solid;
+	border-color: transparent;
+	border-top: 0;
+}
+
+/* Stroke */
+.tri-up:before {
+	top: -11px;
+	left: 21px;
+	border-bottom-color: #E7E7E7;
+	border-width: 11px;
+}
+
+/* Fill */
+.tri-up:after {
+	top: -10px;
+	left: 22px;
+	border-bottom-color: #FFFFFF;
+	border-width: 10px;
+}
+.text-muted-md{
+	color: rgb(231, 231, 231);
+}
+.post-cards{
+  padding: 15px;
+  border: 1px solid rgb(231, 231, 231);
+  background: white;
+  margin-top:10px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  border-bottom:none;
+}
+.post-card-footer{
+  padding: 5px 15px 5px 15px;
+  background: white;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border: 1px solid rgb(231, 231, 231);
+  border-top:1px dashed rgb(231, 231, 231);
+}
+.post-card-buttons{
+	margin-top:5px;
+}
+.post-card-button-inner{
+	cursor:pointer;
+}
+.post-card-button-inner:hover{
+	color:#127ba3;
+}
+.mr-r{
+	margin-right:5px;
+}
+.no-margin-bottom{
+	margin-bottom:0px;
+}
+.no-likes{
+  background: rgb(231, 231, 231);
+  padding: 6px;
+  border-radius: 3px;
+  padding-bottom: 8px;
+}
+.well-snow{
+	margin-bottom:15px;
+	background:white;
+	padding:15px;
+	border: 1px solid rgb(231, 231, 231);
+	border-radius:5px;
+}
+.nmt{
+	margin-top:0px;
+}

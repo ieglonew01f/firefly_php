@@ -18,4 +18,18 @@ class ChatController extends BaseController {
 		
 		return $chat -> chat_list($data);
 	}
+
+	//this saves the converstaion on to the database
+	public function save_active_conversation(){
+		$chat          = new chat;
+		$with_username = Input::get('with_username');
+		$type          = Input::get('type');
+
+		$data = array(
+			"with_username" => $with_username,
+			"type"          => $type
+ 		);
+
+		$chat -> save_active_conversation($data);
+	}
 }

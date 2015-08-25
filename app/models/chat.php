@@ -188,4 +188,26 @@ class Chat extends Eloquent {
 
 		return $html;
 	}
+
+
+	//saves active conv
+	public function save_active_conversation($data){
+		$with_id_query = DB::table('users')->select('id')->where('username', $data['with_username'])->first();
+		$with_id       = $with_id_query -> id;
+
+		$query  = DB::table('conversation')->where('with_id', $with_id)->where('u_id', Session::get('id'))->first();
+
+		if(!$query){
+			$data_i = array(
+				"u_id"    => Session::get('id'),
+				"with_id" => $with_id
+			);
+			DB::table('conversation')->insert($data_i);
+		}
+		else{
+			if($data['type'] == 0 || $data['type'] == "0"){
+				DB::table('conversation')->where('with_id', $with_id)->where('u_id', Session::get('id'))->delete();
+			}
+		}
+	}
 }
