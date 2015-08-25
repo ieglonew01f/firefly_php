@@ -174,7 +174,10 @@ class Profiles extends Eloquent {
 			$open_chats_html = "";
 			$left = 230;
 			foreach ($open_chat_query as $open_chat_query) {
-				$open_chats_html .= htmlfactory::bake_html("13", ['fullname' => $open_chat_query -> fullname, 'username' => $open_chat_query -> username, 'left' => $left]);
+				$chat = new chat;
+				$messages_data = $chat -> get_chat_convById($open_chat_query -> with_id);
+
+				$open_chats_html .= htmlfactory::bake_html("13", ['fullname' => $open_chat_query -> fullname, 'username' => $open_chat_query -> username, 'left' => $left, 'messages' => $messages_data]);
 				$left = $left + (230 - 35);
 			}
 		}

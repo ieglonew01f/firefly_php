@@ -19,6 +19,7 @@ class Htmlfactory {
 		* type = 11 -> for conv listing
 		* type = 12 -> for generating inbox modal new message data
 		* type = 13 -> for generating chat boxes
+		* type = 14 -> for listing chat conversations get conv
 		*/
 
 		#$base_path = 'http://localhost'; //change it to site url
@@ -320,7 +321,7 @@ class Htmlfactory {
 		}
 		else if($type === "6" || $type === 6){
 			return '
-				<li data-fullname="'.$data['fullname'].'" data-username="'.$data['username'].'" data-pp="'.$data['profile_picture'].'"">
+				<li data-fullname="'.$data['fullname'].'" data-username="'.$data['username'].'" data-pp="'.$data['profile_picture'].'" data-id="'.$data['id'].'"">
 		          <div class="media">
 		            <div class="media-left">
 		              <a href="/profile/'.$data['username'].'">
@@ -556,13 +557,50 @@ class Htmlfactory {
 				        </div>
 				    </div>
 				    <div class="well chat-box-inner nmb">
-
+				    	'.$data['messages'].'
 				    </div>
 				    <div class="well chat-box-well-input">
 				        <input class="chat-box-input" placeholder="Type a message..."/>
 				    </div>
 				</div>
 			';
+		}
+		else if($type === "14" || $type === 14){
+
+			if($data['isOutbound']){
+				return 
+					'<div class="row margin-bottom-sm">
+						<div class="chat-outgoing margin-bottom-md">
+							<div class="chat-message-box wa pull-right">
+								<div class="chat-out fs15">
+									<span>'.$data['message'].'</span> <br/>
+									<small class="fs10 text-muted">'.$data['timestamp'].'</small>
+								</div>
+							</div>
+						</div>
+					</div>';
+			}
+			else {
+				return '
+				<div class="row margin-bottom-sm">
+					<div class="chat-incomming">
+			           <div class="chat-message-box">
+			                <div class="row">
+			                    <div class="col-md-1">
+			                        <img class="media-object img-circle" data-src="holder.js/64x64" alt="64x64" src="/uploads/'.$data['profile_picture'].'" data-holder-rendered="true" style="width: 34px; height: 34px;">
+			                    </div>
+			                    <div class="col-md-10 wa">
+			                        <div class="chat-in fs15">
+			                            <span>'.$data['message'].'</span> <br/>
+			                            <small class="fs10 text-muted">'.$data['timestamp'].'</small>
+			                        </div>
+			                    </div>
+			                </div>
+			            </div>
+			      	</div>
+				</div>
+				';
+			}
 		}
 	}
 }

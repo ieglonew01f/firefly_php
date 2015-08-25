@@ -61,6 +61,8 @@ var init = function(){
 	//workers
 
 	//chat workers
+	//scroll to bottom
+	handler_feeds.scroll_bottom();
 	//register on node.js network
 	comet.register({'id':session_id, 'username': session_username, 'fullname': session_fullname});
 
@@ -93,7 +95,7 @@ var init = function(){
 			var left_position    = parseInt($('.chat-box-outer').width)*parseInt(chat_boxes_count);
 
 			var chat_body = ''+
-				'<div style="left:'+left_position+'px !important;" data-username="'+data.by_username+'" data-fullname="'+data.by_username+'" class="chat-box-outer">'+
+				'<div style="left:'+left_position+'px !important;" data-username="'+data.by_username+'" data-fullname="'+data.by_username+'" data-id="'+data.by_id+'" class="chat-box-outer">'+
 				    '<div class="well chat-box-head nmb">'+
 						'<button id="close-chat-box" type="button" class="close" data-dismiss="alert" aria-label="Close">'+
 						  '<span aria-hidden="true" class="text-black">&times;</span>'+
@@ -110,7 +112,6 @@ var init = function(){
 				        '</div>'+
 				    '</div>'+
 				    '<div class="well chat-box-inner nmb">'+
-				    	chat_message_box+
 				    '</div>'+
 				    '<div class="well chat-box-well-input">'+
 				        '<input class="chat-box-input" placeholder="Type a message..."/>'+
@@ -120,6 +121,8 @@ var init = function(){
 			$('body').append(chat_body);
 			handler_feeds.saveActiveConversation(data.by_username, 1);
 			var chatBody = $('.chat-box-outer[data-username="'+data.by_username+'"]').find('.chat-box-inner');
+			handler_feeds.show_conv($('.chat-box-outer[data-id="'+data.by_id+'"]'));
+			chatBody.append(chat_message_box);
 			chatBody.animate({ scrollTop: chatBody[0].scrollHeight}, 400);
 		}
 		else if($('.chat-box-outer[data-username='+data.by_username+']').length > 0) {
@@ -156,7 +159,7 @@ var init = function(){
 			var left_position    = parseInt(parseInt($('.chat-box-outer').width())*parseInt(chat_boxes_count + 1) - 35);
 
 			var chat_body = ''+
-				'<div style="left:'+left_position+'px !important;" data-username="'+$(this).data('username')+'" data-fullname="'+$(this).data('fullname')+'" class="chat-box-outer">'+
+				'<div style="left:'+left_position+'px !important;" data-username="'+$(this).data('username')+'" data-fullname="'+$(this).data('fullname')+'" data-id="'+$(this).data('id')+'" class="chat-box-outer">'+
 				    '<div class="well chat-box-head nmb">'+
 						'<button id="close-chat-box" type="button" class="close" data-dismiss="alert" aria-label="Close">'+
 						  '<span aria-hidden="true" class="text-black">&times;</span>'+
@@ -182,6 +185,7 @@ var init = function(){
 
 			$('body').append(chat_body);
 			handler_feeds.saveActiveConversation($(this).data('username'), 1);
+			handler_feeds.show_conv($(this));
 		}
 		else{
 
@@ -214,7 +218,7 @@ var init = function(){
 						'</div>'+
 					'</div>';
 
-				comet.send_message({for_username:username, by_username:session_username, by_pp:session_pp, by_fullname:session_fullname, message:message}, function(data){
+				comet.send_message({for_username:username, by_username:session_username, by_id:session_id, by_pp:session_pp, by_fullname:session_fullname, message:message}, function(data){
 					var chatBody = $('.chat-box-outer[data-username="'+username+'"]').find('.chat-box-inner');
 					chatBody.append(chat_message_box);
 					chatBody.animate({ scrollTop: chatBody[0].scrollHeight}, 400);
@@ -222,6 +226,7 @@ var init = function(){
 
 				$('.chat-box-input').val('');
 				//$('#typing'+$('#id').val()).remove(); //remove is typing of this user
+				handler_feeds.save_conv({message:message, for_username:username});
 			}
 	  }
 	});
@@ -345,6 +350,53 @@ var init = function(){
 /* =============================================== HELPERS ==============================================*/
 
 handler_feeds  = {
+	scroll_bottom: function(){
+		var chat_body = $('.chat-box-outer').find('.chat-box-inner');
+		if(chat_body.length)
+			chat_body.animate({ scrollTop: chat_body[0].scrollHeight}, 10);
+	},
+	show_conv: function(self){
+		var id  = self.data('id');
+		var chat_body = $('.chat-box-outer[data-id='+id+']').find('.chat-box-inner');
+		$.ajax({
+		    type  : 'POST',
+		    url   : '/get_chat_conv',
+			data  : { id : id },
+			beforeSend: function(){
+				chat_body.html('<div class="loader loader-inner ball-pulse text-center" style="margin-top: 100px;"><div></div><div></div><div></div></div>');
+			},
+			success: function(data){
+				if(data){
+					chat_body.html(data);
+				}
+			},
+			complete: function(responseText){
+				chat_body.animate({ scrollTop: chat_body[0].scrollHeight}, 10);
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
+			    alert(errorThrown)
+			}
+		});
+	},
+	save_conv: function(data){
+		$.ajax({
+		    type  : 'POST',
+		    url   : '/save_conv',
+			data  : data,
+			beforeSend: function(){
+
+			},
+			success: function(data){
+
+			},
+			complete: function(responseText){
+
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
+			    alert(errorThrown)
+			}
+		});
+	},
 	close_chat_box: function(){
 		self = $(this);
 		var username = self.parents('.chat-box-outer').data('username');

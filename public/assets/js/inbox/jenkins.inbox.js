@@ -158,19 +158,19 @@ var inbox_handler  = {
 		$.ajax({
 		    type  : 'POST',
 		    url   : '/save_conv',
-				data  : data,
-				beforeSend: function(){
+			data  : data,
+			beforeSend: function(){
 
-				},
-				success: function(data){
+			},
+			success: function(data){
 
-				},
-				complete: function(responseText){
+			},
+			complete: function(responseText){
 
-				},
-				error: function(XMLHttpRequest, textStatus, errorThrown) {
-				    alert(errorThrown)
-				}
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
+			    alert(errorThrown)
+			}
 		});
 	},
 	show_conv: function(){

@@ -61,6 +61,42 @@ class Chat extends Eloquent {
 		return $html;
 	}
 
+	//get chat conversation for chat box
+	public function get_chat_convById($id){
+		$isOutbound = false;
+		$s_id       = Session::get('id');
+
+		$query      = DB::select("SELECT * FROM messages WHERE by_id = '$s_id' AND for_id = '$id' UNION SELECT * FROM messages WHERE by_id = '$id' AND for_id = '$s_id' ORDER BY id ASC");
+
+		$html       = "";
+
+		foreach($query as $query){
+
+			if($query -> by_id == $s_id){ //outbound message
+				$isOutbound = true;
+			}
+
+			//getting user details
+			$user = DB::table('users_profile')->join('users', 'users.id', '=', 'users_profile.u_id')->where('users.id', '=', $query -> by_id)->first();
+
+			$data = array(
+				"id"              => $id,
+				"fullname"        => $user -> fullname,
+				"profile_picture" => $user -> profile_picture,
+				"username"        => $user -> username,
+				"message"         => $query -> message,
+				"timestamp"       => timeago::time_ago($query -> timestamp),
+				"isOutbound"      => $isOutbound
+			);
+
+			$html .= htmlfactory::bake_html("14", $data);
+
+			$isOutbound = false;
+		}
+
+		return $html;
+	}
+
 	//get latest conv by username
 	public function get_lastConvOf($username){
 		$isOutbound = false;

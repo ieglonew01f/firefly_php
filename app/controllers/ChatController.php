@@ -32,4 +32,10 @@ class ChatController extends BaseController {
 
 		$chat -> save_active_conversation($data);
 	}
+
+	//get chat conv
+	public function get_chat_conv(){
+		$chat = new chat;
+		return $chat -> get_chat_convById(Input::get('id'));
+	}
 }
