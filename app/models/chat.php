@@ -150,8 +150,7 @@ class Chat extends Eloquent {
 	}
 
 	//search conv
-
 	public function search_conv_byKeyword($keyword){
-		
+		$query = DB::select("SELECT * FROM users u, profile p WHERE u.id = p.u_id AND u.id IN (SELECT for_id FROM messages WHERE by_id = '$id' UNION SELECT by_id FROM messages WHERE for_id = '$id') AND u.fullname LIKE %")
 	}
 }
