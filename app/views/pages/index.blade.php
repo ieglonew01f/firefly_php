@@ -17,6 +17,7 @@
             </div>
             <div class="collapse navbar-collapse">
               <ul class="nav navbar-nav navbar-right">
+                <li><button onclick="window.location='/question'" type="button" class="btn btn-success navbar-btn">Question</button></li>
                 <li><a href="#"><b>FEATURES</b></a></li>
                 <li><a href="#"><b>DOCUMENTATION</b></a></li>
                 <li><a href="#"><b>FAQ's</b></a></li>

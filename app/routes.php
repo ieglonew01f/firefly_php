@@ -49,7 +49,7 @@ Route::post('/bake_profile', 'ProfileController@bake_profile');
 Route::post('/people_handler', 'ProfileController@people_handler');
 
 /*ROUTES FOR FILE UPLOADS LIKE CHANGING BANNER*/
-Route::post('/change_banner', 'UploadController@change_banner');
+Route::post('/change_banner', 'UploadController@change_banner');	
 Route::post('/change_pp', 'UploadController@change_profile_picture');
 Route::post('/set_avatar', 'UploadController@set_avatar');
 Route::post('/photo_update', 'UploadController@photo_update');
@@ -70,3 +70,7 @@ Route::get('/whats_new', 'NotificationsController@whats_new');
 Route::post('/get_conv', 'InboxController@get_conv');
 Route::post('/save_conv', 'InboxController@save_conv');
 Route::post('/search_conv', 'InboxController@search_conv');
+
+/*ASSIGNMENT_ONE*/
+Route::get('/question', 'JenkinsController@new_question');
+Route::post('/add_question', 'JenkinsController@add_question');
