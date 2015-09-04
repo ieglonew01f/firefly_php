@@ -1,0 +1,16 @@
+body{
+    background: #F3F4F5 !important;
+    font-weight:bolder;
+}
+.mrt60{
+    margin-top: 60px;
+}
+.mrt80{
+    margin-top:80px;
+}
+.bottom{
+    background-color: white;
+    position: fixed;
+    width: 100%;
+    bottom: -35px;
+}

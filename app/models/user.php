@@ -34,6 +34,32 @@ class User extends Eloquent {
 		}
 	}
 
+	/*NEW*/
+	//signup by email
+	public function new_email_signup($data){
+		//verifying new user data
+		//checking for email duplication
+		$user = $this::where('email', $data['email'])->first();
+
+		if($user) {
+			return 0; // failure
+		}
+		else {
+
+			$data = array(
+				"email"  => $data['email'],
+				"code"   => md5($data['email'].time()),
+				"ip"     => $_SERVER['REMOTE_ADDR'],
+				"active" => 0
+			);
+
+			$this::create($data);
+			$user = $this::where('email', '=', $data['email'])->first();
+
+			return ['id' => $user -> id, 'code' => $user -> code];
+		}
+	}
+
 	public function validate_username($username){
 
 		//if session exists

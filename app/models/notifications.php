@@ -63,10 +63,12 @@ class Notifications extends Eloquent {
 
 	//returns a json of latest data
 	public function get_latest_data($type, $data){
-		$query = DB::table('notifications')->where('for_id', Session::get('id'))->where('by_id', '!=', Session::get('id'))->where('seen', '0')->count();
+		$notifications = DB::table('notifications')->where('for_id', Session::get('id'))->where('by_id', '!=', Session::get('id'))->where('seen', '0')->count();
+		$messages      = DB::table('messages')->where('for_id', Session::get('id'))->where('by_id', '!=', Session::get('id'))->where('seen', '0')->count();
 
 		$data = array(
-			'notifications' => $query
+			'notifications' => $notifications,
+			'messages'      => $messages
 		);
 
 		return json_encode($data);

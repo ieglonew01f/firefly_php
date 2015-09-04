@@ -1,6 +1,6 @@
      <!-- MAIN SCRIPTS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    {{ HTML::script('public/assets/js/jenkins.main.min.js'); }}
+    {{ HTML::script('public/assets/js/base/jenkins.main.min.js'); }}
     <!-- EOF MAIN SCRIPTS -->
 
     <!-- JQUERY PLUGINS -->

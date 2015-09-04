@@ -1,87 +1,131 @@
 @import url(http://fonts.googleapis.com/css?family=Stalemate);
-body{
-	color: #838383;
+.hidden.menu {
+  display: none;
 }
-h1,h2,h3,h4,h5,h6{
-	color: #838383;
+.w4{
+  width:400px !important;
 }
-@media (min-width: 1200px){
-	.container {
-	    width: 1170px !important;
-	}
+body.pushable{
+  background:url('http://www.freepik.com/blog/wp-content/uploads/2015/08/drewpost1.png') !important;
+  background-size:cover !important;
 }
-.jumbotron h1, .jumbotron .h1 {
-  color: white;
+.masthead.segment {
+  min-height: 700px;
+  padding: 1em 0em;
 }
-.width-full{
-	width:100%;
+.masthead .logo.item img {
+  margin-right: 1em;
 }
-.background-transparent{
-	background:transparent;
+.masthead .ui.menu .ui.button {
+  margin-left: 0.5em;
 }
-.jumbotron-background{
-	background: #08233e;
-  background-size:cover;
-  border:none;
+.masthead h1.ui.header {
+  margin-top: 3em;
+  margin-bottom: 0em;
+  font-size: 4em;
+  font-weight: normal;
 }
-.text-white{
-	color:white;
+.masthead h2 {
+  font-size: 1.7em;
+  font-weight: normal;
+}
+body.pushable>.pusher{
+  background:transparent;
+}
+.ui.vertical.stripe {
+  padding: 8em 0em;
+}
+.ui.vertical.stripe h3 {
+  font-size: 2em;
+}
+.ui.vertical.stripe .button + h3,
+.ui.vertical.stripe p + h3 {
+  margin-top: 3em;
+}
+.ui.vertical.stripe .floated.image {
+  clear: both;
+}
+.ui.vertical.stripe p {
+  font-size: 1.33em;
+}
+.ui.vertical.stripe .horizontal.divider {
+  margin: 3em 0em;
+}
+
+.quote.stripe.segment {
+  padding: 0em;
+}
+.quote.stripe.segment .grid .column {
+  padding-top: 5em;
+  padding-bottom: 5em;
+}
+
+.footer.segment {
+  padding: 5em 0em;
+}
+
+.secondary.pointing.menu .toc.item {
+  display: none;
+}
+
+@media only screen and (max-width: 700px) {
+  .ui.fixed.menu {
+    display: none !important;
+  }
+  .secondary.pointing.menu .item,
+  .secondary.pointing.menu .menu {
+    display: none;
+  }
+  .secondary.pointing.menu .toc.item {
+    display: block;
+  }
+  .masthead.segment {
+    min-height: 350px;
+  }
+  .masthead h1.ui.header {
+    font-size: 2em;
+    margin-top: 1.5em;
+  }
+  .masthead h2 {
+    margin-top: 0.5em;
+    font-size: 1.5em;
+  }
+}
+.no-border{
+  border:0 !important;
+}
+.has-background{
+  opacity: 0.9 !important;
+  height:100vh;
+}
+.bg-white{
+  background:white !important;
+}
+.has-margin{
+  margin-top:50px !important;
+  margin-bottom:50px !important;
+}
+.has-center{
+  margin-top:10px !important;
+  margin-bottom:10px !important;
+  text-align:center !important;
+  color: #6D6D6D !important;
 }
 .navbar-brand{
-	font-family: 'Stalemate', cursive;
-	font-size:6em;
+  font-family: 'Stalemate', cursive !important;
+  font-size:3em !important;
+  font-weight:bolder;
+  padding:0 !important;
 }
-.font-family-stale{
-	font-family: 'Stalemate', cursive;
+.padding-sm{
+  padding:5px !important;
 }
-hr.symbol {
-  padding: 0;
-  border: none;
-  border-top: 1px solid #D8D8D8;
-  color: #585858;
-  text-align: center;
-  margin-top: 10px;
-  margin-bottom: 15px;
+.demo-img{
+  width:600px !important;
+  max-width:700px !important;
 }
-hr.symbol:after {
-  content: "or signup with your email";
-  display: inline-block;
-  position: relative;
-  top: -13px;
-  padding: 0 10px;
-  background: rgb(245, 245, 245);
-  font-weight:400;
-}
-.margin-bottom-sm{
-	margin-bottom:10px;
-}
-.no-margin-top{
-	margin-top:0px;
-}
-.navbar-default{
-  border-color:transparent;
-}
-.members-icons{
-  -webkit-transition: all .1s ease-in-out;
-  -moz-transition: all .1s ease-in-out;
-  -o-transition: all .1s ease-in-out;
-  transition: all .1s ease-in-out;
-}
-img.img-circle.members-icons:hover {
-  width:60px;
-  height:60px;
-  cursor:pointer;
-}
-.navbar-default .navbar-nav>li>a {
-  color: white;
-}
-.navbar-default .navbar-nav>li>a:hover{
-  color: #838383;
-}
-.npr{
-  padding-right:0px;
-}
-.nptb{
-  padding-top: 0px !important;
-  padding-bottom: 0px !important;
+.has-error{
+  background: #fff6f6 !important;
+  border-color: #e0b4b4 !important;
+  color: #9f3a38 !important;
 }

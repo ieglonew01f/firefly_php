@@ -37,6 +37,14 @@ class IndexController extends BaseController {
 		return $user -> add_user($input);
  	}
 
+ 	/* NEW */
+ 	//signup by email address
+ 	public function signup_with_email(){
+ 		$email = Input::get('email');
+ 		$user  = new user;
+ 		return json_encode($user -> new_email_signup(['email' => $email]));
+ 	}
+
  	//test username 
  	public function check_username(){
 		$user   = new user;
@@ -44,7 +52,6 @@ class IndexController extends BaseController {
  	}
 
  	//get settings for index page
-
  	public function load_settings_index(){
  		$settings = new settings;
  		return json_encode($settings -> get_settings());

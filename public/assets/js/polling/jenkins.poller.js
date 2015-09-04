@@ -1,7 +1,10 @@
 /* poll handler */
 /* takes care of updating notifications */
 //cache
-var notif_badge = $('.notif-badge');
+var notif_badge         = $('.notif-badge');
+var inbox_badge         = $('.inbox-badge');
+var sidebar_inbox_badge = $('.sidebar-inbox-badge');
+var sidebar_notif_badge = $('.sidebar-notif-badge');
 
 //variables
 
@@ -13,12 +16,12 @@ var init = function(){
 	//workers
 
 	//poll the db for new stuff
-  poll_handler.whats_new(5000); //check for new stuff every x seconds
+  poll_handler.whats_new(10000); //check for new stuff every x seconds
 
 }
 
 //helpers
-var poll_handler  = {
+var poll_handler = {
   whats_new : function(frequency){
     //poll the db for new stuff
     setInterval(function(){
@@ -30,19 +33,21 @@ var poll_handler  = {
   //handles the response
   handleNewResponse: function(response){
     /* 1 -> Notifications response
-    *  2 -> Others // to add later
+    *  2 -> Inbox Notification response 
     */
 
     if(response.notifications){
-      //then do
-      //if the data is not same as in dom
-      if(notif_badge.text() != response.notifications){
-        notif_badge.text(response.notifications);
-        ion.sound.play("ping");
-      }
+      poll_handler.set_notification_html(notif_badge, response.notifications, false);
+      poll_handler.set_notification_html(sidebar_notif_badge, response.notifications, false)
     }
-    else {
-        notif_badge.text('');
+    else if(response.messages){
+      poll_handler.set_notification_html(inbox_badge, response.messages, false);
+      poll_handler.set_notification_html(sidebar_inbox_badge, response.messages, false);
+    }
+    else { //else clear it
+      poll_handler.set_notification_html(notif_badge, null, true);
+      poll_handler.set_notification_html(inbox_badge, null, true);
+      poll_handler.set_notification_html(sidebar_inbox_badge, null, true);
     }
 
   },
@@ -51,13 +56,24 @@ var poll_handler  = {
     ion.sound({
         sounds: [
             {
-                name: "ping"
+              name: "ping"
             }
         ],
         volume: 0.5,
         path: "/public/assets/sound/",
         preload: true
     });
+  }, 
+  set_notification_html: function(self, data, clear){
+    if(clear == false){
+      if(self.text() != data){
+        self.text(data);
+        ion.sound.play("ping");
+      }
+    }
+    else{
+      self.text('');
+    }
   }
 }
 

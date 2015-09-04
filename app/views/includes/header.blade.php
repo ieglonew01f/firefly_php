@@ -48,7 +48,7 @@
                   </li>
                 </ul>
               </li>
-              <li><a href="/inbox/{{ Session::get('username') }}"><span data-icon="&#xe03f;"></span> Inbox</a></li>
+              <li><a href="/inbox/{{ Session::get('username') }}"><span data-icon="&#xe03f;"></span> Inbox <span class="badge inbox-badge"></span></a></li>
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span data-icon="&#xe005;"></span> Profile <span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu">
