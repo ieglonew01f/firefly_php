@@ -2,6 +2,7 @@
 /vendor
 /uploads
 /test
+/.idea
 composer.phar
 composer.lock
 .env.*.php

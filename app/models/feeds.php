@@ -798,4 +798,10 @@ class Feeds extends Eloquent {
 			DB::table('feed_share')->where('u_id', Session::get('id'))->where('feed_id', $data['feed_id'])->update(['timestamp' => time()]);
 		}
 	}
+
+	//get feeds by id
+	public function get_feeds_by_data($data){
+		$data = DB::table('feeds')->select('id')->where('u_id', Session::get('id'))->where('created', $data['created'])->where('type', $data['type'])->first();
+		return $data -> id;
+	}
 }

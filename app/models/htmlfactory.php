@@ -15,11 +15,12 @@ class Htmlfactory {
 		* type =  7 -> for generating notification list
 		* type =  8 -> Search results generator
 		* type =  9 -> Inbox Contact list
-		* type = 10 -> Generating inbox conv list
-		* type = 11 -> for conv listing
+		* type = 10 -> Generating inbox conversation list
+		* type = 11 -> for conversation listing
 		* type = 12 -> for generating inbox modal new message data
 		* type = 13 -> for generating chat boxes
 		* type = 14 -> for listing chat conversations get conv
+		* type = 15 -> for listing photos in photo albums
 		*/
 
 		#$base_path = 'http://localhost'; //change it to site url
@@ -116,7 +117,7 @@ class Htmlfactory {
 	                <div class="media nmt">
 	                  <div class="media-left">
 	                    <a href="/profile/'.$data['username'].'">
-	                      <img width="64" height="64" class="media-object" src="/uploads/'.$data['profile_picture'].'">
+	                      <img width="64" height="64" class="media-object" src="/uploads/thumb_'.$data['profile_picture'].'">
 	                    </a>
 	                  </div>
 	                  <div class="media-body">
@@ -147,7 +148,7 @@ class Htmlfactory {
 			                <div class="media nmt">
 			                  <div class="media-left">
 			                    <a href="/profile/'.$username_session.'">
-			                      <img width="38" height="38" class="media-object" src="/uploads/'.$profile_picture_session.'">
+			                      <img width="38" height="38" class="media-object" src="/uploads/thumb_'.$profile_picture_session.'">
 			                    </a>
 			                  </div>
 			                  <div class="media-body">
@@ -166,7 +167,7 @@ class Htmlfactory {
                 <div class="media nmt">
                   <div class="media-left">
                     <a href="/profile/'.$data['username'].'">
-                      <img width="32" height="32" class="media-object" src="/uploads/'.$data['profile_picture'].'">
+                      <img width="32" height="32" class="media-object" src="/uploads/thumb_'.$data['profile_picture'].'">
                     </a>
                   </div>
                   <div class="media-body">
@@ -325,7 +326,7 @@ class Htmlfactory {
 		          <div class="media">
 		            <div class="media-left">
 		              <a href="/profile/'.$data['username'].'">
-		                <img width="32" height="32" class="media-object" src="/uploads/'.$data['profile_picture'].'">
+		                <img width="32" height="32" class="media-object" src="/uploads/thumb_'.$data['profile_picture'].'">
 		              </a>
 		            </div>
 		            <div class="media-body vam"> <span class="label label-success pull-right green-ball">&nbsp;</span>
@@ -413,7 +414,7 @@ class Htmlfactory {
 						<div class="media nmt">
 							<div class="media-left">
 								<span>
-									<img width="32" height="32" class="media-object" src="/uploads/'.$data['profile_picture'].'">
+									<img width="32" height="32" class="media-object" src="/uploads/thumb_'.$data['profile_picture'].'">
 								</span>
 							</div>
 							<div class="media-body notif-mediabody">
@@ -431,7 +432,7 @@ class Htmlfactory {
 						<div class="media nmt">
 							<div class="media-left">
 								<span>
-									<img width="32" height="32" class="media-object" src="/uploads/'.$data['profile_picture'].'">
+									<img width="32" height="32" class="media-object" src="/uploads/thumb_'.$data['profile_picture'].'">
 								</span>
 							</div>
 							<div class="media-body notif-mediabody">
@@ -451,7 +452,7 @@ class Htmlfactory {
 					<div class="media nmt">
 						<div class="media-left">
 							<span>
-								<img width="42" height="42" class="media-object" src="/uploads/'.$data['profile_picture'].'">
+								<img width="42" height="42" class="media-object" src="/uploads/thumb_'.$data['profile_picture'].'">
 							</span>
 						</div>
 						<div class="media-body notif-mediabody">
@@ -486,7 +487,7 @@ class Htmlfactory {
 				            <div class="message-box">
 				                <div class="row">
 				                    <div class="col-md-2">
-				                        <img class="media-object img-circle" data-src="holder.js/64x64" alt="64x64" src="/uploads/'.$data['profile_picture'].'" data-holder-rendered="true" style="width: 54px; height: 54px;">
+				                        <img class="media-object img-circle" data-src="holder.js/64x64" alt="64x64" src="/uploads/thumb_'.$data['profile_picture'].'" data-holder-rendered="true" style="width: 54px; height: 54px;">
 				                    </div>
 				                    <div class="col-md-10 wa">
 				                        <div class="message-in fs15">
@@ -506,7 +507,7 @@ class Htmlfactory {
 					<div class="media nmt">
 						<div class="media-left">
 							<span>
-								<img width="42" height="42" class="media-object" src="/uploads/'.$data['profile_picture'].'">
+								<img width="42" height="42" class="media-object" src="/uploads/thumb_'.$data['profile_picture'].'">
 							</span>
 						</div>
 						<div class="media-body notif-mediabody"> <span class="fs10 text-muted pull-right">'.$data['timestamp'].'</span>
@@ -525,7 +526,7 @@ class Htmlfactory {
 					<div class="media nmt">
 						<div class="media-left">
 							<span>
-								<img width="42" height="42" class="media-object" src="/uploads/'.$data['profile_picture'].'">
+								<img width="42" height="42" class="media-object" src="/uploads/thumb_'.$data['profile_picture'].'">
 							</span>
 						</div>
 						<div class="media-body notif-mediabody">
@@ -540,7 +541,7 @@ class Htmlfactory {
 		}
 		else if($type === "13" || $type === 13){
 			return '
-				<div style="left:'.$data['left'].'px !important;" data-username="'.$data['username'].'" data-fullname="'.$data['fullname'].'" class="chat-box-outer">
+				<div style="right:'.$data['right'].'px !important;" data-username="'.$data['username'].'" data-fullname="'.$data['fullname'].'" class="chat-box-outer">
 				    <div class="well chat-box-head nmb">
 						<button id="close-chat-box" type="button" class="close" data-dismiss="alert" aria-label="Close">
 						  <span aria-hidden="true" class="text-black">&times;</span>
@@ -568,7 +569,7 @@ class Htmlfactory {
 		else if($type === "14" || $type === 14){
 
 			if($data['isOutbound']){
-				return 
+				return
 					'<div class="row margin-bottom-sm">
 						<div class="chat-outgoing margin-bottom-md">
 							<div class="chat-message-box wa pull-right">
@@ -587,7 +588,7 @@ class Htmlfactory {
 			           <div class="chat-message-box">
 			                <div class="row">
 			                    <div class="col-md-1">
-			                        <img class="media-object img-circle" data-src="holder.js/64x64" alt="64x64" src="/uploads/'.$data['profile_picture'].'" data-holder-rendered="true" style="width: 34px; height: 34px;">
+			                        <img class="media-object img-circle" data-src="holder.js/64x64" alt="64x64" src="/uploads/thumb_'.$data['profile_picture'].'" data-holder-rendered="true" style="width: 34px; height: 34px;">
 			                    </div>
 			                    <div class="col-md-10 wa">
 			                        <div class="chat-in fs15">
@@ -601,6 +602,18 @@ class Htmlfactory {
 				</div>
 				';
 			}
+		}
+		else if($type === "15" || $type === 15){
+			$img_list = '';
+			foreach($data['images'] as $images){
+				$img_list .= '<div class="item photo-album-item"><span class="overlay-photos-delete-btn"> &times; </span> <img width="100" class="feedPhotos" data-id="'.$images['feed_id'].'" data-img="'.$images['image'].'" src="/uploads/'.$images['image'].'"></img></div>';
+			}
+
+			return '
+				<div class="img-collage-div">
+					'.$img_list.'
+				</div>
+				';
 		}
 	}
 }

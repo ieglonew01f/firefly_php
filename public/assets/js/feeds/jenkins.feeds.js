@@ -75,7 +75,7 @@ var init = function(){
 		           '<div class="chat-message-box">'+
 		                '<div class="row">'+
 		                    '<div class="col-md-1">'+
-		                        '<img class="media-object img-circle" data-src="holder.js/64x64" alt="64x64" src="/uploads/'+data.by_pp+'" data-holder-rendered="true" style="width: 34px; height: 34px;">'+
+		                        '<img class="media-object img-circle" data-src="holder.js/64x64" alt="64x64" src="/uploads/thumb_'+data.by_pp+'" data-holder-rendered="true" style="width: 34px; height: 34px;">'+
 		                    '</div>'+
 		                    '<div class="col-md-10 wa">'+
 		                        '<div class="chat-in fs15">'+
@@ -92,10 +92,10 @@ var init = function(){
 			//check for any other open chat boxes
 			//and count them
 			var chat_boxes_count = $('.chat-box-outer').length;
-			var left_position    = parseInt($('.chat-box-outer').width)*parseInt(chat_boxes_count);
+			var right_position   = parseInt($('.chat-box-outer').width)*parseInt(chat_boxes_count);
 
 			var chat_body = ''+
-				'<div style="left:'+left_position+'px !important;" data-username="'+data.by_username+'" data-fullname="'+data.by_username+'" data-id="'+data.by_id+'" class="chat-box-outer">'+
+				'<div style="right:'+right_position+'px !important;" data-username="'+data.by_username+'" data-fullname="'+data.by_username+'" data-id="'+data.by_id+'" class="chat-box-outer">'+
 				    '<div class="well chat-box-head nmb">'+
 						'<button id="close-chat-box" type="button" class="close" data-dismiss="alert" aria-label="Close">'+
 						  '<span aria-hidden="true" class="text-black">&times;</span>'+
@@ -103,7 +103,7 @@ var init = function(){
 				        '<div class="media nmt">'+
 				          '<div class="media-left hidden">'+
 				            '<a href="/profile/'+data.by_username+'">'+
-				              '<img id="inbox-whois" class="media-object img-circle" style="width:28px;height:28px;" src="/uploads/'+data.by_pp+'" alt="...">'+
+				              '<img id="inbox-whois" class="media-object img-circle" style="width:28px;height:28px;" src="/uploads/thumb_'+data.by_pp+'" alt="...">'+
 				            '</a>'+
 				          '</div>'+
 				          '<div class="media-body">'+
@@ -156,10 +156,10 @@ var init = function(){
 			//check for any other open chat boxes
 			//and count them
 			var chat_boxes_count = $('.chat-box-outer').length;
-			var left_position    = parseInt(parseInt($('.chat-box-outer').width())*parseInt(chat_boxes_count + 1) - 35);
+			var right_position    = parseInt(parseInt($('.chat-box-outer').width())*parseInt(chat_boxes_count + 1) - 35);
 
 			var chat_body = ''+
-				'<div style="left:'+left_position+'px !important;" data-username="'+$(this).data('username')+'" data-fullname="'+$(this).data('fullname')+'" data-id="'+$(this).data('id')+'" class="chat-box-outer">'+
+				'<div style="right:'+right_position+'px !important;" data-username="'+$(this).data('username')+'" data-fullname="'+$(this).data('fullname')+'" data-id="'+$(this).data('id')+'" class="chat-box-outer">'+
 				    '<div class="well chat-box-head nmb">'+
 						'<button id="close-chat-box" type="button" class="close" data-dismiss="alert" aria-label="Close">'+
 						  '<span aria-hidden="true" class="text-black">&times;</span>'+
@@ -531,7 +531,7 @@ handler_feeds  = {
 				var created = handler_feeds.timestampToDate(data.user_data.created).toDateString();
 				viewerDialogMediaBody.children('.media-body').find('h4').text(data.user_data.fullname); //setting fullname
 				viewerDialogMediaBody.children('.media-left').find('a').attr('href', '/profile/'+data.user_data.username+''); //setting href for profile
-				viewerDialogMediaBody.children('.media-left').find('a').children('img').attr('src', '/uploads/'+data.user_data.profile_picture+''); //setting profile picture
+				viewerDialogMediaBody.children('.media-left').find('a').children('img').attr('src', '/uploads/thumb_'+data.user_data.profile_picture+''); //setting profile picture
 				viewerDialogMediaBody.children('.media-body').find('small').text(created) //set the time when post was created
 
 				//set feed id for input comment

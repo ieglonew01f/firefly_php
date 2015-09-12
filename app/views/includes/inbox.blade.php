@@ -5,7 +5,7 @@
                 <div class="well conversation-list">
                     <div class="top-menu">
                         <div class="row">
-                            <div class="col-xs-3"><img class="media-object" style="width:32px;height:32px;" src="/uploads/{{ $profile_data['profile_picture'] }}" alt="..."/></div>
+                            <div class="col-xs-3"><img class="media-object" style="width:32px;height:32px;" src="/uploads/thumb_{{ $profile_data['profile_picture'] }}" alt="..."/></div>
                             <div class="col-xs-9"><a href="/settings" title="Inbox Settings" class="btn btn-transparent-primary btn-sm pull-right mrls"><span data-icon="&#xe060;"></span></a><button title="New Message" class="btn btn-transparent-primary btn-sm pull-right new-message-inbox"><i class="fa fa-plus"></i></button></div>
                         </div>
                     </div>
@@ -25,7 +25,7 @@
                     <div class="media">
                       <div class="media-left">
                         <a href="/profile/{{ $inbox_chatter_data['username'] }}">
-                          <img id="inbox-whois" class="media-object img-circle" style="width:32px;height:32px;" src="/uploads/{{ $inbox_chatter_data['profile_picture'] }}" alt="...">
+                          <img id="inbox-whois" class="media-object img-circle" style="width:32px;height:32px;" src="/uploads/thumb_{{ $inbox_chatter_data['profile_picture'] }}" alt="...">
                         </a>
                       </div>
                       <div class="media-body">

@@ -25,6 +25,7 @@ Route::get('/home', 'HomeController@index');
 
 /*ROUTES FOR PROFILE PAGE*/
 Route::get('/profile/{username}', 'ProfileController@profile');
+Route::get('/profile/{username}/photos', 'ProfileController@profile');
 ROute::post('/search_people', 'ProfileController@search_people');
 
 /*ROUTES FOR FEEDS */
@@ -53,6 +54,7 @@ Route::post('/change_banner', 'UploadController@change_banner');
 Route::post('/change_pp', 'UploadController@change_profile_picture');
 Route::post('/set_avatar', 'UploadController@set_avatar');
 Route::post('/photo_update', 'UploadController@photo_update');
+Route::post('/photos_uploader', 'UploadController@photos_uploader');
 Route::post('/save_banner_position', 'UploadController@set_banner_position');
 
 /*ROUTES FOR INBOX PAGE */
@@ -78,3 +80,5 @@ Route::post('/search_conv', 'InboxController@search_conv');
 Route::get('/settings', 'SettingsController@index');
 Route::post('/save_settings', 'SettingsController@save_settings');
 
+/*ROUTES FOR PHOTO UPLOADS*/
+Route::get('/photo_upload', 'UploadController@photo_upload');

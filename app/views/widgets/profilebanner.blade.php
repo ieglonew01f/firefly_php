@@ -32,14 +32,14 @@
   </div>
   <div class="well well-snow footer-links-well">
     <span>
-      <ul class="list-inline nmb">
-        <li class="li-icons li-icons-active"><span class="text-primary" data-icon="&#xe005;"></span> Profile</li>
+      <ul class="list-inline nmb profile-buttons">
+        <li data-type="profile" class="li-icons li-icons-active"><span class="text-primary" data-icon="&#xe005;"></span> Profile</li>
         <li class="text-muted-md">|</li>
-        <li class="li-icons"><span class="text-primary" data-icon="&#xe060;"></span> About</li>
+        <li data-type="about"class="li-icons"><span class="text-primary" data-icon="&#xe060;"></span> About</li>
         <li class="text-muted-md">|</li>
-        <li class="li-icons"><span class="text-primary" data-icon="&#xe001;"></span> Friends</li>
+        <li data-type="friends"class="li-icons"><span class="text-primary" data-icon="&#xe001;"></span> Friends</li>
         <li class="text-muted-md">|</li>
-        <li class="li-icons"><span data-icon="&#xe07f;" class="text-primary"></span> Photos</li>
+        <li data-type="photos" class="li-icons"><span data-icon="&#xe07f;" class="text-primary"></span> Photos</li>
       </ul>
     </span>
     <div class="resize-save-offset pull-right hidden"><button class="btn btn-transparent-primary banner-resize-save-btn">Save and Close</button> <button class="btn btn-transparent-primary banner-resize-close-btn">Cancel</button></div>

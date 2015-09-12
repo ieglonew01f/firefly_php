@@ -15,7 +15,7 @@
             @include('widgets.profilebanner', $profile_data)
           </div>
         </div>
-        <div class="row">
+        <div class="row" id="profile-container">
           <div class="col-md-7">
             @include('widgets.profileSetup', array('percentage' => $profile_completion, 'profile_data' => $profile_data))
             @include('includes.statusdiv', ['isProfile' => 'hidden', 'placeholder_text' => 'Write on wall..', 'profile_data_id' => $profile_data['u_id']])
@@ -28,6 +28,9 @@
             @include('widgets.about', $profile_data)
             @include('widgets.suggestions')
           </div>
+        </div>
+
+        @include('widgets.photos', $profile_data)
       </div>
         @include('includes.utility')
         @include('includes.modalcommon', $profile_data)

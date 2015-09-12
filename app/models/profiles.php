@@ -172,18 +172,30 @@ class Profiles extends Eloquent {
 
 		if($open_chat_query){
 			$open_chats_html = "";
-			$left = 230;
+			$right = 230;
 			foreach ($open_chat_query as $open_chat_query) {
 				$chat = new chat;
 				$messages_data = $chat -> get_chat_convById($open_chat_query -> with_id);
 
-				$open_chats_html .= htmlfactory::bake_html("13", ['fullname' => $open_chat_query -> fullname, 'username' => $open_chat_query -> username, 'left' => $left, 'messages' => $messages_data]);
-				$left = $left + (230 - 35);
+				$open_chats_html .= htmlfactory::bake_html("13", ['fullname' => $open_chat_query -> fullname, 'username' => $open_chat_query -> username, 'right' => $right, 'messages' => $messages_data]);
+				$right = $right + (230 - 35);
 			}
 		}
 		else{
 			$open_chats_html = "";
 		}
+
+		//loading profile photos
+		$photos      = DB::table('photo_update')->join('feeds', 'feeds.id', '=', 'photo_update.feed_id')->where('feeds.u_id', '=', $data-> u_id)->get();
+		$photo_array = array();
+		$photo_count = 0;
+
+		foreach($photos as $photos){
+			array_push($photo_array, ['image' => $photos -> image, 'feed_id' => $photos -> feed_id]);
+			$photo_count ++;
+		}
+
+		$photo_array = htmlfactory::bake_html("15", ['images' => $photo_array]);
 
 
 		//throw all profile data
@@ -217,7 +229,9 @@ class Profiles extends Eloquent {
 			"more_button"       => $more_button,
 			"modal_body"        => $modal_data,
 			"friends_array"     => json_encode($friends_array),
-			"open_chat_list"    => $open_chats_html   
+			"open_chat_list"    => $open_chats_html,
+			"photo_array"       => $photo_array,
+			"photo_count"       => $photo_count
 		);
 	}
 

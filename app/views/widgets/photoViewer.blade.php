@@ -39,7 +39,7 @@
                       <div class="media nmt">
                         <div class="media-left">
                           <a href="/profile/{{ $username }}">
-                            <img width="38" height="38" class="media-object" src="/uploads/{{ $profile_picture }}">
+                            <img width="38" height="38" class="media-object" src="/uploads/thumb_{{ $profile_picture }}">
                           </a>
                         </div>
                         <div class="media-body">
