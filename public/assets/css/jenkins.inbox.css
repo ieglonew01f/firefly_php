@@ -96,6 +96,8 @@
 }
 .wa{
 	width: auto !important;
+  max-width: 295px;
+  word-wrap: break-word;
 }
 .contact:hover{
 	background:rgb(231, 231, 231);
