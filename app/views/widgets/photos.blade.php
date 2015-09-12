@@ -10,13 +10,7 @@
             <ul class="list-inline margin-top-sm nmb"><li><a href=""><b>Photos @if ( $photo_count ) ({{ $photo_count }}) @endif</b></a></li><li>-</li><li><a href=""><b>Albums</b></a></li></ul>
           </div>
           <div class="panel-body">
-            @if ( count($photo_array) < 1 )
-              {{ $photo_array }}
-            @else
-              <div class="empty-photos-or-album text-center">
-                <h3> <span class="icon-camera"></span> Looks like there is nothing to see here </h3>
-              </div>
-            @endif
+            {{ $photo_array }}
           </div>
         </div>
     </div>
