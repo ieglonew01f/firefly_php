@@ -102,8 +102,8 @@ class UploadController extends BaseController {
             "u_id"        => Session::get('id')
         );
 
-        $albums = new Albums;
-        $albums = Albums::create($album_data);
+        $albums = new albums;
+        $albums = albums::create($album_data);
     }
 
     private function lossless_save($save_path, $file, $type){
