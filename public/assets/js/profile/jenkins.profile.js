@@ -180,7 +180,7 @@ handler  = {
 						self.find('div#post_dropdown').addClass("hidden");
 					},
 					success: function(html){
-						//self.fadeOut("slow");
+						self.parents('.col-sm-6.col-md-4').hide('slow');
 					},
 					complete: function(responseText){
 
