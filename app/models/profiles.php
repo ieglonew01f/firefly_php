@@ -198,7 +198,7 @@ class Profiles extends Eloquent {
 		$photo_array = htmlfactory::bake_html("15", ['images' => $photo_array]);
 
 		//getting album array
-		$albums = Albums::where('u_id', '=', $data -> u_id)->get();
+		$albums = albums::where('u_id', '=', $data -> u_id)->get();
 		$albums_html = '<div class="row">';
 		$album_count = 0;
 
