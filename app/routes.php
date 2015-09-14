@@ -25,7 +25,9 @@ Route::get('/home', 'HomeController@index');
 
 /*ROUTES FOR PROFILE PAGE*/
 Route::get('/profile/{username}', 'ProfileController@profile');
-Route::get('/profile/{username}/photos', 'ProfileController@profile');
+Route::get('/profile/{username}/photos', 'ProfileController@photos');
+Route::get('/profile/{username}/albums', 'ProfileController@albums');
+Route::get('/profile/{username}/albums/{id}', 'ProfileController@albumsById');
 ROute::post('/search_people', 'ProfileController@search_people');
 
 /*ROUTES FOR FEEDS */
@@ -82,3 +84,5 @@ Route::post('/save_settings', 'SettingsController@save_settings');
 
 /*ROUTES FOR PHOTO UPLOADS*/
 Route::get('/photo_upload', 'UploadController@photo_upload');
+Route::post('/album_upload', 'UploadController@album_upload');
+Route::post('/save_new_album', 'UploadController@new_album');

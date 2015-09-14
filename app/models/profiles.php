@@ -197,6 +197,18 @@ class Profiles extends Eloquent {
 
 		$photo_array = htmlfactory::bake_html("15", ['images' => $photo_array]);
 
+		//getting album array
+		$albums = Albums::where('u_id', '=', $data -> u_id)->get();
+		$albums_html = '<div class="row">';
+		$album_count = 0;
+
+		foreach($albums as $albums){
+			$image = DB::table('photo_update')->select('image')->where('feed_id', '=', $albums -> feed_id)->first();
+			$albums_html .= htmlfactory::bake_html("16", ['album_data' => $albums, 'image' => $image -> image, 'username' => $username]);
+			$album_count ++;
+		}
+
+		$albums_html .= '</div>';
 
 		//throw all profile data
 
@@ -231,7 +243,9 @@ class Profiles extends Eloquent {
 			"friends_array"     => json_encode($friends_array),
 			"open_chat_list"    => $open_chats_html,
 			"photo_array"       => $photo_array,
-			"photo_count"       => $photo_count
+			"photo_count"       => $photo_count,
+			"albums_array"      => $albums_html,
+			"album_count"       => $album_count
 		);
 	}
 
@@ -365,6 +379,22 @@ class Profiles extends Eloquent {
 			$html .= htmlfactory::bake_html("12", ['fullname' => $friends_list -> fullname, 'username' => $friends_list -> username, 'profile_picture' => $friends_list -> profile_picture, 'college' => $friends_list -> college]);
 		}
 		return $html;
+	}
+
+	//load album photos
+	public function load_album_photos($id){
+		//loading profile photos
+		$albums      = Albums::find($id);
+		$photos      = DB::table('photo_update')->join('feeds', 'feeds.id', '=', 'photo_update.feed_id')->where('feeds.id', '=', $albums -> feed_id)->get();
+		$photo_array = array();
+		$photo_count = 0;
+
+		foreach($photos as $photos){
+			array_push($photo_array, ['image' => $photos -> image, 'feed_id' => $photos -> feed_id]);
+			$photo_count ++;
+		}
+
+		return htmlfactory::bake_html("17", ['images' => $photo_array, 'album_title' => $albums -> album_title, 'album_desc' => $albums -> album_desc]);
 	}
 
 }

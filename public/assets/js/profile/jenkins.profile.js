@@ -17,10 +17,18 @@ var close_resize_banner         = $('.banner-resize-close-btn');
 var save_resize_banner          = $('.banner-resize-save-btn');
 var add_photos_button           = $('.add_photos_btn');
 var photos_upload_form          = $('form.photos_upload');
+var new_album_create            = $('#new-album-create');
+var album_progress_bar          = $('#album-upload-progress-bar');
+var form_album_upload           = $('form.album_upload');
+var loader_image_div            = $('.loader-album-div');
+var save_album                  = $('#save-album');
+var albums_view                 = $('.albums-view');
+var new_album_div               = $('.new-album-div');
+var delete_album                = $('.delete-album');
 
 //variables
 var handler = {};
-var offset = 0, endOfFeed = false, backgroundPosition, photos_array = [], current_url;
+var offset = 0, endOfFeed = false, backgroundPosition, photos_array = [], current_url, album_images = [];
 
 //init function
 var init = function(){
@@ -33,16 +41,23 @@ var init = function(){
     handler.is_photos_view();
 
 	//workers
+	new_album_create.click(handler.new_album);
 	change_banner_btn.click(handler.click_file);
 	file_change_banner.change(handler.change_banner);
 	resize_banner.click(handler.banner_resize);
 	close_resize_banner.click(handler.banner_resize_close);
 	save_resize_banner.click(handler.banner_resize_save);
-	$('ul.profile-buttons').find('li.li-icons').click(handler.profile_page_btn_handler);
+	//$('ul.profile-buttons').find('li.li-icons').click(handler.profile_page_btn_handler);
 	add_photos_button.click(handler.add_photos_fn);
 	$(document).on('click', '.photo-select', '', function(){
 		photos_upload.click();
 	});
+
+	delete_album.click(handler.delete_album);
+
+	save_album.click(handler.add_new_album);
+
+	$(document).on('change', 'input#album_upload', '', handler.new_album_submit);
 
 	$(document).on('change', '#photos_upload', '', handler.add_photos_uploader);
 
@@ -68,6 +83,33 @@ var init = function(){
 
 			$('.img-collage-div').append(template);
 			$('.img-collage-div').gridalicious({gutter: 2});
+		}
+	});
+
+	form_album_upload.ajaxForm({
+		beforeSend: function() { //before sending form
+			//close the modal
+			album_images = [];
+			loader_image_div.removeClass('hidden');
+			new_album_div.removeClass('hidden');
+			albums_view.addClass('hidden');
+
+		},
+		uploadProgress: function(event, position, total, percentComplete) { //on progress
+			album_progress_bar.attr('style', 'width:'+percentComplete+'%');
+			$('.upload-perc').text(percentComplete+' %');
+		},
+		complete: function(response) { // on complete
+			album_images = jQuery.parseJSON(response.responseText);
+			var template = '';
+			for(var i = 0; i < album_images.length; i ++) {
+				template += '<div class="item photo-album-item"><span class="overlay-photos-delete-btn"> × </span> <img width="100" class="feedPhotos" data-img="'+album_images[i]+'" src="/uploads/'+album_images[i]+'"></div>';
+			}
+
+			$('.images-div').html(template);
+			$('.images-div').gridalicious({gutter: 2});
+			loader_image_div.addClass('hidden');
+			save_album.removeClass('disabled');
 		}
 	});
 
@@ -117,12 +159,73 @@ var init = function(){
 
 //helpers
 handler  = {
+	delete_album: function(){
+		var self = $(this);
+		var dataString = "feed_id="+self.data("id");
+		$.confirm({
+		    title: 'Delete Album',
+		    content: 'Are you sure you want to delete this album',
+		    confirmButton: 'Delete',
+		    theme: 'supervan',
+		    keyboardEnabled: true,
+		    confirmButtonClass: 'btn-primary',
+		    animation: 'bottom',
+		    confirm: function(){
+				$.ajax({
+				    type  : 'POST',
+				    url   : '/delete_post',
+				    data  : dataString,
+					beforeSend: function(){
+						self.find('div#delete_loader').removeClass("hidden");
+						self.find('div#post_dropdown').addClass("hidden");
+					},
+					success: function(html){
+						//self.fadeOut("slow");
+					},
+					complete: function(responseText){
+
+					},
+					error: function(XMLHttpRequest, textStatus, errorThrown) {
+					    alert(errorThrown)
+					}
+				});
+		    }
+		});
+	},
+	add_new_album: function(){
+		var self        = $(this);
+		var album_desc  = $('#album-desc').val();
+		var album_title = $('#album-title').val();
+
+		$.ajax({
+			type     : 'POST',
+			url      : '/save_new_album',
+			data     : { album_desc : album_desc, album_title: album_title, album_images: album_images  },
+			beforeSend: function(){
+				self.addClass('background-transparent-hover').addClass('background-transparent').html('<div class="loader loader-inner ball-pulse"><div></div><div></div><div></div></div>');
+			},
+			success: function(html){
+				location.reload();
+			},
+			complete: function(data){
+
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
+			 alert(errorThrown)
+			}
+	 	});
+	},
+	new_album: function(){
+		$('input#album_upload').click();
+	},
+	new_album_submit: function(){
+		form_album_upload.submit();
+	},
 	//if url has photos show photos div
 	is_photos_view: function(){
 		if(window.location.href.split('/')[5] == "photos"){
 			$('ul.profile-buttons').find('li[data-type="photos"]').click();
 		}
-
 	},
 	close_modal: function(){
 		total_utility_modal.modal('hide');

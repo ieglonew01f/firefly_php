@@ -29,10 +29,85 @@ class ProfileController extends BaseController {
 			"question"           => $profile_settings['question'],
 			"hidden"             => $profile_settings['hidden'],
 			"profile_data"       => $profile_data,
-			"session_data"       => $session_data
+			"session_data"       => $session_data,
+			"isSelected"         => "profile"
 		);
 
 		return View::make('pages.profile', $data);
+	}
+
+	//show photos
+	public function photos($username){
+		$feeds   = new feeds;
+		$profile = new profiles;
+
+		//getting profile data
+		$profile_settings = $profile -> load_profile_settings();
+		$profile_data     = $profile -> load_profile_data($username);
+		$session_data     = $profile -> load_profile_data(Session::get('username'));
+
+		$data = array(
+			"feeds"              => "",
+			"profile_completion" => "",
+			"dom"                => $profile_settings['dom'],
+			"question"           => $profile_settings['question'],
+			"hidden"             => $profile_settings['hidden'],
+			"profile_data"       => $profile_data,
+			"session_data"       => $session_data,
+			"isSelected"         => "photos"
+		);
+
+		return View::make('pages.photos', $data);
+	}
+
+	//show albums
+	public function albums($username){
+		$feeds   = new feeds;
+		$profile = new profiles;
+
+		//getting profile data
+		$profile_settings = $profile -> load_profile_settings();
+		$profile_data     = $profile -> load_profile_data($username);
+		$session_data     = $profile -> load_profile_data(Session::get('username'));
+
+		$data = array(
+			"feeds"              => "",
+			"profile_completion" => "",
+			"dom"                => $profile_settings['dom'],
+			"question"           => $profile_settings['question'],
+			"hidden"             => $profile_settings['hidden'],
+			"profile_data"       => $profile_data,
+			"session_data"       => $session_data,
+			"isSelected"         => "photos"
+		);
+
+		return View::make('pages.albums', $data);
+	}
+
+	//get album photos by id
+	public function albumsById($username, $id){
+		$feeds   = new feeds;
+		$profile = new profiles;
+
+		//getting profile data
+		$profile_settings = $profile -> load_profile_settings();
+		$profile_data     = $profile -> load_profile_data($username);
+		$session_data     = $profile -> load_profile_data(Session::get('username'));
+		$album_photos     = $profile -> load_album_photos($id);
+
+		$data = array(
+			"feeds"              => "",
+			"profile_completion" => "",
+			"dom"                => $profile_settings['dom'],
+			"question"           => $profile_settings['question'],
+			"hidden"             => $profile_settings['hidden'],
+			"profile_data"       => $profile_data,
+			"session_data"       => $session_data,
+			"isSelected"         => "photos",
+			"album_photos"       => $album_photos
+		);
+
+		return View::make('pages.albumPhotos', $data);
 	}
 
 	//baking profile data

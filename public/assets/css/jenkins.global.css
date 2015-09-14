@@ -22,6 +22,9 @@ h1,h2,h3,h4,h5,h6{
 .background-transparent{
   background:transparent;
 }
+.anchor-none:hover, .anchor-none:focus, .anchor-none:active{
+  text-decoration:none;
+}
 .custom-input{
   background: white
   border-left: none;

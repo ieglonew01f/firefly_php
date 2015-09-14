@@ -60,6 +60,52 @@ class UploadController extends BaseController {
         echo $image;
     }
 
+    //new album
+    public function new_album(){
+
+        $image_arr = Input::get('album_images');
+        $feeds = new feeds;
+        $type  = 0;
+
+        /* Check type here */
+        /* If is multi image then type = 3 */
+        if(count($image_arr) > 1){
+            $type = 3;
+        }
+        /* If is a single image then type = 4 */
+        else if(count($image_arr) == 1){
+            $type = 4;
+        }
+
+
+        $data  = array(
+            "content" => Input::get('album_title'),
+            "images"  => $image_arr,
+            "u_id"    => Session::get('id'),
+            "type"    => $type, // for image update
+            "created" => time(),
+            "isWall"  => 0,
+            "wall_id" => 0
+        );
+
+        $feeds -> insert_post($data);
+
+        //get the post
+        $feed_id = $feeds -> get_feeds_by_data($data);
+
+
+
+        $album_data = array(
+            "album_title" => Input::get('album_title'),
+            "album_desc"  => Input::get('album_desc'),
+            "feed_id"     => $feed_id,
+            "u_id"        => Session::get('id')
+        );
+
+        $albums = new Albums;
+        $albums = Albums::create($album_data);
+    }
+
     private function lossless_save($save_path, $file, $type){
         //save path
         $upload_folder = $save_path;
@@ -163,7 +209,7 @@ class UploadController extends BaseController {
     }
 
 
-    //album upload processor
+    //photo upload processor
     public function photos_uploader(){
         //sleep(2);
         $id   = Session::get('id');  
@@ -288,6 +334,104 @@ class UploadController extends BaseController {
         $id = $feeds -> get_feeds_by_data($data);
 
         return array('images' => $image_arr, 'feed_id' => $id);
+    }
+
+
+    //album upload processor
+    public function album_upload(){
+        //sleep(2);
+        $id   = Session::get('id');  
+        //save path
+        $upload_folder  = $_SERVER['DOCUMENT_ROOT'];
+        $upload_folder .= "/uploads/";
+
+
+        ############ Edit settings ##############
+        $ThumbSquareSize        = 600; //Thumbnail will be 100x100
+        $BigImageMaxSize        = 4096; //Image Maximum height or width
+        $ThumbPrefix            = "thumb_"; //Normal thumb Prefix
+        $DestinationDirectory   = $upload_folder;
+        $Quality                = 100; //jpeg quality
+        $image_arr              = array();
+        ##########################################
+        
+        foreach($_FILES as $file)
+        {
+            // some information about image we need later.
+            $ImageName      = $file['name'];
+            $ImageSize      = $file['size'];
+            $TempSrc        = $file['tmp_name'];
+            $ImageType      = $file['type'];
+
+
+            if (is_array($ImageName))
+            {
+                $c = count($ImageName);
+
+                for ($i=0; $i < $c; $i++)
+                {
+                    $processImage           = true;
+                    $RandomNumber           = rand(0, 9999999999);  // We need same random name for both files.
+
+                    if(!isset($ImageName[$i]) || !is_uploaded_file($TempSrc[$i]))
+                    {
+                        echo '<div class="error">Error occurred while trying to process <strong>'.$ImageName[$i].'</strong>, may be file too big!</div>'; //output error
+                    }
+                    else
+                    {
+                        //Validate file + create image from uploaded file.
+                        switch(strtolower($ImageType[$i]))
+                        {
+                            case 'image/png':
+                                $CreatedImage = imagecreatefrompng($TempSrc[$i]);
+                                break;
+                            case 'image/gif':
+                                $CreatedImage = imagecreatefromgif($TempSrc[$i]);
+                                break;
+                            case 'image/jpeg':
+                            case 'image/pjpeg':
+                                $CreatedImage = imagecreatefromjpeg($TempSrc[$i]);
+                                break;
+                            default:
+                                $processImage = false; //image format is not supported!
+                        }
+                        //get Image Size
+                        list($CurWidth,$CurHeight)=getimagesize($TempSrc[$i]);
+
+                        //Get file extension from Image name, this will be re-added after random name
+                        $ImageExt = substr($ImageName[$i], strrpos($ImageName[$i], '.'));
+                        $ImageExt = str_replace('.','',$ImageExt);
+
+                        //Construct a new image name (with random number added) for our new image.
+                        $NewImageName = $RandomNumber.'.'.$ImageExt;
+
+                        //Set the Destination Image path with Random Name
+                        $thumb_DestRandImageName    = $DestinationDirectory.$ThumbPrefix.$NewImageName; //Thumb name
+                        $DestRandImageName          = $DestinationDirectory.$NewImageName; //Name for Big Image
+
+                        //Resize image to our Specified Size by calling resizeImage function.
+                        if($processImage && $this -> resizeImage($CurWidth,$CurHeight,$BigImageMaxSize,$DestRandImageName,$CreatedImage,$Quality,$ImageType[$i]))
+                        {
+                            //Create a square Thumbnail right after, this time we are using cropImage() function
+                            if(! $this -> cropImage($CurWidth,$CurHeight,$ThumbSquareSize,$thumb_DestRandImageName,$CreatedImage,$Quality,$ImageType[$i]))
+                                {
+                                    echo 'Error Creating thumbnail';
+                                }
+                                //Get New Image Size
+                                list($ResizedWidth,$ResizedHeight) = getimagesize($DestRandImageName);
+
+                                array_push($image_arr, $NewImageName);
+
+                        }else{
+                            echo '<div class="error">Error occurred while trying to process <strong>'.$ImageName[$i].'</strong>! Please check if file is supported</div>'; //output error
+                        }
+                    }
+
+                }
+            }
+        }
+
+        return $image_arr;
     }
 
     // This function will proportionally resize image

@@ -33,13 +33,13 @@
   <div class="well well-snow footer-links-well">
     <span>
       <ul class="list-inline nmb profile-buttons">
-        <li data-type="profile" class="li-icons li-icons-active"><span class="text-primary" data-icon="&#xe005;"></span> Profile</li>
+        <li data-type="profile"  @if($data_active == 'profile') class="li-icons li-icons-active" @else class="li-icons" @endif><a href="/profile/{{ $username }}" class="anchor-none"><span class="text-primary" data-icon="&#xe005;"></span> Profile</a></li>
         <li class="text-muted-md">|</li>
-        <li data-type="about"class="li-icons"><span class="text-primary" data-icon="&#xe060;"></span> About</li>
+        <li data-type="about"  @if($data_active == 'about') class="li-icons li-icons-active" @else class="li-icons" @endif><a href="/profile/{{ $username }}/about" class="anchor-none"><span class="text-primary" data-icon="&#xe060;"></span> About</a></li>
         <li class="text-muted-md">|</li>
-        <li data-type="friends"class="li-icons"><span class="text-primary" data-icon="&#xe001;"></span> Friends</li>
+        <li data-type="friends"  @if($data_active == 'friends') class="li-icons li-icons-active" @else class="li-icons" @endif><a href="/profile/{{ $username }}/friends" class="anchor-none"><span class="text-primary" data-icon="&#xe001;"></span> Friends</a></li>
         <li class="text-muted-md">|</li>
-        <li data-type="photos" class="li-icons"><span data-icon="&#xe07f;" class="text-primary"></span> Photos</li>
+        <li data-type="photos" @if($data_active == 'photos') class="li-icons li-icons-active" @else class="li-icons" @endif><a href="/profile/{{ $username }}/photos" class="anchor-none"><span data-icon="&#xe07f;" class="text-primary"></span> Photos</a></li>
       </ul>
     </span>
     <div class="resize-save-offset pull-right hidden"><button class="btn btn-transparent-primary banner-resize-save-btn">Save and Close</button> <button class="btn btn-transparent-primary banner-resize-close-btn">Cancel</button></div>

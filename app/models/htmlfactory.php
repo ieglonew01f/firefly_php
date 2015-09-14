@@ -21,6 +21,8 @@ class Htmlfactory {
 		* type = 13 -> for generating chat boxes
 		* type = 14 -> for listing chat conversations get conv
 		* type = 15 -> for listing photos in photo albums
+		* type = 16 -> for listing photo albums
+		* type = 17 -> for listing album photos
 		*/
 
 		#$base_path = 'http://localhost'; //change it to site url
@@ -611,6 +613,53 @@ class Htmlfactory {
 
 			return '
 				<div class="img-collage-div">
+					'.$img_list.'
+				</div>
+				';
+		}
+		else if($type === "16" || $type === 16){
+			if($data['album_data'] -> album_title == ''){
+				$data['album_data'] -> album_title = 'Untitled Album';
+			}
+			$album_html = '
+			  <div class="col-sm-6 col-md-4">
+			    <div class="thumbnail">
+			    	<a href="/profile/'.$data['username'].'/albums/'.$data['album_data'] -> id.'" class="">
+			      		<img style="height: 200px;width: 100%;" src="/uploads/thumb_'.$data['image'].'" alt="...">
+			    	</a>
+			      <div class="caption">
+	              	<div id="delete_loader" class="loader loader-inner ball-pulse pull-right hidden"><div></div><div></div><div></div></div>
+					<div id="post_dropdown" class="btn-group pull-right">
+	                  <button type="button" class="close font-size-18 text-muted dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+	                    <span class="fa fa-chevron-circle-down text-muted"></span>
+	                  </button>
+						<ul class="dropdown-menu post-card-dropdown" role="menu">
+							<li data-id="'.$data['album_data'] -> feed_id.'" class="delete-album"><b><span data-icon=""></span> Delete this album</b> </br></li>
+						</ul>
+	                </div>
+			        <h3 class="nmt nmb">'.$data['album_data'] -> album_title.'</h3>
+			        <p>'.$data['album_data'] -> album_desc.'</p>
+			      </div>
+			    </div>
+			  </div>
+			';
+
+			return $album_html;
+		}
+		else if($type === "17" || $type === 17){
+			if(!$data['album_title']){
+				$data['album_title'] = 'Untitled Album';
+			}
+
+			$img_list = '';
+			foreach($data['images'] as $images){
+				$img_list .= '<div class="item photo-album-item"><span class="overlay-photos-delete-btn"> &times; </span> <img width="100" class="feedPhotos" data-id="'.$images['feed_id'].'" data-img="'.$images['image'].'" src="/uploads/'.$images['image'].'"></img></div>';
+			}
+
+			return '
+				<div class="img-collage-div">
+					<h3 class="nmt">'.$data['album_title'].'</h3>
+					<p>'.$data['album_desc'].'</p>
 					'.$img_list.'
 				</div>
 				';
