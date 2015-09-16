@@ -45,6 +45,8 @@ var feed_container        = $('div#feeds_cont');
 //variables
 var online_users, friend_list = FRIEND_LIST_ARRAY, data, matches, soundcloud, viemo, code, regExp, match, previous_comment_offset = 6, current_c_perc, handler_feeds = {}, photo_array = [], image_counter = 0, img_feed_id = 0;
 var youtube_vtitle, youtube_vdesc, youtube_vthumb, youtube_vcode, global_SoundCloud_Link, comment_card_obj, post_card_obj,exec = 0, multiples, remainder, isPhotoUpdate = false, offset = 0, endOfFeed = false;
+var isTypingSent  = false;
+var noIsTyping    = false;
 
 var session_username = jenkins_session_data.data('username');
 var session_fullname = jenkins_session_data.data('fullname');
@@ -66,8 +68,15 @@ var init = function(){
 	//register on node.js network
 	comet.register({'id':session_id, 'username': session_username, 'fullname': session_fullname});
 
+	//populate chat list 
+	handler_feeds.populateChatList(FRIEND_LIST_ARRAY);
+
 	//recieve message handler
 	comet.new_message(function(data){
+
+		$('.isTypingRowChat[data-username="'+data.by_username+'"]').remove(); //remove istyping
+		isTypingSent = false;
+
 		//building html
 		var chat_message_box = ''+
 			'<div class="row margin-bottom-sm">'+
@@ -107,7 +116,7 @@ var init = function(){
 				            '</a>'+
 				          '</div>'+
 				          '<div class="media-body">'+
-				            '<h5 id="inbox-whois-fullname" class="media-heading fwb nmb">'+data.by_fullname+'</h5>'+
+				            '<h5 id="inbox-whois-fullname" class="media-heading fwb nmb"><span class="online-icon"><i class="fa fa-circle text-success"></i></span> '+data.by_fullname+'</h5>'+
 				          '</div>'+
 				        '</div>'+
 				    '</div>'+
@@ -133,6 +142,38 @@ var init = function(){
 
 		//play sound
 		ion.sound.play("ping");
+		emojify.run();
+	});
+
+
+	//set is typing
+	comet.set_typing(function(data) {
+		var html = 
+			'<div class="row margin-bottom-sm">'+
+				'<div data-username="'+data.by_username+'" class="isTypingRowChat">'+
+		           '<div class="chat-message-box">'+
+		                '<div class="row">'+
+		                    '<div class="col-md-1">'+
+		                        '<img class="media-object img-circle" data-src="holder.js/64x64" alt="64x64" src="/uploads/thumb_'+data.by_pp+'" data-holder-rendered="true" style="width: 34px; height: 34px;">'+
+		                    '</div>'+
+		                    '<div class="col-md-10 wa">'+
+		                        '<div class="chat-in fs15">'+
+		                            '<span>is typing...</span> <br>'+
+		                        '</div>'+
+		                    '</div>'+
+		                '</div>'+
+		            '</div>'+
+		      	'</div>'+
+	      	'</div>'+
+		'';
+		var chatBody = $('.chat-box-outer[data-username="'+data.by_username+'"]').find('.chat-box-inner');
+		chatBody.append(html);
+		chatBody.animate({ scrollTop: chatBody[0].scrollHeight}, 400);
+	});
+
+	//set is not typing 
+	comet.set_not_typing(function(data) {
+		$('.isTypingRowChat[data-username="'+data.by_username+'"]').remove();
 	});
 
 	//refresh chat list if new user
@@ -140,11 +181,15 @@ var init = function(){
 	comet.chat_list(friend_list, function(friends_online){
 		//make ajax call to get friends_online details
 		if(friends_online.length > 0){
-			handler_feeds.populateOnlineChatList(friends_online);
+			for(var i = 0; i < friends_online.length; i++) {
+				//setting online for whoso ever is online in the chat
+				$('ul.sidebar-chat-list').find('li[data-username="'+friends_online[i]+'"]').find('.online-icon-clist.pull-right').removeClass('hidden');
+				$('.chat-box-outer[data-username="'+friends_online[i]+'"]').find('.online-icon').removeClass('hidden');
+			}
 		}
 		else{
 			//nobody is online 
-			sidebar_chat_list.empty();
+			//sidebar_chat_list.empty();
 		}
 	});
 
@@ -171,7 +216,7 @@ var init = function(){
 				            '</a>'+
 				          '</div>'+
 				          '<div class="media-body">'+
-				            '<h5 id="inbox-whois-fullname" class="media-heading fwb nmb">'+$(this).data('fullname')+'</h5>'+
+				            '<h5 id="inbox-whois-fullname" class="media-heading fwb nmb"><span class="online-icon"><i class="fa fa-circle text-success"></i></span> '+$(this).data('fullname')+'</h5>'+
 				          '</div>'+
 				        '</div>'+
 				    '</div>'+
@@ -196,15 +241,27 @@ var init = function(){
 	$(document).on('click', '#close-chat-box', '', handler_feeds.close_chat_box);
 
 	//send message handler
-	$(document).on('keydown', '.chat-box-input', '', function(e){
+	$(document).on('keyup', '.chat-box-input', '', function(e){
+		//get username
+		var username = $(this).parents('.chat-box-outer').data('username');
+		var fullname = $(this).parents('.chat-box-outer').data('fullname');
+		var message  = $(this).val();
+
+		if(!isTypingSent){
+			//send isTyping
+			handler_feeds.isTyping(true, {for_username:username, by_username:session_username, by_pp:session_pp, by_fullname:session_fullname});
+		}
+
+		if($(this).val() === ''){
+			if(!noIsTyping){
+				handler_feeds.isTyping(false, {for_username:username, by_username:session_username, by_pp:session_pp, by_fullname:session_fullname});
+			}
+		}
+
 		var keyCode = e.keyCode || e.which;
-	  if (keyCode == 13) {
+		if (keyCode == 13) {
 			//check for empty msg
 			if($('.chat-box-input').val() != ''){
-				//get username
-				var username = $(this).parents('.chat-box-outer').data('username');
-				var fullname = $(this).parents('.chat-box-outer').data('fullname');
-				var message  = $(this).val();
 
 				//chat message outbound html
 				var chat_message_box = ''+
@@ -222,14 +279,49 @@ var init = function(){
 					var chatBody = $('.chat-box-outer[data-username="'+username+'"]').find('.chat-box-inner');
 					chatBody.append(chat_message_box);
 					chatBody.animate({ scrollTop: chatBody[0].scrollHeight}, 400);
+					isTypingSent = false;
+					noIsTyping = false;
 				});
 
 				$('.chat-box-input').val('');
 				//$('#typing'+$('#id').val()).remove(); //remove is typing of this user
 				handler_feeds.save_conv({message:message, for_username:username});
+				emojify.run();
 			}
-	  }
+		}
 	});
+
+	//someone disconnected
+	comet.someone_died(function(data){
+		//remove from online chat list
+		$('ul.sidebar-chat-list').find('li[data-username="'+data+'"]').find('.online-icon-clist.pull-right').addClass('hidden');
+		//remove is online icon from chat container
+		$('.chat-box-outer[data-username="'+data+'"]').find('.online-icon').addClass('hidden');
+	});
+
+
+	//emojs
+	emojify.setConfig({
+	    img_dir : 'public/assets/img/plugins/emoj/images'  // Directory for emoji images
+	});
+	emojify.run();
+
+	$(document).on('click', 'img.emoji', '', function(){
+		$('.chat-box-input').val($('.chat-box-input').val()+$(this).attr('title'));
+		$('.chat-box-input').focus();
+	});
+
+	$(document).on('click', '.btn-tiny-emoj', '', function(){
+		$(this).parents('.chat-box-outer').find('.emoj-modal').toggleClass('hidden');
+	});
+
+	$("body").click(function(){
+	  $(".emoj-modal").addClass('hidden');
+	});
+
+	//eof emoj settings
+
+
 
 	//eof chat workers
 
@@ -347,9 +439,23 @@ var init = function(){
 	});
 }
 
-/* =============================================== HELPERS ==============================================*/
+/* =============================================== HELPERS ============================================== */
 
 handler_feeds  = {
+	isTyping: function(flag, data){
+		if(flag){
+			comet.is_typing(data, function(){
+				isTypingSent = true;
+				noIsTyping = false;
+			});
+		}
+		else{
+			comet.no_is_typing(data, function(){
+				noIsTyping = true;
+				isTypingSent = false;
+			});
+		}
+	},
 	scroll_bottom: function(){
 		var chat_body = $('.chat-box-outer').find('.chat-box-inner');
 		if(chat_body.length)
@@ -368,6 +474,7 @@ handler_feeds  = {
 			success: function(data){
 				if(data){
 					chat_body.html(data);
+					emojify.run();
 				}
 			},
 			complete: function(responseText){
@@ -422,7 +529,7 @@ handler_feeds  = {
 			}
 		});
 	},
-	populateOnlineChatList: function(friend_list){
+	populateChatList: function(friend_list){
 		$.ajax({
 			type  : 'POST',
 			url   : '/chat_list',

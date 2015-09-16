@@ -6,6 +6,7 @@ var comet = (function($){
 
   /* SERVER ADDRESS */
   var socket = io.connect('http://128.199.192.79:3000');
+  //var socket = io.connect('192.168.0.7:3000');
 
   //register user on the socket network
   var register = function(data){
@@ -68,6 +69,13 @@ var comet = (function($){
     });
   }
 
+  //someone died/disconnected
+  var someone_died = function(callback){
+    socket.on('someone died', function(data){
+      callback(data);
+    });
+  };
+
   return {
       register       : register,
       chat_list      : chat_list,
@@ -76,7 +84,8 @@ var comet = (function($){
       is_typing      : is_typing,
       set_typing     : set_typing,
       set_not_typing : set_not_typing,
-      no_is_typing   : no_is_typing
+      no_is_typing   : no_is_typing,
+      someone_died   : someone_died
   };
 
 })(jQuery);

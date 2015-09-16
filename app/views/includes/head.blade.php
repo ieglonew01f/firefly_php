@@ -12,6 +12,7 @@
     {{ HTML::style('public/assets/css/lineicons.css'); }}
     {{ HTML::style('public/assets/css/jquery-confirm.min.css'); }}
     {{ HTML::style('public/assets/css/jenkins.global.css'); }}
+    {{ HTML::style('public/assets/css/emojify.min.css'); }}
     <!-- PAGE LEVEL CSS -->
     @yield('page_css')
     <!-- EOF PAGE LEVEL CSS -->

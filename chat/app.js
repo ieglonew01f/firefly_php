@@ -32,12 +32,16 @@ io.sockets.on('connection', function(socket){
 
 	//on is typing
 	socket.on('is typing', function(data){
-		connectedUsers[data.for_username].emit('set typing', data);
+		if(connectedUsers[data.for_username]){
+			connectedUsers[data.for_username].emit('set typing', data);
+		}
 	});
 
 	//unset is typing
 	socket.on('is not typing', function(data){
-		connectedUsers[data.for_username].emit('set not typing', data);
+		if(connectedUsers[data.for_username]){
+			connectedUsers[data.for_username].emit('set not typing', data);
+		}
 	});
 
 
@@ -45,8 +49,9 @@ io.sockets.on('connection', function(socket){
 	//some one died X_X socket disconnect
 	socket.on('disconnect', function () {
 		if(!socket.nickname) return;
+		io.sockets.emit('someone died', socket.nickname);
 		delete connectedUsers[socket.nickname]
-		io.sockets.emit('update chat list', Object.keys(connectedUsers));
+		//io.sockets.emit('update chat list', Object.keys(connectedUsers));
 	});
 
 });

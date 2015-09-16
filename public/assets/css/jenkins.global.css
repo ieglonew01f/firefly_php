@@ -2750,7 +2750,7 @@ font-size: 15px;
   position: fixed;
   right: 230px;
   z-index: 999;
-  bottom: 0;
+  bottom: -20px;
 }
 .chat-box-head{
   border-bottom: none;
@@ -2763,12 +2763,18 @@ font-size: 15px;
 }
 .chat-box-input{
   outline: none;
-  width: 100%;
+  width: 85%;
   border: none;
   padding: 10px;
   line-height: 20px;
-  background-color: rgb(249, 249, 249);
   border-radius: 5px;
+}
+.btn-tiny-emoj{
+  font-size: 19px !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important; 
+  /* padding-top: 1px; */
+  margin-bottom: 1px !important;
 }
 .chat-box-well-input{
   box-shadow: none;
@@ -2778,8 +2784,8 @@ font-size: 15px;
   border-top-left-radius: 0px;
   border-top-right-radius: 0px;
   background-color: white;
-  padding: 10px;
   border-bottom-left-radius: 0px;
+  padding:0px;
 }
 .chat-message-box{
   padding:0px;
@@ -2814,4 +2820,23 @@ font-size: 15px;
   text-align: center;
   cursor: pointer; 
   display:none;
+}
+.emoj-modal{
+  position: absolute;
+  z-index: 9999;
+  /* padding: 140px; */
+  background-color: white;
+  bottom: 75px;
+  left: 105px;
+  width: 275px;
+  border: 1px solid #E7E7E7;
+  border-radius: 5px;
+  height:310px;
+  max-height: 310px;
+  overflow-y:scroll;
+  padding:5px;
+}
+img.emoji{
+  cursor: pointer;
+  margin-bottom: 2px;
 }

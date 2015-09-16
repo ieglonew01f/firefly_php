@@ -4,6 +4,7 @@
     <!-- EOF MAIN SCRIPTS -->
 
     <!-- JQUERY PLUGINS -->
+    {{ HTML::script('public/assets/js/plugins/emoj/emojify.js'); }}
     {{ HTML::script('public/assets/js/plugins/jqueryTypeahead/typeahead.bundle.min.js'); }}
     {{ HTML::script('public/assets/js/plugins/JqueryIonSound/ion.sound.min.js'); }}
     {{ HTML::script('public/assets/js/polling/jenkins.poller.js'); }}
