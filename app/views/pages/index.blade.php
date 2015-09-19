@@ -22,69 +22,61 @@
   </div>
 
   <!-- Sidebar Menu -->
-  <div class="ui vertical inverted sidebar menu">
+  <div class="ui vertical sidebar menu">
     <a class="item navbar-brand">Jenkins</a>
   </div>
 
 
   <!-- Page Contents -->
   <div class="pusher">
-    <div class="ui inverted vertical masthead center aligned segment has-background">
+    <div class="ui vertical masthead aligned segment has-background">
 
       <div class="ui container">
-        <div class="ui large secondary inverted pointing menu no-border">
+        <div class="ui large secondary pointing menu no-border">
           <a class="toc item">
             <i class="sidebar icon"></i>
           </a>
           <a class="item navbar-brand">Jenkins</a>
           <div class="right item">
-            <a href="/login" class="ui inverted button">Log in</a>
-            <a href="/signup" class="ui inverted button">Sign Up</a>
+            <a href="/login" class="ui blue basic button">Log in</a>
+            <a href="/signup" class="ui active blue basic button">Sign Up</a>
           </div>
         </div>
       </div>
 
-      <div class="ui text container">
-        <h1 class="ui inverted header">Be awesome!</h1>
-        <p class="inverted">Jenkins is the best way to create your own 
-          social network or online community in just 5 minutes without any programming knowledge.</p>
-        <div class="ui big width5 right labeled left icon input">
-          <i class="mail outline icon"></i>
-          <input type="email" class="w4 email" placeholder="Your email address">
-          <a href="javascript:void(0)" class="ui blue tag label signup">
-            Signup
-          </a>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="ui vertical stripe segment bg-white">
-      <div class="ui middle aligned stackable grid container">
-        <div class="row">
-          <div class="eight wide column">
-            <h3 class="ui header"><i class="checkmark icon green"></i> Features like never before</h3>
-            <p class="grey">Create a stunning social network in minutes engaging your users with facebook like features live chat, news feed, timeline, profiles, events, notifications, likes, and more. See <a href="/elements/icon.html">here</a> for full list of features</p>
-            <h3 class="ui header"><i class="checkmark icon green"></i> Easy to install</h3>
-            <p>Yes that's right, our comprehensive <a href="">documentation</a> makes it easy for the user to deploy the script on to their private or public cloud in no time</p>
-          </div>
-          <div class="six wide right floated column">
-            <img src="public/assets/img/website/macbook.jpg" class="ui Massive fluid image demo-img">
-          </div>
-        </div>
-        <div class="row">
-          <div class="center aligned column">
-            <div class="ui animated blue huge button" tabindex="0">
-              <div class="visible content"><b>Learn more</b></div>
-              <div class="hidden content">
-                <i class="right arrow icon"></i>
-              </div>
+      <div class="ui container">
+        <div class="ui grid">
+          <div class="seven wide column">
+            <h1 class="ui header grey">
+              <strong class="has-custom-font">Jenkins</strong>
+            </h1>
+            <p class="cool-font has-custom-font"> 
+              Simple Social networking solution
+              <br/> and easy deployment <br/>
+              for everyone
+            </p>
+            <hr/>
+            <p class="cool-font has-custom-font"> 
+              Register your free account and try it out for free
+            </p>
+            <div id="error-message" class="ui warning message hidden"></div>
+            <div class="ui big fluid input margin-bottom-sm">
+              <input data-content="Please enter your fullname" type="text" id="fullname" placeholder="Fullname">
             </div>
+            <div class="ui big fluid input margin-bottom-sm">
+              <input data-content="Please enter your email address" type="text" id="email" placeholder="Email Address">
+            </div>
+            <div class="ui big fluid input margin-bottom-sm">
+              <input data-content="Please enter a password" type="password" id="password" placeholder="Password">
+            </div>
+            <button id="signup" class="fluid ui massive blue button">Create My Account</button>
+          </div>
+          <div class="nine wide column has-large-margin">
+            <img src="public/assets/img/website/macbook.jpg" class="ui Massive fluid image right demo-img">
           </div>
         </div>
       </div>
     </div>
-
 
     <div class="ui vertical stripe quote segment bg-white">
       <div class="ui equal width stackable internally celled grid">

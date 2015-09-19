@@ -47,6 +47,7 @@ var online_users, friend_list = FRIEND_LIST_ARRAY, data, matches, soundcloud, vi
 var youtube_vtitle, youtube_vdesc, youtube_vthumb, youtube_vcode, global_SoundCloud_Link, comment_card_obj, post_card_obj,exec = 0, multiples, remainder, isPhotoUpdate = false, offset = 0, endOfFeed = false;
 var isTypingSent  = false;
 var noIsTyping    = false;
+var friends_online_list = [];
 
 var session_username = jenkins_session_data.data('username');
 var session_fullname = jenkins_session_data.data('fullname');
@@ -179,18 +180,8 @@ var init = function(){
 	//refresh chat list if new user
 	//send friendlist to socket server and check who is online and get list of friends online
 	comet.chat_list(friend_list, function(friends_online){
-		//make ajax call to get friends_online details
-		if(friends_online.length > 0){
-			for(var i = 0; i < friends_online.length; i++) {
-				//setting online for whoso ever is online in the chat
-				$('ul.sidebar-chat-list').find('li[data-username="'+friends_online[i]+'"]').find('.online-icon-clist.pull-right').removeClass('hidden');
-				$('.chat-box-outer[data-username="'+friends_online[i]+'"]').find('.online-icon').removeClass('hidden');
-			}
-		}
-		else{
-			//nobody is online 
-			//sidebar_chat_list.empty();
-		}
+		handler_feeds.set_online(friends_online);
+		friends_online_list = friends_online;
 	});
 
 	//user clicks on a contact list to chat with
@@ -216,7 +207,7 @@ var init = function(){
 				            '</a>'+
 				          '</div>'+
 				          '<div class="media-body">'+
-				            '<h5 id="inbox-whois-fullname" class="media-heading fwb nmb"><span class="online-icon"><i class="fa fa-circle text-success"></i></span> '+$(this).data('fullname')+'</h5>'+
+				            '<h5 id="inbox-whois-fullname" class="media-heading fwb nmb"><span class="online-icon"><i class="fa fa-circle hidden text-success"></i></span> '+$(this).data('fullname')+'</h5>'+
 				          '</div>'+
 				        '</div>'+
 				    '</div>'+
@@ -229,6 +220,7 @@ var init = function(){
 				'</div>';
 
 			$('body').append(chat_body);
+			handler_feeds.set_online(friends_online_list);
 			handler_feeds.saveActiveConversation($(this).data('username'), 1);
 			handler_feeds.show_conv($(this));
 		}
@@ -302,7 +294,7 @@ var init = function(){
 
 	//emojs
 	emojify.setConfig({
-	    img_dir : 'public/assets/img/plugins/emoj/images'  // Directory for emoji images
+	    img_dir : '/public/assets/img/plugins/emoj/images'  // Directory for emoji images
 	});
 	emojify.run();
 
@@ -442,6 +434,20 @@ var init = function(){
 /* =============================================== HELPERS ============================================== */
 
 handler_feeds  = {
+	set_online: function(friends_online){
+		//set online icon for friends online
+		if(friends_online.length > 0){
+			for(var i = 0; i < friends_online.length; i++) {
+				//setting online for whoso ever is online in the chat
+				$('ul.sidebar-chat-list').find('li[data-username="'+friends_online[i]+'"]').find('.online-icon-clist.pull-right').removeClass('hidden');
+				$('.chat-box-outer[data-username="'+friends_online[i]+'"]').find('.online-icon').removeClass('hidden');
+			}
+		}
+		else{
+			//nobody is online 
+			//sidebar_chat_list.empty();
+		}
+	},
 	isTyping: function(flag, data){
 		if(flag){
 			comet.is_typing(data, function(){

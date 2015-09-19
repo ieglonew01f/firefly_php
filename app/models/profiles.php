@@ -178,7 +178,7 @@ class Profiles extends Eloquent {
 				$messages_data = $chat -> get_chat_convById($open_chat_query -> with_id);
 
 				$open_chats_html .= htmlfactory::bake_html("13", ['fullname' => $open_chat_query -> fullname, 'username' => $open_chat_query -> username, 'right' => $right, 'messages' => $messages_data]);
-				$right = $right + (230 - 35);
+				$right = $right + (330 - 35);
 			}
 		}
 		else{

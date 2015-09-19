@@ -37,6 +37,23 @@ class IndexController extends BaseController {
 		return $user -> add_user($input);
  	}
 
+ 	public function short_signup(){
+
+ 		$data = array(
+	 		"fullname" => ucwords(Input::get('fullname')),
+	 		"email"    => Input::get('email'),
+	 		"password" => md5(Input::get('password')),
+	 		"time"     => time(),
+	 		"code"     => md5(Input::get('email')),
+	 		"active"   => 0,
+	 		"ip"       => $_SERVER['REMOTE_ADDR'],
+	 		"username" => explode('@', Input::get('email'))[0].time()
+ 		);
+
+ 		$user = new user;
+ 		return $user -> add_user($data);
+ 	}
+
  	/* NEW */
  	//signup by email address
  	public function signup_with_email(){

@@ -13,6 +13,7 @@
 /* ROUTES FOR INDEX */
 Route::get('/', 'IndexController@index');
 Route::post('/signup', 'IndexController@signup');
+Route::post('/easySignup', 'IndexController@short_signup');
 Route::post('/check_username', 'IndexController@check_username');
 Route::get('/load_settings_index', 'IndexController@load_settings_index');
 

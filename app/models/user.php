@@ -10,7 +10,7 @@ class User extends Eloquent {
 		$user = $this::where('email', $input['email'])->first();
 		
 		if($user) {
-			return 0; // failure
+			return json_encode(['error_message' => 'Email address is already registed', 'status' => 'error']);
 		}
 		else {
 			//saving new user
@@ -27,10 +27,10 @@ class User extends Eloquent {
 
 				//jenkins bot says hello
 				DB::table('messages')->insert(['by_id' => 20, 'for_id' => $username -> id, 'timestamp' => time(), 'message' => 'Hi I\'m Jenkins Bot']);
-				return 1;
+				return json_encode(['status' => 'success']);
 			}
 			else
-				return 0;		//if insertion into DB failed
+				return json_encode(['error_message' => 'Email address is already registed', 'status' => 'error']);
 		}
 	}
 
