@@ -14,6 +14,8 @@ var btn_gp           = $(".btn-group");
 var friendliText     = $(".friendliText");
 var result_container = $('.search-results-container');
 var search_bar_input = $('.search-bar');
+var see_all_search   = $('#see-all-search');
+var search_dropdown  = $('.search-dropdown');
 //variables
 
 
@@ -31,24 +33,28 @@ var init = function(){
 		}
 	});
 	//handler.search_bar_handler();
+
+
 }
 
 //helpers
 var handler_people  = {
 	search_bar_handler: function(keyword){
 		$.ajax({
-		    type  : 'POST',
-		    url   : '/search_people',
-		    data  : { keyword : keyword },
+		    type     : 'POST',
+		    url      : '/search_people',
+		    data     : { keyword : keyword },
+		    dataType : 'json',
 			beforeSend: function(){
 				result_container.html('<div class="loader loader-inner ball-pulse text-center" style="margin-top: 100px;"><div></div><div></div><div></div></div>');
 			},
 			success: function(data){
-				if(data){
-						result_container.html(data);
+				if(data.users){
+					result_container.html(data.users);
+					search_dropdown.append(data.see_all);
 				}
 				else{
-						result_container.html('<div class="allcaughtup text-center" style="margin-top: 85px;"><b><span class="icon-bulb"></span> Nothing to see here</b></div>');
+					result_container.html('<div class="allcaughtup text-center" style="margin-top: 85px;"><b><span class="icon-bulb"></span> Nothing to see here</b></div>');
 				}
 			},
 			complete: function(responseText){
@@ -66,6 +72,7 @@ var handler_people  = {
 		event.stopPropagation();
 		var this_var   = $(this);
 		var isOrigin   = void(0);
+		var this_id    = $(this).data("id");
 		var dataString = "type="+$(this).data("type")+"&profile_id="+$(this).data("id");
 		$.ajax({
 		    type  : 'POST',
@@ -73,7 +80,13 @@ var handler_people  = {
 		    data  : dataString,
 			beforeSend: function(){
 				if(this_var.data('type') == '01'){
-					friend_button.html('Friend request sent <span class="caret"></span>').attr('data-toggle', 'dropdown').blur();
+					if(this_var.data('origin') == 'suggestions') {
+						isOrigin = 2;
+						this_var.parents('.suggestions-mediabody').html('<div class="loader loader-inner ball-pulse notif-bar-loader-friend-req" style="margin-top:8px;"><div></div><div></div><div></div></div>');
+					}
+					else{
+						friend_button.html('Friend request sent <span class="caret"></span>').attr('data-toggle', 'dropdown').blur();
+					}
 				}
 				else if(this_var.data('type') == '10'){
 					friend_button.html('Add as a friend').attr('data-toggle', '').blur();
@@ -113,7 +126,10 @@ var handler_people  = {
 			},
 			success: function(data){
 				if(isOrigin == '1' || isOrigin == 1){
-						$('.notif-bar-loader-friend-req').parents('.li-notif').fadeOut('slow');
+					$('.notif-bar-loader-friend-req').parents('.li-notif').fadeOut('slow');
+				}
+				else if(isOrigin == '2' || isOrigin == 2){
+					$('.contact-modal[data-id="'+this_id+'"]').fadeOut('slow');
 				}
 			},
 			complete: function(responseText){

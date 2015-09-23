@@ -11,6 +11,9 @@ h1,h2,h3,h4,h5,h6{
     width: 970px;
   }
 }
+.margin-bottom-xs{
+  margin-bottom:5px;
+}
 .tt-query {
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
      -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);

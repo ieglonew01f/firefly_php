@@ -39,7 +39,13 @@ class Notifications extends Eloquent {
 	//get notifications api call
 	public function get_notifications($type, $data){
 		$html  = '';
-		$query = DB::table('notifications')->where('for_id', Session::get('id'))->where('by_id', '!=', Session::get('id'))->get();
+
+		if($type == 1){ //notifications by id
+			$query = DB::table('notifications')->where('for_id', Session::get('id'))->where('id', $data['id'])->where('by_id', '!=', Session::get('id'))->orderBy('id', 'desc')->get();
+		}
+		else{ //all notifications
+			$query = DB::table('notifications')->where('for_id', Session::get('id'))->where('by_id', '!=', Session::get('id'))->orderBy('id', 'desc')->get();
+		}
 
 		foreach($query as $query){
 			//set seen as 1 (seen);

@@ -23,6 +23,7 @@ class Htmlfactory {
 		* type = 15 -> for listing photos in photo albums
 		* type = 16 -> for listing photo albums
 		* type = 17 -> for listing album photos
+		* type = 18 -> for listing friends suggestions
 		*/
 
 		#$base_path = 'http://localhost'; //change it to site url
@@ -446,6 +447,17 @@ class Htmlfactory {
 						</div>
 					</a>
 				</li>
+			';
+		}
+		else if($type === "88" || $type === 88){
+			return '
+                <li>
+                  <a href="/view/search/'.$data['key'].'" id="see-all-search" class="bg-grey notification-see-all">
+                    <div class="text-center">
+                      <small><b>SEE ALL</b></small>
+                    </div>
+                  </a>
+                </li>
 			';
 		}
 		else if($type === "9" || $type === 9){
@@ -1546,6 +1558,25 @@ class Htmlfactory {
 					'.$img_list.'
 				</div>
 				';
+		}
+		else if($type === "18" || $type === 18){
+			return '
+		        <div data-id="'.$data['id'].'" class="contact-modal">
+		          <div class="media nmt margin-bottom-xs">
+		            <div class="media-left">
+		              <a href="/profile/'.$data['username'].'">
+		                <img width="42" height="42" class="media-object" src="/uploads/thumb_'.$data['profile_picture'].'">
+		              </a>
+		            </div>
+		            <div class="media-body suggestions-mediabody">
+		              <p class="nmb nmt padding-none">
+		              </p><h4 class="media-heading small-mh nmb" id="media-heading">'.$data['fullname'].'</h4>
+		                <small class="text-muted"><b>'.$data['location'].'</b></small> <button data-origin="suggestions" data-id="'.$data['id'].'" data-type="01" class="btn btn-transparent-primary btn-sm pull-right friend">Add <span data-icon="&#xe002;"></span></button>
+		              <p></p>
+		            </div>
+		          </div>
+		        </div>
+			';
 		}
 	}
 }

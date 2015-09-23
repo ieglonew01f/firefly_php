@@ -18,18 +18,10 @@
                 <form class="navbar-form navbar-left" role="search">
                     <div class="btn-group">
                       <input autocomplete="off" type="text" id="keywords" placeholder="Search for people and more ..." class="search-bar form-control dropdown-toggle" data-toggle="dropdown" style="width:300px !important;">
-                      <ul class="dropdown-menu notification-dropdown margin-top-sm" role="menu">
+                      <ul class="dropdown-menu notification-dropdown search-dropdown margin-top-sm" role="menu">
                         <div class="search-results-container">
-
+                          
                         </div>
-                        <li>
-
-                          <a href="#" class="bg-grey notification-see-all">
-                            <div class="text-center">
-                              <small><b>SEE ALL</b></small>
-                            </div>
-                          </a>
-                        </li>
                       </ul>
                     </div>
                 </form>
@@ -40,7 +32,7 @@
                   <div class="notifications-container">
                   </div>
                   <li>
-                    <a href="#" class="bg-grey notification-see-all">
+                    <a href="/view/notifications" class="bg-grey notification-see-all">
                       <div class="text-center">
                         <small><b>SEE ALL</b></small>
                       </div>

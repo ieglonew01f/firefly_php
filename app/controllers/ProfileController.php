@@ -136,6 +136,12 @@ class ProfileController extends BaseController {
 	//search people
 	public function search_people(){
 		$profiles = new profiles;
-		return $profiles -> get_peoples_array(["key" => Input::get('keyword')]);
+		return $profiles -> get_peoples_array(["key" => Input::get('keyword'), 'type' => '']);
+	}
+
+	//search people
+	public function search_people_json(){
+		$profiles = new profiles;
+		return $profiles -> get_people_json();
 	}
 }

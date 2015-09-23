@@ -35,6 +35,8 @@ class Chat extends Eloquent {
 		$html       = "";
 
 		foreach($query as $query){
+			//set seen to 1 for loaded messages
+			DB::table('messages')->where('by_id', $query -> by_id)->where('for_id', $query -> for_id)->where('message', $query -> message)->update(['seen' => 1]);
 
 			if($query -> by_id == $s_id){ //outbound message
 				$isOutbound = true;
@@ -158,6 +160,9 @@ class Chat extends Eloquent {
 				$html .= htmlfactory::bake_html("10", $data);
 
 				$isOutbound = false;
+
+				//set seen to 1 for loaded messages
+				DB::table('messages')->where('by_id', $query -> by_id)->where('for_id', $query -> for_id)->where('message', $query -> message)->update(['seen' => 1]);
 			}
 		}
 
@@ -178,11 +183,7 @@ class Chat extends Eloquent {
 
 		//check if already present
 		$query = DB::table('messages')->where('message', $data['message'])->where('by_id', Session::get('id'))->where('for_id', $user_array -> u_id)->first();
-
-		//if not found then insert
-		if(!$query){
-			DB::table('messages')->insert($data);
-		}
+		DB::table('messages')->insert($data);
 	}
 
 	//search conv

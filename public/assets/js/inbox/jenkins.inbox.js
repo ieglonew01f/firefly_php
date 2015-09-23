@@ -100,6 +100,7 @@ var init = function(){
 				//send ajax call to save to db
 				inbox_handler.save_conv({message:message, for_username:username});
 				$(this).val('');
+				emojify.run();
 			}
 	  	}
 	});
@@ -206,7 +207,8 @@ var inbox_handler  = {
 					}
 				},
 				complete: function(responseText){
-					chatter_inbox.animate({ scrollTop: chatter_inbox[0].scrollHeight}, 400);
+					chatter_inbox.animate({ scrollTop: chatter_inbox[0].scrollHeight}, 100);
+					emojify.run();
 				},
 				error: function(XMLHttpRequest, textStatus, errorThrown) {
 				    alert(errorThrown)

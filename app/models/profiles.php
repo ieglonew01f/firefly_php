@@ -210,6 +210,15 @@ class Profiles extends Eloquent {
 
 		$albums_html .= '</div>';
 
+		//load friend suggestions
+		$session_id        = Session::get('id');
+		$suggestions_data  = '';
+		$suggestions_query = DB::select("SELECT * FROM users u, users_profile p WHERE u.id = p.u_id AND u.id NOT IN (SELECT for_id FROM friends WHERE by_id = '$session_id' UNION SELECT by_id FROM friends WHERE for_id = '$session_id') AND u.id NOT IN (SELECT id FROM users WHERE id = '$session_id') LIMIT 5");
+
+		foreach($suggestions_query as $suggestions_query){
+			$suggestions_data .= htmlfactory::bake_html("18", ['location' => $suggestions_query -> location, 'id' => $suggestions_query -> u_id, 'profile_picture' => $suggestions_query -> profile_picture, 'fullname' => $suggestions_query -> fullname, 'username' => $suggestions_query -> username]);
+		}
+
 		//throw all profile data
 
 		return array(
@@ -245,7 +254,8 @@ class Profiles extends Eloquent {
 			"photo_array"       => $photo_array,
 			"photo_count"       => $photo_count,
 			"albums_array"      => $albums_html,
-			"album_count"       => $album_count
+			"album_count"       => $album_count,
+			"suggestions_data"  => $suggestions_data
 		);
 	}
 
@@ -322,12 +332,35 @@ class Profiles extends Eloquent {
 	public function get_peoples_array($data){
 		$query = DB::table('users')->join('users_profile', 'users_profile.u_id', '=', 'users.id')->where('users.fullname', 'LIKE', '%'.$data['key'].'%')->get();
 		$users = '';
-
+		$see_all = '';
+		$count = 0;
 		foreach($query as $query){
 			$users .= htmlfactory::bake_html("8", ['id' => $query -> id, 'fullname' => $query -> fullname, 'username' => $query -> username, 'profile_picture' => $query -> profile_picture, 'college' => $query -> college]);
+			$count++;
 		}
 
-		return $users;
+		if($count > 5){ //append show more
+			$see_all .= htmlfactory::bake_html("88", ['key' => $data['key']]);
+		}
+
+		if($data['type']){
+			return ['users' => $users, 'count' => $count];
+		}
+		else{
+			return ['users' => $users, 'count' => $count, 'see_all' => $see_all];
+		}
+	}
+
+	//get people json
+	public function get_people_json(){
+		$users_array = [];
+		$query = DB::table('users')->join('users_profile', 'users_profile.u_id', '=', 'users.id')->get();
+
+		foreach($query as $query){
+			array_push($users_array, $query -> fullname);
+		}
+
+		return $users_array;
 	}
 
 	//load inbox data

@@ -25,7 +25,7 @@
           </div>
           <div class="col-md-5">
             @include('widgets.about', $profile_data)
-            @include('widgets.suggestions')
+            @include('widgets.suggestions', $profile_data)
           </div>
         </div>
       </div>

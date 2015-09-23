@@ -12,13 +12,14 @@
       <div class="container">
         <div class="row">
           <div class="col-md-7">
-
-            @include('includes.statusdiv', ['isProfile' => '', 'placeholder_text' => 'Share something new...', 'profile_data_id' => ''])
-
-            <div id="feeds_cont">
-              {{$feeds}}
+            <div class="well-snow">
+              {{ $view_header }}
+              <hr class="hr-dashed">
+                
+              <ul class="list-unstyled">
+                {{ $view_data }}
+              </ul>
             </div>
-
           </div>
           <div class="col-md-5">
             @include('widgets.profileSetup', array('percentage' => $profile_completion))

@@ -29,7 +29,8 @@ Route::get('/profile/{username}', 'ProfileController@profile');
 Route::get('/profile/{username}/photos', 'ProfileController@photos');
 Route::get('/profile/{username}/albums', 'ProfileController@albums');
 Route::get('/profile/{username}/albums/{id}', 'ProfileController@albumsById');
-ROute::post('/search_people', 'ProfileController@search_people');
+Route::post('/search_people', 'ProfileController@search_people');
+Route::get('/search_people_json', 'ProfileController@search_people_json');
 
 /*ROUTES FOR FEEDS */
 Route::post('/share_post', 'FeedController@bake_post');
@@ -87,3 +88,8 @@ Route::post('/save_settings', 'SettingsController@save_settings');
 Route::get('/photo_upload', 'UploadController@photo_upload');
 Route::post('/album_upload', 'UploadController@album_upload');
 Route::post('/save_new_album', 'UploadController@new_album');
+
+/*ROUTES FOR VIEWS*/
+Route::get('/view/search/{query}', 'ViewController@search');
+Route::get('/view/notifications/{id?}', 'ViewController@notifications');
+

@@ -30,10 +30,10 @@ var notif_handler  = {
 			},
 			success: function(html){
 				if(html){
-						notification_container.html(html);
+					notification_container.html(html);
 				}
 				else{
-						notification_container.html('<div class="allcaughtup text-center" style="margin-top: 85px;"><b><span class="icon-bulb"></span> Nothing to see here</b></div>');
+					notification_container.html('<div class="allcaughtup text-center" style="margin-top: 85px;"><b><span class="icon-bulb"></span> Nothing to see here</b></div>');
 				}
 			},
 			complete: function(responseText){
