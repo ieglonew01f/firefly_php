@@ -1,7 +1,7 @@
 @if ($location || $college || $home)
   <div class="about-container">
     <div class="well-snow">
-      <h4 class="nmt">About</h4>
+      <h4 class="nmt"><b>About</b></h4>
       <ul class="list-unstyled">
         @if ($location)
         <li class="mrb10">

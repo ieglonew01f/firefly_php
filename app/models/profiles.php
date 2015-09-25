@@ -189,9 +189,11 @@ class Profiles extends Eloquent {
 		$photos      = DB::table('photo_update')->join('feeds', 'feeds.id', '=', 'photo_update.feed_id')->where('feeds.u_id', '=', $data-> u_id)->get();
 		$photo_array = array();
 		$photo_count = 0;
+		$photos_widget_html = "";
 
 		foreach($photos as $photos){
 			array_push($photo_array, ['image' => $photos -> image, 'feed_id' => $photos -> feed_id]);
+			$photos_widget_html .= htmlfactory::bake_html("20", ['image' => $photos -> image, 'feed_id' => $photos -> feed_id]);
 			$photo_count ++;
 		}
 
@@ -219,43 +221,55 @@ class Profiles extends Eloquent {
 			$suggestions_data .= htmlfactory::bake_html("18", ['location' => $suggestions_query -> location, 'id' => $suggestions_query -> u_id, 'profile_picture' => $suggestions_query -> profile_picture, 'fullname' => $suggestions_query -> fullname, 'username' => $suggestions_query -> username]);
 		}
 
+		//generate friends array for the session user
+		$first_diff = DB::table('friends')->join('users', 'users.id', '=', 'friends.by_id')->join('users_profile', 'users_profile.u_id', '=', 'users.id')->where('friends.for_id', '=', $data -> u_id);
+		$friends_list_widget = DB::table('friends')->join('users', 'users.id', '=', 'friends.for_id')->join('users_profile', 'users_profile.u_id', '=', 'users.id')->where('friends.by_id', '=', $data -> u_id)->union($first_diff)->take(12)->get();
+		$friends_widget_html = "";
+		//friends widget
+		foreach($friends_list_widget as $friends_list_widget){
+			$friends_widget_html .= htmlfactory::bake_html("19", ['fullname' => $friends_list_widget -> fullname, 'username' => $friends_list_widget -> username, 'profile_picture' =>  $friends_list_widget -> profile_picture]);
+		}
+
+
 		//throw all profile data
 
 		return array(
-			"base_url"          => $website_url,
+			"base_url"           => $website_url,
 			/* ----------- PROFILE DATA  ------------*/
-			"u_id"              => $data -> u_id,
-			"fullname"          => $data -> fullname,
-			"username"          => $username,
-			"email"             => $data -> email,
-			"gender"            => $data -> gender,
-			"location"          => $data -> location,
-			"home"              => $data -> home,
-			"schooling"         => $data -> schooling,
-			"college"           => $data -> college,
-			"relationship"      => $data -> relationship,
-			"profile_picture"   => $data -> profile_picture,
-			"banner"            => $data -> banner,
-			"banner_position"   => $data -> banner_position,
-			"about"             => $data -> about,
-			"friends"           => $friends_count,
-			"followers"         => $followers,
-			"following"         => $following,
+			"u_id"               => $data -> u_id,
+			"fullname"           => $data -> fullname,
+			"username"           => $username,
+			"email"              => $data -> email,
+			"gender"             => $data -> gender,
+			"location"           => $data -> location,
+			"home"               => $data -> home,
+			"schooling"          => $data -> schooling,
+			"college"            => $data -> college,
+			"relationship"       => $data -> relationship,
+			"profile_picture"    => $data -> profile_picture,
+			"banner"             => $data -> banner,
+			"banner_position"    => $data -> banner_position,
+			"about"              => $data -> about,
+			"friends"            => $friends_count,
+			"followers"          => $followers,
+			"following"          => $following,
 			/* ----------- META DATA  ------------*/
-			"friendship_button" => $friendship_button,
-			"friendship_text"   => $friendship_text,
-			"friendship_status" => $friendship_status,
-			"follow_button"     => $follow_button,
-			"message_button"    => $message_button,
-			"more_button"       => $more_button,
-			"modal_body"        => $modal_data,
-			"friends_array"     => json_encode($friends_array),
-			"open_chat_list"    => $open_chats_html,
-			"photo_array"       => $photo_array,
-			"photo_count"       => $photo_count,
-			"albums_array"      => $albums_html,
-			"album_count"       => $album_count,
-			"suggestions_data"  => $suggestions_data
+			"friendship_button"  => $friendship_button,
+			"friendship_text"    => $friendship_text,
+			"friendship_status"  => $friendship_status,
+			"follow_button"      => $follow_button,
+			"message_button"     => $message_button,
+			"more_button"        => $more_button,
+			"modal_body"         => $modal_data,
+			"friends_array"      => json_encode($friends_array),
+			"open_chat_list"     => $open_chats_html,
+			"photo_array"        => $photo_array,
+			"photo_count"        => $photo_count,
+			"albums_array"       => $albums_html,
+			"album_count"        => $album_count,
+			"suggestions_data"   => $suggestions_data,
+			"friends_widget"     => $friends_widget_html,
+			"photos_widget_html" => $photos_widget_html
 		);
 	}
 

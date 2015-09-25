@@ -144,4 +144,29 @@ class ProfileController extends BaseController {
 		$profiles = new profiles;
 		return $profiles -> get_people_json();
 	}
+
+
+	//show about
+	public function about($username){
+		$feeds   = new feeds;
+		$profile = new profiles;
+
+		//getting profile data
+		$profile_settings = $profile -> load_profile_settings();
+		$profile_data     = $profile -> load_profile_data($username);
+		$session_data     = $profile -> load_profile_data(Session::get('username'));
+
+		$data = array(
+			"feeds"              => $feeds -> get_feeds(1, array('offset' => 0, 'u_id' => $profile_data['u_id'])),
+			"profile_completion" => $profile_settings['percentage'],
+			"dom"                => $profile_settings['dom'],
+			"question"           => $profile_settings['question'],
+			"hidden"             => $profile_settings['hidden'],
+			"profile_data"       => $profile_data,
+			"session_data"       => $session_data,
+			"isSelected"         => "profile"
+		);
+
+		return View::make('pages.about', $data);
+	}
 }

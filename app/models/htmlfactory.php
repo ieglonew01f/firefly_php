@@ -24,6 +24,7 @@ class Htmlfactory {
 		* type = 16 -> for listing photo albums
 		* type = 17 -> for listing album photos
 		* type = 18 -> for listing friends suggestions
+		* type = 19 -> for listing friends widget
 		*/
 
 		#$base_path = 'http://localhost'; //change it to site url
@@ -1576,6 +1577,25 @@ class Htmlfactory {
 		            </div>
 		          </div>
 		        </div>
+			';
+		}
+		else if($type === "19" || $type === 19){
+			return '
+	          <div class="col-sm-3 row-thumbs-div">
+	            <a href="/profile/'.$data['username'].'">
+	              <img width="88" src="/uploads/thumb_'.$data['profile_picture'].'"></img>
+	              <div class="thumbs-row-highlight">'.$data['fullname'].'</div>
+	            </a>
+	          </div>
+			';
+		}
+		else if($type === "20" || $type === 20){
+			return '
+	          <div class="col-sm-3 row-thumbs-div">
+	            <a href="javascript:;">
+	              <img class="feedPhotos" data-id="'.$data['feed_id'].'" data-img="'.$data['image'].'" width="88" src="/uploads/thumb_'.$data['image'].'"></img>
+	            </a>
+	          </div>
 			';
 		}
 	}

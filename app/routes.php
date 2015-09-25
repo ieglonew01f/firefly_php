@@ -28,6 +28,8 @@ Route::get('/home', 'HomeController@index');
 Route::get('/profile/{username}', 'ProfileController@profile');
 Route::get('/profile/{username}/photos', 'ProfileController@photos');
 Route::get('/profile/{username}/albums', 'ProfileController@albums');
+Route::get('/profile/{username}/about', 'ProfileController@about');
+Route::get('/profile/{username}/friends', 'ProfileController@friends');
 Route::get('/profile/{username}/albums/{id}', 'ProfileController@albumsById');
 Route::post('/search_people', 'ProfileController@search_people');
 Route::get('/search_people_json', 'ProfileController@search_people_json');

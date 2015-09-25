@@ -1,6 +1,6 @@
 @extends('layouts.internal')
 @section('title')
-  Social Networking Script
+  About - {{ $profile_data['fullname'] }}
 @stop
 @section('page_css')
   {{ HTML::style('public/assets/css/jenkins.profile.css'); }}
@@ -16,17 +16,10 @@
           </div>
         </div>
         <div class="row" id="profile-container">
-          <div class="col-md-7">
-            @include('widgets.profileSetup', array('percentage' => $profile_completion, 'profile_data' => $profile_data))
-            @include('includes.statusdiv', ['isProfile' => 'hidden', 'placeholder_text' => 'Write on wall..', 'profile_data_id' => $profile_data['u_id']])
-            <div id="feeds_cont">
-              {{$feeds}}
+          <div class="col-md-12">
+            <div class="well-snow">
+              <h3> {{ $profile_data['followers'] }} Follower</h3>
             </div>
-          </div>
-          <div class="col-md-5">
-            @include('widgets.about', $profile_data)
-            @include('widgets.friends', $profile_data)
-            @include('widgets.photoWidget', $profile_data)
           </div>
         </div>
       </div>
