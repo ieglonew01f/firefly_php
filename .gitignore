@@ -1,6 +1,7 @@
 /bootstrap/compiled.php
 /test
 /.idea
+/uploads
 composer.phar
 composer.lock
 .env.*.php
