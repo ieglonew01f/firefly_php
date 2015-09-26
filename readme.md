@@ -4,6 +4,9 @@ Jenkins is a web application social networking script with expressive and elegan
 
 Jenkins is accessible, yet powerful, providing powerful tools needed for large, robust social networking applications. A superb number of features like built in real time chat made purely with node.js and much more.
 
+## Demo url
+http://128.199.192.79
+
 ## Getting started
 Set up your LAMP stack like usual, for the built in chat application you will need a dedicated node.js server 
 copy the repository contents to the root of your httpdocs or www directory and launch the application.
