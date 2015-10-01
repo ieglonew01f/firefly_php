@@ -1,8 +1,8 @@
-## Jenkins Social Networking Script
+## Firefly Social Networking Script
 
-Jenkins is a web application social networking script with expressive and elegant features.
+Firefly is a web application social networking script with expressive and elegant features.
 
-Jenkins is accessible, yet powerful, providing powerful tools needed for large, robust social networking applications. A superb number of features like built in real time chat made purely with node.js and much more.
+Firefly is accessible, yet powerful, providing powerful tools needed for large, robust social networking applications. A superb number of features like built in real time chat made purely with node.js and much more.
 
 ## Demo url
 http://128.199.192.79
