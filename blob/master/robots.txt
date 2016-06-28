@@ -1,0 +1,60 @@
+{
+  "paragraphs": [
+    {
+      "text": "show tables;",
+      "dateUpdated": "Jun 28, 2016 5:58:03 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1467093464176_379386666",
+      "id": "20160628-055744_578919864",
+      "result": {
+        "code": "ERROR",
+        "type": "TEXT",
+        "msg": "\u003cconsole\u003e:28: error: not found: value show\n              show tables;\n              ^\n"
+      },
+      "dateCreated": "Jun 28, 2016 5:57:44 AM",
+      "dateStarted": "Jun 28, 2016 5:58:03 AM",
+      "dateFinished": "Jun 28, 2016 5:58:46 AM",
+      "status": "ERROR",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1467093483539_1554271889",
+      "id": "20160628-055803_1271498924",
+      "dateCreated": "Jun 28, 2016 5:58:03 AM",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "test_note4",
+  "id": "EVUCF12GD51467093463",
+  "angularObjects": {
+    "2BPNP1JZ4112501467092025198": [],
+    "2BQGPK8P4112501467092025166": [],
+    "2BRJYWMK4112501467092025201": []
+  },
+  "config": {},
+  "info": {},
+  "source": "FCN"
+}
